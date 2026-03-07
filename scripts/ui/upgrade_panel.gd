@@ -189,7 +189,8 @@ const ICON_ROLE_BY_ID: Dictionary = {
 	"they_can_see_you": "final"
 }
 
-const LAYOUT_SCALE: float = 0.38
+const LAYOUT_SCALE_X: float = 0.42
+const LAYOUT_SCALE_Y: float = 0.188
 const BASE_NODE_SIZE: Vector2 = Vector2(140.0, 72.0)
 const ROOT_NODE_SIZE: Vector2 = Vector2(170.0, 84.0)
 const FINAL_NODE_SIZE: Vector2 = Vector2(190.0, 92.0)
@@ -267,6 +268,7 @@ func _ready() -> void:
 	_game_manager = get_node_or_null(game_manager_path) as GameManager
 	_build_ui()
 	_build_tree_nodes()
+	_apply_layout()
 	_refresh_tree()
 
 	if _game_manager != null:
@@ -289,7 +291,7 @@ func _build_ui() -> void:
 	_dark_overlay.anchor_bottom = 1.0
 	_dark_overlay.texture = UI_TEXTURES["overlay_dark"] as Texture2D
 	_dark_overlay.stretch_mode = TextureRect.STRETCH_SCALE
-	_dark_overlay.modulate = Color(1.0, 1.0, 1.0, 0.5)
+	_dark_overlay.modulate = Color(1.0, 1.0, 1.0, 0.46)
 	_dark_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_dark_overlay)
 
@@ -329,10 +331,15 @@ func _build_ui() -> void:
 	_node_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_tree_root.add_child(_node_layer)
 
-	_add_branch_label("Conversion", Vector2(26.0, 52.0))
-	_add_branch_label("Faith Flow", Vector2(304.0, 52.0))
-	_add_branch_label("World Control", Vector2(562.0, 52.0))
-	_add_branch_label("Late Game", Vector2(338.0, 568.0))
+	var tree_title: Label = Label.new()
+	tree_title.text = "UPGRADE TREE"
+	tree_title.position = Vector2(316.0, 10.0)
+	tree_title.modulate = Color(0.96, 0.93, 0.84, 0.96)
+	_tree_root.add_child(tree_title)
+
+	_add_branch_label("Conversion", Vector2(90.0, 52.0))
+	_add_branch_label("Faith Flow", Vector2(290.0, 52.0))
+	_add_branch_label("World Control", Vector2(472.0, 52.0))
 
 	_run_summary_panel = Panel.new()
 	_run_summary_panel.name = "RunSummaryPanel"
@@ -403,16 +410,17 @@ func _apply_layout() -> void:
 		return
 
 	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
-	var panel_size: Vector2 = Vector2(780.0, 640.0)
-	var panel_pos: Vector2 = Vector2((viewport_size.x - panel_size.x) * 0.5, 95.0)
-	if panel_pos.y + panel_size.y > viewport_size.y - 120.0:
-		panel_pos.y = max(70.0, viewport_size.y - panel_size.y - 120.0)
+	var panel_size: Vector2 = Vector2(720.0, 390.0)
+	var panel_pos: Vector2 = Vector2(
+		(viewport_size.x - panel_size.x) * 0.5,
+		max(95.0, (viewport_size.y - panel_size.y) * 0.34)
+	)
 
 	_tree_root.position = panel_pos
 	_tree_root.size = panel_size
 
-	var summary_size: Vector2 = Vector2(250.0, 120.0)
-	var summary_pos: Vector2 = Vector2(max(20.0, panel_pos.x - summary_size.x - 20.0), panel_pos.y)
+	var summary_size: Vector2 = Vector2(240.0, 120.0)
+	var summary_pos: Vector2 = Vector2(max(24.0, panel_pos.x - summary_size.x - 24.0), panel_pos.y)
 	_run_summary_panel.position = summary_pos
 	_run_summary_panel.size = summary_size
 
@@ -423,14 +431,19 @@ func _apply_layout() -> void:
 	)
 	_continue_button.size = continue_size
 
-	var tooltip_size: Vector2 = Vector2(220.0, 160.0)
+	var tooltip_size: Vector2 = Vector2(240.0, 170.0)
 	_tooltip_panel.size = tooltip_size
-	_tooltip_default_position = Vector2(panel_pos.x + panel_size.x + 14.0, panel_pos.y)
+	_tooltip_default_position = Vector2(panel_pos.x + panel_size.x + 24.0, panel_pos.y)
 	if _tooltip_default_position.x + tooltip_size.x > viewport_size.x - 12.0:
-		_tooltip_default_position = Vector2(summary_pos.x, summary_pos.y + summary_size.y + 12.0)
+		_tooltip_default_position = Vector2(summary_pos.x, summary_pos.y + summary_size.y + 14.0)
 
 	if _continue_button.position.y + continue_size.y > viewport_size.y - 8.0:
 		_continue_button.position.y = viewport_size.y - continue_size.y - 8.0
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_RESIZED:
+		_apply_layout()
+
 func _build_summary_row(parent: VBoxContainer) -> Label:
 	var container: PanelContainer = PanelContainer.new()
 	var style: StyleBoxTexture = StyleBoxTexture.new()
@@ -516,7 +529,7 @@ func _build_tree_nodes() -> void:
 
 func _scaled_position(upgrade_id: String) -> Vector2:
 	var raw: Vector2 = NODE_POSITIONS.get(upgrade_id, Vector2.ZERO) as Vector2
-	return raw * LAYOUT_SCALE + Vector2(118.0, 10.0)
+	return Vector2(raw.x * LAYOUT_SCALE_X, raw.y * LAYOUT_SCALE_Y) + Vector2(48.0, 38.0)
 
 func _node_size_for(upgrade_id: String) -> Vector2:
 	if upgrade_id == "awakening":
@@ -541,6 +554,8 @@ func _refresh_tree() -> void:
 	if not visible:
 		_hide_tooltip()
 		return
+
+	_apply_layout()
 
 	var definitions: Array[Dictionary] = _game_manager.get_upgrade_definitions()
 	for definition: Dictionary in definitions:
