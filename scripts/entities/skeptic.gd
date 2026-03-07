@@ -1,6 +1,12 @@
 extends CharacterBody2D
 class_name Skeptic
 
+static var SKEPTIC_TEXTURES: Array[Texture2D] = [
+	preload("res://assets/sprites/characters/skeptics/skeptic_01.png"),
+	preload("res://assets/sprites/characters/skeptics/skeptic_02.png"),
+	preload("res://assets/sprites/characters/skeptics/skeptic_03.png")
+]
+
 @export var speed: float = 58.0
 @export var flee_speed_multiplier: float = 1.35
 @export var flee_radius: float = 120.0
@@ -17,6 +23,16 @@ func _ready() -> void:
 	_pick_new_direction()
 	_cursor = get_tree().get_first_node_in_group("cursor") as CursorEntity
 	_game_manager = get_tree().get_first_node_in_group("game_manager") as GameManager
+	_apply_random_skeptic_texture()
+
+func _apply_random_skeptic_texture() -> void:
+	var sprite: Sprite2D = $Sprite2D as Sprite2D
+	if sprite == null:
+		return
+	if SKEPTIC_TEXTURES.is_empty():
+		return
+	var index: int = _rng.randi_range(0, SKEPTIC_TEXTURES.size() - 1)
+	sprite.texture = SKEPTIC_TEXTURES[index]
 
 func _physics_process(delta: float) -> void:
 	if _game_manager != null and _game_manager.are_npcs_paused():

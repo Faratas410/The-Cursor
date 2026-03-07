@@ -5,6 +5,18 @@ const STATE_WANDER: int = 0
 const STATE_ATTRACTED: int = 1
 const STATE_FOLLOW: int = 2
 
+static var CIVILIAN_TEXTURES: Array[Texture2D] = [
+	preload("res://assets/sprites/characters/civilians/civilian_01.png"),
+	preload("res://assets/sprites/characters/civilians/civilian_02.png"),
+	preload("res://assets/sprites/characters/civilians/civilian_03.png")
+]
+
+static var CULTIST_TEXTURES: Array[Texture2D] = [
+	preload("res://assets/sprites/characters/cultists/cultist_01.png"),
+	preload("res://assets/sprites/characters/cultists/cultist_02.png"),
+	preload("res://assets/sprites/characters/cultists/cultist_03.png")
+]
+
 @export var speed: float = 60.0
 var converted: bool = false
 var state: int = STATE_WANDER
@@ -30,8 +42,27 @@ func _ready() -> void:
 	_cursor = get_tree().get_first_node_in_group("cursor") as CursorEntity
 	_game_manager = get_tree().get_first_node_in_group("game_manager") as GameManager
 	_sprite = $Sprite2D as Sprite2D
+	if not converted:
+		_apply_random_civilian_texture()
 	_reset_worship_timer()
 	_reset_chant_timer()
+
+func apply_converted_visual() -> void:
+	converted = true
+	if _sprite == null:
+		return
+	if CULTIST_TEXTURES.is_empty():
+		return
+	var index: int = _rng.randi_range(0, CULTIST_TEXTURES.size() - 1)
+	_sprite.texture = CULTIST_TEXTURES[index]
+
+func _apply_random_civilian_texture() -> void:
+	if _sprite == null:
+		return
+	if CIVILIAN_TEXTURES.is_empty():
+		return
+	var index: int = _rng.randi_range(0, CIVILIAN_TEXTURES.size() - 1)
+	_sprite.texture = CIVILIAN_TEXTURES[index]
 
 func _physics_process(delta: float) -> void:
 	if _game_manager != null and _game_manager.cursor_locked and not _is_kneeling and state == STATE_FOLLOW:
@@ -67,7 +98,7 @@ func _physics_process(delta: float) -> void:
 	_update_gaze(delta)
 
 func become_follower(angle: float, distance: float) -> void:
-	converted = true
+	apply_converted_visual()
 	state = STATE_FOLLOW
 	_follow_angle = angle
 	_follow_distance = distance

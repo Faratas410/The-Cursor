@@ -93,7 +93,7 @@ func _convert_npc(npc_entity: NPC, apply_resistance: bool) -> bool:
 		_spawn_feedback(npc_entity.global_position, 0, "Doubt")
 		return false
 
-	npc_entity.converted = true
+	npc_entity.apply_converted_visual()
 	var gained_followers: int = _game_manager.get_current_conversion_value()
 	if gained_followers <= 0:
 		npc_entity.queue_free()
