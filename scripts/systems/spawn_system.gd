@@ -21,7 +21,7 @@ func _ready() -> void:
 	if _npc_container == null or _game_manager == null:
 		return
 
-	_spawn_timer.wait_time = _game_manager.npc_spawn_interval
+	_spawn_timer.wait_time = _game_manager.get_effective_npc_spawn_interval()
 	_spawn_timer.timeout.connect(_on_spawn_timer_timeout)
 	_spawn_timer.start()
 
@@ -36,7 +36,7 @@ func _ready() -> void:
 func _on_spawn_timer_timeout() -> void:
 	if _npc_container == null or _game_manager == null or npc_scene == null:
 		return
-	if _game_manager.final_sequence_active or _game_manager.final_gathering_active:
+	if _game_manager.final_sequence_active or _game_manager.final_gathering_active or not _game_manager.is_gameplay_phase():
 		return
 
 	_update_spawn_scaling()
@@ -44,7 +44,7 @@ func _on_spawn_timer_timeout() -> void:
 	if devotion_mode:
 		_spawn_timer.wait_time = 0.3
 	else:
-		_spawn_timer.wait_time = _game_manager.npc_spawn_interval
+		_spawn_timer.wait_time = _game_manager.get_effective_npc_spawn_interval()
 
 	var wild_count: int = get_tree().get_nodes_in_group("wild_npc").size()
 	var available_slots: int = _game_manager.max_npc - wild_count
@@ -70,7 +70,7 @@ func _on_spawn_timer_timeout() -> void:
 func _on_prophet_timer_timeout() -> void:
 	if _npc_container == null or _game_manager == null or prophet_scene == null:
 		return
-	if _game_manager.final_sequence_active or _game_manager.final_gathering_active:
+	if _game_manager.final_sequence_active or _game_manager.final_gathering_active or not _game_manager.is_gameplay_phase():
 		return
 	if _game_manager.followers < 1000:
 		return
@@ -89,7 +89,7 @@ func _on_prophet_timer_timeout() -> void:
 func _on_event_timer_timeout() -> void:
 	if _npc_container == null or _game_manager == null:
 		return
-	if _game_manager.final_sequence_active or _game_manager.final_gathering_active:
+	if _game_manager.final_sequence_active or _game_manager.final_gathering_active or not _game_manager.is_gameplay_phase():
 		return
 
 	var roll: int = _rng.randi_range(0, 2)
@@ -137,6 +137,7 @@ func _spawn_npc_cluster(count: int, center: Vector2, radius: float, clamp_inside
 		var npc_instance: NPC = npc_scene.instantiate() as NPC
 		if npc_instance == null:
 			continue
+		npc_instance.speed *= _game_manager.get_npc_speed_multiplier()
 
 		var angle: float = _rng.randf_range(0.0, TAU)
 		var distance: float = _rng.randf_range(0.0, radius)
@@ -196,6 +197,14 @@ func _update_spawn_scaling() -> void:
 
 func _random_world_position() -> Vector2:
 	var view_size: Vector2 = get_viewport().get_visible_rect().size
+	if _game_manager != null and _game_manager.has_upgrade("pilgrimage"):
+		var center: Vector2 = view_size * 0.5
+		var radius_x: float = max(40.0, view_size.x * 0.25)
+		var radius_y: float = max(40.0, view_size.y * 0.25)
+		return Vector2(
+			clamp(center.x + _rng.randf_range(-radius_x, radius_x), 40.0, max(40.0, view_size.x - 40.0)),
+			clamp(center.y + _rng.randf_range(-radius_y, radius_y), 40.0, max(40.0, view_size.y - 40.0))
+		)
 	return Vector2(
 		_rng.randf_range(40.0, max(40.0, view_size.x - 40.0)),
 		_rng.randf_range(40.0, max(40.0, view_size.y - 40.0))

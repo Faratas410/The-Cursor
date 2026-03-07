@@ -40,7 +40,7 @@ func _process(_delta: float) -> void:
 	if _game_manager == null:
 		return
 
-	if not _game_manager.cursor_locked:
+	if _game_manager.is_gameplay_phase() and not _game_manager.cursor_locked:
 		global_position = get_global_mouse_position()
 
 	var delta_pos: Vector2 = global_position - _last_position
@@ -97,7 +97,8 @@ func _on_final_sequence_started() -> void:
 		set_cursor_visual("final")
 
 func _on_body_entered(body: Node) -> void:
-	if _game_manager != null and _game_manager.final_sequence_active:
+	if _game_manager != null and (_game_manager.final_sequence_active or not _game_manager.is_gameplay_phase()):
 		return
 	if body.is_in_group("npc"):
 		npc_detected.emit(body)
+

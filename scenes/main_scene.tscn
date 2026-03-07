@@ -1,8 +1,7 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/npc.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/cursor.tscn" id="2"]
-[ext_resource type="PackedScene" path="res://scenes/upgrade_button.tscn" id="3"]
 [ext_resource type="Script" path="res://scripts/main/game_manager.gd" id="4"]
 [ext_resource type="Script" path="res://scripts/systems/spawn_system.gd" id="5"]
 [ext_resource type="Script" path="res://scripts/systems/conversion_system.gd" id="6"]
@@ -33,6 +32,8 @@ followers_label_path = NodePath("TopBar/FollowersLabel")
 faith_label_path = NodePath("TopBar/FaithLabel")
 followers_per_second_label_path = NodePath("TopBar/FollowersPerSecondLabel")
 cult_power_label_path = NodePath("TopBar/CultPowerLabel")
+run_timer_label_path = NodePath("TopBar/RunTimerLabel")
+upgrade_panel_path = NodePath("UpgradePanel")
 
 [node name="TopBar" type="HBoxContainer" parent="UI"]
 offset_left = 16.0
@@ -53,14 +54,18 @@ text = "Followers/sec: 0.00"
 [node name="CultPowerLabel" type="Label" parent="UI/TopBar"]
 text = "Cult Power: 0"
 
-[node name="UpgradePanel" type="VBoxContainer" parent="UI"]
-offset_left = 16.0
-offset_top = 64.0
-offset_right = 360.0
-offset_bottom = 360.0
+[node name="RunTimerLabel" type="Label" parent="UI/TopBar"]
+text = "Run: 15.0s"
+
+[node name="UpgradePanel" type="Control" parent="UI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
 script = ExtResource("10")
 game_manager_path = NodePath("../../Systems/GameManager")
-upgrade_button_scene = ExtResource("3")
 
 [node name="Systems" type="Node" parent="."]
 

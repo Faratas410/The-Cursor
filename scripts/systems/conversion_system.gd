@@ -23,14 +23,14 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if _game_manager == null:
 		return
-	if _game_manager.final_sequence_active:
+	if _game_manager.final_sequence_active or not _game_manager.is_gameplay_phase():
 		return
 	_process_prophet_conversion()
 
 func _on_npc_detected(npc: Node) -> void:
 	if _game_manager == null:
 		return
-	if _game_manager.final_sequence_active:
+	if _game_manager.final_sequence_active or not _game_manager.is_gameplay_phase():
 		return
 
 	var npc_entity: NPC = npc as NPC
@@ -101,6 +101,9 @@ func _convert_npc(npc_entity: NPC, apply_resistance: bool) -> bool:
 		return false
 
 	_game_manager.add_followers(gained_followers)
+	var faith_per_conversion: float = _game_manager.get_faith_per_conversion()
+	if faith_per_conversion > 0.0:
+		_game_manager.add_faith(faith_per_conversion)
 	npc_converted.emit()
 	_game_manager.npc_converted.emit()
 	_spawn_feedback(npc_entity.global_position, gained_followers, "")
@@ -215,6 +218,7 @@ func _find_nearest_wild_npc(origin: Vector2, radius: float) -> NPC:
 
 func play_convert_sound() -> void:
 	pass
+
 
 
 
