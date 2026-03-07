@@ -56,6 +56,12 @@ class Upgrade:
 
 signal upgrade_purchased(upgrade: Dictionary)
 
+static var BUTTON_TEXTURES: Dictionary = {
+	"normal": preload("res://assets/ui/buttons/btn_upgrade.png"),
+	"hover": preload("res://assets/ui/buttons/btn_upgrade_hover.png"),
+	"disabled": preload("res://assets/ui/buttons/btn_upgrade_disabled.png")
+}
+
 @export var game_manager_path: NodePath
 @export var upgrade_button_scene: PackedScene
 
@@ -98,9 +104,43 @@ func _create_button(index: int) -> Button:
 		button = Button.new()
 
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_apply_button_visual(button)
 	button.pressed.connect(_on_upgrade_pressed.bind(index))
 	_update_button_text(index)
 	return button
+
+func _apply_button_visual(button: Button) -> void:
+	var normal: Texture2D = BUTTON_TEXTURES["normal"] as Texture2D
+	var hover: Texture2D = BUTTON_TEXTURES["hover"] as Texture2D
+	var disabled: Texture2D = BUTTON_TEXTURES["disabled"] as Texture2D
+
+	var normal_style: StyleBoxTexture = StyleBoxTexture.new()
+	normal_style.texture = normal
+	normal_style.set_texture_margin_all(10.0)
+
+	var hover_style: StyleBoxTexture = StyleBoxTexture.new()
+	hover_style.texture = hover
+	hover_style.set_texture_margin_all(10.0)
+
+	var pressed_style: StyleBoxTexture = StyleBoxTexture.new()
+	pressed_style.texture = hover
+	pressed_style.set_texture_margin_all(10.0)
+
+	var disabled_style: StyleBoxTexture = StyleBoxTexture.new()
+	disabled_style.texture = disabled
+	disabled_style.set_texture_margin_all(10.0)
+
+	button.add_theme_stylebox_override("normal", normal_style)
+	button.add_theme_stylebox_override("hover", hover_style)
+	button.add_theme_stylebox_override("pressed", pressed_style)
+	button.add_theme_stylebox_override("disabled", disabled_style)
+	button.add_theme_stylebox_override("focus", hover_style)
+
+	button.add_theme_color_override("font_color", Color(0.98, 0.96, 0.9, 1.0))
+	button.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0, 1.0))
+	button.add_theme_color_override("font_pressed_color", Color(1.0, 1.0, 1.0, 1.0))
+	button.add_theme_color_override("font_disabled_color", Color(0.64, 0.64, 0.64, 1.0))
+	button.custom_minimum_size = Vector2(320.0, 44.0)
 
 func _on_upgrade_pressed(index: int) -> void:
 	if _game_manager == null:

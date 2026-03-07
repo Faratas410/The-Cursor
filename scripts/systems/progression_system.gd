@@ -2,6 +2,15 @@ extends Node
 
 signal dimension_changed(level: int)
 
+static var BACKGROUND_TEXTURES: Array[Texture2D] = [
+	preload("res://assets/backgrounds/bg_village.png"),
+	preload("res://assets/backgrounds/bg_town.png"),
+	preload("res://assets/backgrounds/bg_city.png"),
+	preload("res://assets/backgrounds/bg_metropolis.png"),
+	preload("res://assets/backgrounds/bg_planet.png"),
+	preload("res://assets/backgrounds/bg_cult_world.png")
+]
+
 @export var game_manager_path: NodePath
 @export var background_path: NodePath
 
@@ -12,13 +21,6 @@ var _dimension_thresholds: PackedInt32Array = PackedInt32Array([100, 1000, 10000
 var _world_notice_thresholds: PackedInt32Array = PackedInt32Array([5000, 10000, 50000])
 var _shown_world_notice_thresholds: Dictionary = {}
 var _last_cult_power: int = -1
-var _dimension_colors: Array[Color] = [
-	Color(0.18, 0.26, 0.42),
-	Color(0.25, 0.40, 0.30),
-	Color(0.45, 0.35, 0.22),
-	Color(0.36, 0.26, 0.36),
-	Color(0.50, 0.45, 0.20)
-]
 
 func _ready() -> void:
 	_game_manager = get_node_or_null(game_manager_path) as GameManager
@@ -26,8 +28,7 @@ func _ready() -> void:
 	if _game_manager == null:
 		return
 
-	_ensure_background_texture()
-	_update_background_color(_game_manager.current_dimension)
+	apply_dimension_background(_game_manager.current_dimension)
 
 func _process(_delta: float) -> void:
 	if _game_manager == null:
@@ -38,6 +39,30 @@ func _process(_delta: float) -> void:
 	_update_cult_power_effects()
 	_check_world_notice_milestones()
 	_update_final_phase_flags()
+
+func apply_dimension_background(dimension: int) -> void:
+	if _background == null:
+		return
+	if BACKGROUND_TEXTURES.is_empty():
+		return
+
+	var clamped_dimension: int = clamp(dimension, 0, BACKGROUND_TEXTURES.size() - 1)
+	_background.texture = BACKGROUND_TEXTURES[clamped_dimension]
+	_background.modulate = Color(1, 1, 1, 1)
+	_background.centered = false
+	_fit_background_to_viewport()
+
+func _fit_background_to_viewport() -> void:
+	if _background == null or _background.texture == null:
+		return
+
+	var texture_size: Vector2 = _background.texture.get_size()
+	if texture_size.x <= 0.0 or texture_size.y <= 0.0:
+		return
+
+	var view_size: Vector2 = get_viewport_rect().size
+	_background.position = Vector2.ZERO
+	_background.scale = Vector2(view_size.x / texture_size.x, view_size.y / texture_size.y)
 
 func _update_final_phase_flags() -> void:
 	if _game_manager.followers > 500000:
@@ -64,7 +89,7 @@ func _update_dimension_progression() -> void:
 		return
 
 	_game_manager.current_dimension = new_dimension
-	_update_background_color(new_dimension)
+	apply_dimension_background(new_dimension)
 	dimension_changed.emit(new_dimension)
 	_game_manager.dimension_changed.emit(new_dimension)
 	_game_manager.state_changed.emit()
@@ -138,26 +163,5 @@ func _calculate_level(value: int, thresholds: PackedInt32Array) -> int:
 			level = i + 1
 	return level
 
-func _ensure_background_texture() -> void:
-	if _background == null:
-		return
-	if _background.texture != null:
-		return
-
-	var image: Image = Image.create(1, 1, false, Image.FORMAT_RGBA8)
-	image.fill(Color.WHITE)
-	var texture: ImageTexture = ImageTexture.create_from_image(image)
-	_background.texture = texture
-	_background.centered = false
-	_background.scale = get_viewport_rect().size
-
-func _update_background_color(level: int) -> void:
-	if _background == null:
-		return
-	var index: int = clamp(level, 0, _dimension_colors.size() - 1)
-	_background.modulate = _dimension_colors[index]
-
 func _update_world_transform_background() -> void:
-	if _background == null:
-		return
-	_background.modulate = Color(0.85, 0.72, 0.38)
+	apply_dimension_background(5)

@@ -17,12 +17,24 @@ var _final_sequence_running: bool = false
 const DIVINE_PULSE_SCENE: PackedScene = preload("res://scenes/effects/divine_pulse.tscn")
 const END_SCREEN_SCENE: PackedScene = preload("res://scenes/ui/end_screen.tscn")
 
+static var UI_TEXTURES: Dictionary = {
+	"panel_main": preload("res://assets/ui/panels/panel_main.png"),
+	"panel_upgrade": preload("res://assets/ui/panels/panel_upgrade.png"),
+	"panel_popup": preload("res://assets/ui/panels/panel_popup.png"),
+	"label_bg": preload("res://assets/ui/labels/label_bg.png"),
+	"icon_follower": preload("res://assets/ui/icons/icon_follower.png"),
+	"icon_faith": preload("res://assets/ui/icons/icon_faith.png"),
+	"icon_cult_power": preload("res://assets/ui/icons/icon_cult_power.png")
+}
+
 func _ready() -> void:
 	_game_manager = get_node_or_null(game_manager_path) as GameManager
 	_followers_label = get_node_or_null(followers_label_path) as Label
 	_faith_label = get_node_or_null(faith_label_path) as Label
 	_followers_per_second_label = get_node_or_null(followers_per_second_label_path) as Label
 	_cult_power_label = get_node_or_null(cult_power_label_path) as Label
+
+	_setup_ui_visuals()
 
 	if _game_manager != null:
 		_game_manager.state_changed.connect(_refresh_labels)
@@ -32,6 +44,87 @@ func _ready() -> void:
 		_game_manager.final_sequence_started.connect(_on_final_sequence_started)
 
 	_refresh_labels()
+
+func _setup_ui_visuals() -> void:
+	var top_bar: HBoxContainer = _get_top_bar()
+	if top_bar != null:
+		_ensure_panel_background("TopBarBackground", top_bar, UI_TEXTURES["panel_main"] as Texture2D)
+		_wrap_stat_label(top_bar, _followers_label, UI_TEXTURES["icon_follower"] as Texture2D, "Followers")
+		_wrap_stat_label(top_bar, _faith_label, UI_TEXTURES["icon_faith"] as Texture2D, "Faith")
+		_wrap_stat_label(top_bar, _followers_per_second_label, UI_TEXTURES["icon_follower"] as Texture2D, "FollowersPerSecond")
+		_wrap_stat_label(top_bar, _cult_power_label, UI_TEXTURES["icon_cult_power"] as Texture2D, "CultPower")
+
+	var upgrade_panel: Control = get_node_or_null("UpgradePanel") as Control
+	if upgrade_panel != null:
+		_ensure_panel_background("UpgradePanelBackground", upgrade_panel, UI_TEXTURES["panel_upgrade"] as Texture2D)
+
+func _get_top_bar() -> HBoxContainer:
+	if _followers_label == null:
+		return null
+	return _followers_label.get_parent() as HBoxContainer
+
+func _ensure_panel_background(node_name: String, target: Control, texture: Texture2D) -> void:
+	if target == null or texture == null:
+		return
+
+	var background: TextureRect = get_node_or_null(node_name) as TextureRect
+	if background == null:
+		background = TextureRect.new()
+		background.name = node_name
+		add_child(background)
+
+	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	background.texture = texture
+	background.stretch_mode = TextureRect.STRETCH_SCALE
+	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	background.anchor_left = target.anchor_left
+	background.anchor_top = target.anchor_top
+	background.anchor_right = target.anchor_right
+	background.anchor_bottom = target.anchor_bottom
+	background.offset_left = target.offset_left - 8.0
+	background.offset_top = target.offset_top - 8.0
+	background.offset_right = target.offset_right + 8.0
+	background.offset_bottom = target.offset_bottom + 8.0
+	background.z_index = target.z_index - 1
+
+	var target_index: int = target.get_index()
+	if background.get_index() >= target_index:
+		move_child(background, target_index)
+
+func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Texture2D, row_name: String) -> void:
+	if top_bar == null or label == null or icon_texture == null:
+		return
+	if label.get_parent() != top_bar:
+		return
+
+	var row: PanelContainer = PanelContainer.new()
+	row.name = "StatRow_%s" % row_name
+	row.custom_minimum_size = Vector2(210.0, 36.0)
+
+	var row_style: StyleBoxTexture = StyleBoxTexture.new()
+	row_style.texture = UI_TEXTURES["label_bg"] as Texture2D
+	row_style.set_texture_margin_all(8.0)
+	row.add_theme_stylebox_override("panel", row_style)
+
+	var content: HBoxContainer = HBoxContainer.new()
+	content.theme_override_constants.separation = 8
+	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(content)
+
+	var icon: TextureRect = TextureRect.new()
+	icon.texture = icon_texture
+	icon.custom_minimum_size = Vector2(22.0, 22.0)
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+	content.add_child(icon)
+
+	var original_index: int = label.get_index()
+	top_bar.remove_child(label)
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content.add_child(label)
+
+	top_bar.add_child(row)
+	top_bar.move_child(row, original_index)
 
 func _refresh_labels() -> void:
 	if _game_manager == null:
@@ -142,26 +235,41 @@ func _tween_alpha(node: CanvasItem, target_alpha: float, duration: float):
 	await tween.finished
 
 func _show_center_message(text: String) -> void:
+	var popup: Panel = Panel.new()
+	popup.anchor_left = 0.5
+	popup.anchor_top = 0.5
+	popup.anchor_right = 0.5
+	popup.anchor_bottom = 0.5
+	popup.offset_left = -280.0
+	popup.offset_top = -32.0
+	popup.offset_right = 280.0
+	popup.offset_bottom = 32.0
+	popup.modulate = Color(1.0, 1.0, 1.0, 0.0)
+
+	var panel_style: StyleBoxTexture = StyleBoxTexture.new()
+	panel_style.texture = UI_TEXTURES["panel_popup"] as Texture2D
+	panel_style.set_texture_margin_all(10.0)
+	popup.add_theme_stylebox_override("panel", panel_style)
+
 	var label: Label = Label.new()
 	label.text = text
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.anchor_left = 0.5
-	label.anchor_top = 0.5
-	label.anchor_right = 0.5
-	label.anchor_bottom = 0.5
-	label.offset_left = -260.0
-	label.offset_top = -24.0
-	label.offset_right = 260.0
-	label.offset_bottom = 24.0
-	label.modulate = Color(1.0, 0.95, 0.65, 0.0)
-	add_child(label)
+	label.anchor_right = 1.0
+	label.anchor_bottom = 1.0
+	label.offset_left = 18.0
+	label.offset_top = 10.0
+	label.offset_right = -18.0
+	label.offset_bottom = -10.0
+	label.modulate = Color(1.0, 0.95, 0.65, 1.0)
+	popup.add_child(label)
+	add_child(popup)
 
 	var tween: Tween = create_tween()
-	tween.tween_property(label, "modulate:a", 1.0, 0.2)
+	tween.tween_property(popup, "modulate:a", 1.0, 0.2)
 	tween.tween_interval(0.9)
-	tween.tween_property(label, "modulate:a", 0.0, 0.4)
-	tween.finished.connect(label.queue_free)
+	tween.tween_property(popup, "modulate:a", 0.0, 0.4)
+	tween.finished.connect(popup.queue_free)
 
 func _format_int(value: int) -> String:
 	var text: String = str(value)
