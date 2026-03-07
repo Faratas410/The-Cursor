@@ -60,7 +60,7 @@ func _fit_background_to_viewport() -> void:
 	if texture_size.x <= 0.0 or texture_size.y <= 0.0:
 		return
 
-	var view_size: Vector2 = get_viewport_rect().size
+	var view_size: Vector2 = get_viewport().get_visible_rect().size
 	_background.position = Vector2.ZERO
 	_background.scale = Vector2(view_size.x / texture_size.x, view_size.y / texture_size.y)
 
