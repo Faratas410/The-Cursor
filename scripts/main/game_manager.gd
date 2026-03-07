@@ -35,7 +35,7 @@ signal upgrade_phase_opened()
 @warning_ignore("unused_signal")
 signal upgrade_phase_closed()
 
-const UPGRADE_TREE_DEFS: Array[Dictionary] = [
+static var UPGRADE_TREE_DEFS: Array[Dictionary] = [
 	{
 		"id": "awakening", "name": "Awakening", "description": "The first spark of devotion.",
 		"cost": 0.0, "branch": "root", "tier": 0, "dependencies": PackedStringArray(),

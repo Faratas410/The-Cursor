@@ -219,7 +219,7 @@ const NODE_POSITIONS: Dictionary = {
 	"they_can_see_you": Vector2(590.0, 1370.0)
 }
 
-const DEPENDENCY_EDGES: Array[PackedStringArray] = [
+static var DEPENDENCY_EDGES: Array[PackedStringArray] = [
 	PackedStringArray(["awakening", "magnetic_presence"]),
 	PackedStringArray(["awakening", "faster_conversion"]),
 	PackedStringArray(["awakening", "faith_amplifier"]),
@@ -625,10 +625,10 @@ func _on_node_hover_started(upgrade_id: String, screen_position: Vector2) -> voi
 		if not deps.is_empty():
 			lines.append("Requires: %s" % _format_dependency_names(deps))
 
-	_tooltip_label.text = lines.join("\n")
+	_tooltip_label.text = "\n".join(lines)
 	_tooltip_panel.visible = true
 
-	var local_pos: Vector2 = to_local(screen_position + Vector2(12.0, 10.0))
+	var local_pos: Vector2 = screen_position + Vector2(12.0, 10.0)
 	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
 	var max_x: float = viewport_size.x - _tooltip_panel.size.x - 12.0
 	var max_y: float = viewport_size.y - _tooltip_panel.size.y - 12.0
@@ -641,7 +641,7 @@ func _format_dependency_names(dependencies: PackedStringArray) -> String:
 	var display_names: PackedStringArray = PackedStringArray()
 	for dependency_id: String in dependencies:
 		display_names.append(_display_name_for_id(dependency_id))
-	return display_names.join(", ")
+	return ", ".join(display_names)
 
 func _display_name_for_id(upgrade_id: String) -> String:
 	if UPGRADE_COPY_BY_ID.has(upgrade_id):
