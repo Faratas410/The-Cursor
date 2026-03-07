@@ -54,6 +54,7 @@ class Upgrade:
 		if not is_tiered():
 			cost *= cost_multiplier
 
+@warning_ignore("unused_signal")
 signal upgrade_purchased(upgrade: Dictionary)
 
 static var BUTTON_TEXTURES: Dictionary = {
@@ -210,3 +211,7 @@ func _refresh_button_states() -> void:
 
 func play_upgrade_sound() -> void:
 	pass
+
+
+
+

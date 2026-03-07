@@ -1,15 +1,25 @@
 extends Node
 class_name GameManager
 
+@warning_ignore("unused_signal")
 signal npc_converted()
+@warning_ignore("unused_signal")
 signal upgrade_purchased(upgrade: Dictionary)
+@warning_ignore("unused_signal")
 signal dimension_changed(level: int)
+@warning_ignore("unused_signal")
 signal divinity_level_changed(level: int)
+@warning_ignore("unused_signal")
 signal divine_pulse_requested(position: Vector2)
+@warning_ignore("unused_signal")
 signal world_message_requested(message: String)
+@warning_ignore("unused_signal")
 signal world_transformed()
+@warning_ignore("unused_signal")
 signal final_sequence_started()
+@warning_ignore("unused_signal")
 signal final_sequence_finished()
+@warning_ignore("unused_signal")
 signal state_changed()
 
 var followers: int = 0
@@ -168,4 +178,5 @@ func finish_final_sequence() -> void:
 
 func get_playtime_seconds() -> int:
 	var elapsed_msec: int = Time.get_ticks_msec() - _session_start_msec
-	return max(0, int(elapsed_msec / 1000))
+	return max(0, elapsed_msec // 1000)
+

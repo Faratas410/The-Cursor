@@ -159,7 +159,7 @@ func _get_final_circle_target() -> Vector2:
 
 	var count: int = max(1, followers.size())
 	var angle: float = (TAU * float(index)) / float(count)
-	var radius: float = 120.0 + (float(index / 20) * 18.0)
+	var radius: float = 120.0 + (float(index // 20) * 18.0)
 	return _cursor.global_position + Vector2.RIGHT.rotated(angle) * radius
 
 func _update_state_from_cursor() -> void:

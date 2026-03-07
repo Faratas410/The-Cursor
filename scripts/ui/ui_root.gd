@@ -107,7 +107,7 @@ func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Textur
 	row.add_theme_stylebox_override("panel", row_style)
 
 	var content: HBoxContainer = HBoxContainer.new()
-	content.theme_override_constants.separation = 8
+	content.add_theme_constant_override("separation", 8)
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(content)
 
