@@ -163,6 +163,10 @@ func _refresh_phase_ui() -> void:
 	if _upgrade_panel != null and show_upgrade:
 		move_child(_upgrade_panel, get_child_count() - 1)
 
+	var top_bar: HBoxContainer = _get_top_bar()
+	if top_bar != null:
+		top_bar.modulate = Color(1.0, 1.0, 1.0, 0.74 if show_upgrade else 1.0)
+
 func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return

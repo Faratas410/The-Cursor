@@ -189,10 +189,10 @@ const ICON_ROLE_BY_ID: Dictionary = {
 	"they_can_see_you": "final"
 }
 
-const LAYOUT_SCALE: float = 0.52
-const BASE_NODE_SIZE: Vector2 = Vector2(160.0, 90.0)
-const ROOT_NODE_SIZE: Vector2 = Vector2(200.0, 110.0)
-const FINAL_NODE_SIZE: Vector2 = Vector2(220.0, 120.0)
+const LAYOUT_SCALE: float = 0.38
+const BASE_NODE_SIZE: Vector2 = Vector2(140.0, 72.0)
+const ROOT_NODE_SIZE: Vector2 = Vector2(170.0, 84.0)
+const FINAL_NODE_SIZE: Vector2 = Vector2(190.0, 92.0)
 
 const NODE_POSITIONS: Dictionary = {
 	"awakening": Vector2(600.0, 20.0),
@@ -258,6 +258,7 @@ var _run_summary_panel: Panel
 var _run_followers_label: Label
 var _run_faith_label: Label
 var _continue_button: Button
+var _tooltip_default_position: Vector2 = Vector2.ZERO
 
 var _nodes_by_id: Dictionary = {}
 var _defs_by_id: Dictionary = {}
@@ -288,7 +289,7 @@ func _build_ui() -> void:
 	_dark_overlay.anchor_bottom = 1.0
 	_dark_overlay.texture = UI_TEXTURES["overlay_dark"] as Texture2D
 	_dark_overlay.stretch_mode = TextureRect.STRETCH_SCALE
-	_dark_overlay.modulate = Color(1.0, 1.0, 1.0, 0.82)
+	_dark_overlay.modulate = Color(1.0, 1.0, 1.0, 0.5)
 	_dark_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_dark_overlay)
 
@@ -299,9 +300,9 @@ func _build_ui() -> void:
 	_tree_root.anchor_right = 0.5
 	_tree_root.anchor_bottom = 0.0
 	_tree_root.offset_left = -420.0
-	_tree_root.offset_top = 86.0
+	_tree_root.offset_top = 95.0
 	_tree_root.offset_right = 420.0
-	_tree_root.offset_bottom = 860.0
+	_tree_root.offset_bottom = 735.0
 	_tree_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_tree_root)
 
@@ -335,10 +336,10 @@ func _build_ui() -> void:
 
 	_run_summary_panel = Panel.new()
 	_run_summary_panel.name = "RunSummaryPanel"
-	_run_summary_panel.offset_left = 24.0
-	_run_summary_panel.offset_top = 80.0
-	_run_summary_panel.offset_right = 296.0
-	_run_summary_panel.offset_bottom = 198.0
+	_run_summary_panel.offset_left = 60.0
+	_run_summary_panel.offset_top = 95.0
+	_run_summary_panel.offset_right = 310.0
+	_run_summary_panel.offset_bottom = 215.0
 	var summary_style: StyleBoxTexture = StyleBoxTexture.new()
 	summary_style.texture = UI_TEXTURES["panel_main"] as Texture2D
 	summary_style.set_texture_margin_all(10.0)
@@ -364,14 +365,14 @@ func _build_ui() -> void:
 
 	_continue_button = Button.new()
 	_continue_button.name = "ContinueButton"
-	_continue_button.anchor_left = 0.5
-	_continue_button.anchor_top = 1.0
-	_continue_button.anchor_right = 0.5
-	_continue_button.anchor_bottom = 1.0
-	_continue_button.offset_left = -110.0
-	_continue_button.offset_top = -60.0
-	_continue_button.offset_right = 110.0
-	_continue_button.offset_bottom = -18.0
+	_continue_button.anchor_left = 0.0
+	_continue_button.anchor_top = 0.0
+	_continue_button.anchor_right = 0.0
+	_continue_button.anchor_bottom = 0.0
+	_continue_button.offset_left = 0.0
+	_continue_button.offset_top = 0.0
+	_continue_button.offset_right = 240.0
+	_continue_button.offset_bottom = 56.0
 	_continue_button.text = "CONTINUE CULT"
 	_apply_continue_button_visual(_continue_button)
 	_continue_button.pressed.connect(_on_continue_pressed)
@@ -397,6 +398,39 @@ func _build_ui() -> void:
 	_tooltip_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_tooltip_panel.add_child(_tooltip_label)
 
+func _apply_layout() -> void:
+	if _tree_root == null or _run_summary_panel == null or _continue_button == null:
+		return
+
+	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
+	var panel_size: Vector2 = Vector2(780.0, 640.0)
+	var panel_pos: Vector2 = Vector2((viewport_size.x - panel_size.x) * 0.5, 95.0)
+	if panel_pos.y + panel_size.y > viewport_size.y - 120.0:
+		panel_pos.y = max(70.0, viewport_size.y - panel_size.y - 120.0)
+
+	_tree_root.position = panel_pos
+	_tree_root.size = panel_size
+
+	var summary_size: Vector2 = Vector2(250.0, 120.0)
+	var summary_pos: Vector2 = Vector2(max(20.0, panel_pos.x - summary_size.x - 20.0), panel_pos.y)
+	_run_summary_panel.position = summary_pos
+	_run_summary_panel.size = summary_size
+
+	var continue_size: Vector2 = Vector2(240.0, 58.0)
+	_continue_button.position = Vector2(
+		panel_pos.x + (panel_size.x - continue_size.x) * 0.5,
+		panel_pos.y + panel_size.y + 18.0
+	)
+	_continue_button.size = continue_size
+
+	var tooltip_size: Vector2 = Vector2(220.0, 160.0)
+	_tooltip_panel.size = tooltip_size
+	_tooltip_default_position = Vector2(panel_pos.x + panel_size.x + 14.0, panel_pos.y)
+	if _tooltip_default_position.x + tooltip_size.x > viewport_size.x - 12.0:
+		_tooltip_default_position = Vector2(summary_pos.x, summary_pos.y + summary_size.y + 12.0)
+
+	if _continue_button.position.y + continue_size.y > viewport_size.y - 8.0:
+		_continue_button.position.y = viewport_size.y - continue_size.y - 8.0
 func _build_summary_row(parent: VBoxContainer) -> Label:
 	var container: PanelContainer = PanelContainer.new()
 	var style: StyleBoxTexture = StyleBoxTexture.new()
@@ -482,14 +516,14 @@ func _build_tree_nodes() -> void:
 
 func _scaled_position(upgrade_id: String) -> Vector2:
 	var raw: Vector2 = NODE_POSITIONS.get(upgrade_id, Vector2.ZERO) as Vector2
-	return raw * LAYOUT_SCALE + Vector2(22.0, 14.0)
+	return raw * LAYOUT_SCALE + Vector2(118.0, 10.0)
 
 func _node_size_for(upgrade_id: String) -> Vector2:
 	if upgrade_id == "awakening":
-		return ROOT_NODE_SIZE * LAYOUT_SCALE
+		return ROOT_NODE_SIZE
 	if upgrade_id == "they_can_see_you":
-		return FINAL_NODE_SIZE * LAYOUT_SCALE
-	return BASE_NODE_SIZE * LAYOUT_SCALE
+		return FINAL_NODE_SIZE
+	return BASE_NODE_SIZE
 
 func _node_center(upgrade_id: String) -> Vector2:
 	if not _nodes_by_id.has(upgrade_id):
@@ -567,11 +601,11 @@ func _rebuild_connections() -> void:
 
 		var is_active: bool = _is_edge_active(to_id)
 		var line: Line2D = Line2D.new()
-		line.width = 8.0
+		line.width = 2.2
 		line.antialiased = true
 		line.texture_mode = Line2D.LINE_TEXTURE_TILE
 		line.texture = (UI_TEXTURES["connector_active"] if is_active else UI_TEXTURES["connector_line"]) as Texture2D
-		line.default_color = Color(1.0, 1.0, 1.0, 0.78 if is_active else 0.45)
+		line.default_color = Color(1.0, 1.0, 1.0, 0.42 if is_active else 0.22)
 		line.add_point(_node_center(from_id))
 		line.add_point(_node_center(to_id))
 		_connection_layer.add_child(line)
@@ -628,13 +662,12 @@ func _on_node_hover_started(upgrade_id: String, screen_position: Vector2) -> voi
 	_tooltip_label.text = "\n".join(lines)
 	_tooltip_panel.visible = true
 
-	var local_pos: Vector2 = screen_position + Vector2(12.0, 10.0)
 	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
 	var max_x: float = viewport_size.x - _tooltip_panel.size.x - 12.0
 	var max_y: float = viewport_size.y - _tooltip_panel.size.y - 12.0
 	_tooltip_panel.position = Vector2(
-		clamp(local_pos.x, 12.0, max_x),
-		clamp(local_pos.y, 12.0, max_y)
+		clamp(_tooltip_default_position.x, 12.0, max_x),
+		clamp(_tooltip_default_position.y, 12.0, max_y)
 	)
 
 func _format_dependency_names(dependencies: PackedStringArray) -> String:
