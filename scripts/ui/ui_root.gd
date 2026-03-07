@@ -3,18 +3,34 @@ extends CanvasLayer
 @export var game_manager_path: NodePath
 @export var followers_label_path: NodePath
 @export var faith_label_path: NodePath
+@export var followers_per_second_label_path: NodePath
+@export var cult_power_label_path: NodePath
 
 var _game_manager: GameManager
 var _followers_label: Label
 var _faith_label: Label
+var _followers_per_second_label: Label
+var _cult_power_label: Label
+var _cult_moment_shown: bool = false
+var _final_sequence_running: bool = false
+
+const DIVINE_PULSE_SCENE: PackedScene = preload("res://scenes/effects/divine_pulse.tscn")
+const END_SCREEN_SCENE: PackedScene = preload("res://scenes/ui/end_screen.tscn")
 
 func _ready() -> void:
 	_game_manager = get_node_or_null(game_manager_path) as GameManager
 	_followers_label = get_node_or_null(followers_label_path) as Label
 	_faith_label = get_node_or_null(faith_label_path) as Label
+	_followers_per_second_label = get_node_or_null(followers_per_second_label_path) as Label
+	_cult_power_label = get_node_or_null(cult_power_label_path) as Label
 
 	if _game_manager != null:
 		_game_manager.state_changed.connect(_refresh_labels)
+		_game_manager.divinity_level_changed.connect(_on_divinity_level_changed)
+		_game_manager.divine_pulse_requested.connect(_on_divine_pulse_requested)
+		_game_manager.world_message_requested.connect(_on_world_message_requested)
+		_game_manager.final_sequence_started.connect(_on_final_sequence_started)
+
 	_refresh_labels()
 
 func _refresh_labels() -> void:
@@ -24,6 +40,128 @@ func _refresh_labels() -> void:
 		_followers_label.text = "Followers: %s / 1,000,000" % _format_int(_game_manager.followers)
 	if _faith_label != null:
 		_faith_label.text = "Faith: %.1f" % _game_manager.faith
+	if _followers_per_second_label != null:
+		var followers_per_second: float = float(_game_manager.followers) * _game_manager.faith_per_follower
+		_followers_per_second_label.text = "Followers/sec: %.2f" % followers_per_second
+	if _cult_power_label != null:
+		_cult_power_label.text = "Cult Power: %s" % _format_int(_game_manager.cult_power)
+
+func _on_divinity_level_changed(level: int) -> void:
+	if level == 3 and not _cult_moment_shown:
+		_cult_moment_shown = true
+		_show_center_message("THEY CAN SEE YOU")
+
+func _on_world_message_requested(message: String) -> void:
+	_show_center_message(message)
+
+func _on_divine_pulse_requested(position: Vector2) -> void:
+	if DIVINE_PULSE_SCENE == null:
+		return
+	var pulse: DivinePulse = DIVINE_PULSE_SCENE.instantiate() as DivinePulse
+	if pulse == null:
+		return
+	add_child(pulse)
+	pulse.show_pulse(position)
+
+func _on_final_sequence_started() -> void:
+	if _final_sequence_running:
+		return
+	_final_sequence_running = true
+	await _run_final_sequence()
+
+func _run_final_sequence() -> void:
+	_show_center_message("THEY FOLLOWED YOU")
+	await get_tree().create_timer(2.0).timeout
+
+	_show_center_message("BECAUSE YOU MOVED")
+	await get_tree().create_timer(1.9).timeout
+
+	_show_center_message("BUT NOW YOU STOP.")
+	if _game_manager != null:
+		_game_manager.lock_cursor()
+	get_tree().call_group("followers", "perform_kneel")
+	await get_tree().create_timer(1.8).timeout
+
+	var fade_overlay: ColorRect = _create_overlay(Color.WHITE)
+	await _tween_alpha(fade_overlay, 1.0, 1.8)
+
+	var title: Label = Label.new()
+	title.text = "THE CURSOR"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	title.anchor_left = 0.5
+	title.anchor_top = 0.5
+	title.anchor_right = 0.5
+	title.anchor_bottom = 0.5
+	title.offset_left = -240.0
+	title.offset_top = -28.0
+	title.offset_right = 240.0
+	title.offset_bottom = 28.0
+	title.modulate = Color(0.05, 0.05, 0.05, 1.0)
+	add_child(title)
+	await get_tree().create_timer(1.8).timeout
+
+	title.queue_free()
+	fade_overlay.color = Color.BLACK
+	fade_overlay.modulate.a = 0.0
+	await _tween_alpha(fade_overlay, 1.0, 1.8)
+	await get_tree().create_timer(0.2).timeout
+
+	_show_end_screen()
+	if _game_manager != null:
+		_game_manager.finish_final_sequence()
+
+func _show_end_screen() -> void:
+	if END_SCREEN_SCENE == null:
+		return
+
+	var end_screen: EndScreen = END_SCREEN_SCENE.instantiate() as EndScreen
+	if end_screen == null:
+		return
+
+	add_child(end_screen)
+	if _game_manager != null:
+		end_screen.set_results(_game_manager.followers, _game_manager.get_playtime_seconds())
+
+func _create_overlay(color: Color) -> ColorRect:
+	var overlay: ColorRect = ColorRect.new()
+	overlay.anchor_right = 1.0
+	overlay.anchor_bottom = 1.0
+	overlay.offset_left = 0.0
+	overlay.offset_top = 0.0
+	overlay.offset_right = 0.0
+	overlay.offset_bottom = 0.0
+	overlay.color = Color(color.r, color.g, color.b, 1.0)
+	overlay.modulate.a = 0.0
+	add_child(overlay)
+	return overlay
+
+func _tween_alpha(node: CanvasItem, target_alpha: float, duration: float):
+	var tween: Tween = create_tween()
+	tween.tween_property(node, "modulate:a", target_alpha, duration)
+	await tween.finished
+
+func _show_center_message(text: String) -> void:
+	var label: Label = Label.new()
+	label.text = text
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.anchor_left = 0.5
+	label.anchor_top = 0.5
+	label.anchor_right = 0.5
+	label.anchor_bottom = 0.5
+	label.offset_left = -260.0
+	label.offset_top = -24.0
+	label.offset_right = 260.0
+	label.offset_bottom = 24.0
+	label.modulate = Color(1.0, 0.95, 0.65, 0.0)
+	add_child(label)
+
+	var tween: Tween = create_tween()
+	tween.tween_property(label, "modulate:a", 1.0, 0.2)
+	tween.tween_interval(0.9)
+	tween.tween_property(label, "modulate:a", 0.0, 0.4)
+	tween.finished.connect(label.queue_free)
 
 func _format_int(value: int) -> String:
 	var text: String = str(value)

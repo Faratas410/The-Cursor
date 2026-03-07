@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/npc.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/cursor.tscn" id="2"]
@@ -10,6 +10,8 @@
 [ext_resource type="Script" path="res://scripts/systems/progression_system.gd" id="8"]
 [ext_resource type="Script" path="res://scripts/ui/ui_root.gd" id="9"]
 [ext_resource type="Script" path="res://scripts/ui/upgrade_panel.gd" id="10"]
+[ext_resource type="PackedScene" path="res://scenes/prophet.tscn" id="11"]
+[ext_resource type="PackedScene" path="res://scenes/skeptic.tscn" id="12"]
 
 [node name="Main" type="Node2D"]
 
@@ -22,18 +24,22 @@ centered = false
 [node name="NPCContainer" type="Node2D" parent="World"]
 
 [node name="Cursor" parent="." instance=ExtResource("2")]
+game_manager_path = NodePath("../Systems/GameManager")
 
 [node name="UI" type="CanvasLayer" parent="."]
 script = ExtResource("9")
 game_manager_path = NodePath("../Systems/GameManager")
 followers_label_path = NodePath("TopBar/FollowersLabel")
 faith_label_path = NodePath("TopBar/FaithLabel")
+followers_per_second_label_path = NodePath("TopBar/FollowersPerSecondLabel")
+cult_power_label_path = NodePath("TopBar/CultPowerLabel")
 
 [node name="TopBar" type="HBoxContainer" parent="UI"]
 offset_left = 16.0
 offset_top = 16.0
-offset_right = 640.0
+offset_right = 1180.0
 offset_bottom = 50.0
+theme_override_constants/separation = 22
 
 [node name="FollowersLabel" type="Label" parent="UI/TopBar"]
 text = "Followers: 0 / 1,000,000"
@@ -41,11 +47,17 @@ text = "Followers: 0 / 1,000,000"
 [node name="FaithLabel" type="Label" parent="UI/TopBar"]
 text = "Faith: 0.0"
 
+[node name="FollowersPerSecondLabel" type="Label" parent="UI/TopBar"]
+text = "Followers/sec: 0.00"
+
+[node name="CultPowerLabel" type="Label" parent="UI/TopBar"]
+text = "Cult Power: 0"
+
 [node name="UpgradePanel" type="VBoxContainer" parent="UI"]
 offset_left = 16.0
 offset_top = 64.0
-offset_right = 320.0
-offset_bottom = 320.0
+offset_right = 360.0
+offset_bottom = 360.0
 script = ExtResource("10")
 game_manager_path = NodePath("../../Systems/GameManager")
 upgrade_button_scene = ExtResource("3")
@@ -55,11 +67,22 @@ upgrade_button_scene = ExtResource("3")
 [node name="SpawnSystem" type="Node" parent="Systems"]
 script = ExtResource("5")
 npc_scene = ExtResource("1")
+prophet_scene = ExtResource("11")
+skeptic_scene = ExtResource("12")
 npc_container_path = NodePath("../../World/NPCContainer")
 game_manager_path = NodePath("../GameManager")
 
 [node name="SpawnTimer" type="Timer" parent="Systems/SpawnSystem"]
 wait_time = 1.5
+autostart = false
+
+[node name="ProphetTimer" type="Timer" parent="Systems/SpawnSystem"]
+wait_time = 30.0
+autostart = false
+
+[node name="EventTimer" type="Timer" parent="Systems/SpawnSystem"]
+wait_time = 30.0
+one_shot = true
 autostart = false
 
 [node name="ConversionSystem" type="Node" parent="Systems"]
@@ -76,7 +99,7 @@ script = ExtResource("8")
 game_manager_path = NodePath("../GameManager")
 background_path = NodePath("../../World/Background")
 
-[node name="GameManager" type="Node" parent="Systems"]
+[node name="GameManager" type="Node" parent="Systems" groups=["game_manager"]]
 script = ExtResource("4")
 
 [connection signal="npc_detected" from="Cursor" to="Systems/ConversionSystem" method="_on_npc_detected"]

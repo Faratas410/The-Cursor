@@ -11,6 +11,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if _game_manager == null:
 		return
+	if _game_manager.final_sequence_active:
+		return
 
 	if _game_manager.passive_followers_per_second > 0.0:
 		_passive_follower_buffer += _game_manager.passive_followers_per_second * delta

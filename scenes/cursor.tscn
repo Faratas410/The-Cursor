@@ -5,8 +5,9 @@
 [sub_resource type="CircleShape2D" id="1"]
 radius = 16.0
 
-[node name="Cursor" type="Node2D"]
+[node name="Cursor" type="Node2D" groups=["cursor"]]
 script = ExtResource("1")
+attraction_radius = 60.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 modulate = Color(0.980392, 0.909804, 0.447059, 1)
