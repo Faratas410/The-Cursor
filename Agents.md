@@ -402,3 +402,20 @@ Focus on:
 clarity
 maintainability
 simple gameplay loop
+
+---
+
+# 21. PARSE SAFETY RULES
+
+Agents must prevent GDScript parse errors before finishing a patch.
+
+Mandatory checks:
+
+- Never use `//` as an integer division operator in GDScript. `//` starts a comment and can break parsing.
+- For integer division, use explicit conversion such as `int(a / b)`.
+- Use APIs valid for the node base class. Example: in `Node`, use `get_viewport().get_visible_rect()` instead of `get_viewport_rect()`.
+- For theme constants on Controls/Containers, use `add_theme_constant_override(name, value)` (not property chains that may not exist on that class).
+- After editing scripts, run a grep sanity check for parse-risk patterns in `scripts/`:
+  - `rg -n "[A-Za-z0-9_\)\]]\s*//\s*[A-Za-z0-9_\(]" scripts`
+
+If any parse-risk match is found, fix it before concluding.

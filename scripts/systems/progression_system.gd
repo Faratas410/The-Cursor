@@ -134,7 +134,7 @@ func _update_cult_power_effects() -> void:
 	_game_manager.cult_power = _game_manager.followers + (prophet_count * 50)
 
 	var radius_bonus: float = float(_game_manager.cult_power / 5000) * 5.0
-	var cluster_bonus: int = _game_manager.cult_power // 15000
+	var cluster_bonus: int = int(_game_manager.cult_power / 15000)
 	_game_manager.attraction_radius_bonus = min(80.0, radius_bonus)
 	_game_manager.spawn_cluster_bonus = min(4, cluster_bonus)
 
@@ -166,6 +166,7 @@ func _calculate_level(value: int, thresholds: PackedInt32Array) -> int:
 
 func _update_world_transform_background() -> void:
 	apply_dimension_background(5)
+
 
 
 

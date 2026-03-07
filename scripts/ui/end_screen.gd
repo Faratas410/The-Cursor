@@ -27,6 +27,7 @@ func _format_int(value: int) -> String:
 	return out
 
 func _format_time(seconds: int) -> String:
-	var minutes: int = seconds // 60
+	var minutes: int = int(seconds / 60)
 	var rem_seconds: int = seconds % 60
 	return "%02d:%02d" % [minutes, rem_seconds]
+

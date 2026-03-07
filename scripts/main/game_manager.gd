@@ -178,5 +178,6 @@ func finish_final_sequence() -> void:
 
 func get_playtime_seconds() -> int:
 	var elapsed_msec: int = Time.get_ticks_msec() - _session_start_msec
-	return max(0, elapsed_msec // 1000)
+	return max(0, int(elapsed_msec / 1000))
+
 
