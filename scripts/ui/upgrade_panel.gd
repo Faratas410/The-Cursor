@@ -189,35 +189,35 @@ const ICON_ROLE_BY_ID: Dictionary = {
 	"they_can_see_you": "final"
 }
 
-const LAYOUT_SCALE_X: float = 0.38
-const LAYOUT_SCALE_Y: float = 0.15
-const BASE_NODE_SIZE: Vector2 = Vector2(132.0, 68.0)
-const ROOT_NODE_SIZE: Vector2 = Vector2(156.0, 78.0)
-const FINAL_NODE_SIZE: Vector2 = Vector2(176.0, 86.0)
+const LAYOUT_SCALE_X: float = 1.0
+const LAYOUT_SCALE_Y: float = 1.0
+const BASE_NODE_SIZE: Vector2 = Vector2(120.0, 52.0)
+const ROOT_NODE_SIZE: Vector2 = Vector2(140.0, 60.0)
+const FINAL_NODE_SIZE: Vector2 = Vector2(150.0, 64.0)
 
 const NODE_POSITIONS: Dictionary = {
-	"awakening": Vector2(600.0, 20.0),
-	"magnetic_presence": Vector2(180.0, 170.0),
-	"faster_conversion": Vector2(180.0, 300.0),
-	"conversion_pulse": Vector2(180.0, 430.0),
-	"conversion_chain": Vector2(180.0, 560.0),
-	"mass_conversion": Vector2(180.0, 690.0),
-	"faith_amplifier": Vector2(600.0, 170.0),
-	"cult_donations": Vector2(600.0, 300.0),
-	"sacred_economy": Vector2(600.0, 430.0),
-	"divine_harvest": Vector2(600.0, 560.0),
-	"overflow_faith": Vector2(600.0, 690.0),
-	"curious_crowds": Vector2(1020.0, 170.0),
-	"pilgrimage": Vector2(1020.0, 300.0),
-	"wandering_faith": Vector2(1020.0, 430.0),
-	"sacred_ground": Vector2(1020.0, 560.0),
-	"cult_leaders": Vector2(440.0, 820.0),
-	"prophecy": Vector2(600.0, 820.0),
-	"skeptic_hunt": Vector2(760.0, 820.0),
-	"divine_aura": Vector2(600.0, 970.0),
-	"cult_expansion": Vector2(600.0, 1100.0),
-	"worship_wave": Vector2(600.0, 1230.0),
-	"they_can_see_you": Vector2(590.0, 1370.0)
+    "awakening": Vector2(280.0, 12.0),
+    "magnetic_presence": Vector2(20.0, 82.0),
+    "faster_conversion": Vector2(20.0, 142.0),
+    "conversion_pulse": Vector2(20.0, 202.0),
+    "conversion_chain": Vector2(20.0, 262.0),
+    "mass_conversion": Vector2(20.0, 292.0),
+    "faith_amplifier": Vector2(210.0, 82.0),
+    "cult_donations": Vector2(210.0, 142.0),
+    "sacred_economy": Vector2(210.0, 202.0),
+    "divine_harvest": Vector2(210.0, 262.0),
+    "overflow_faith": Vector2(210.0, 292.0),
+    "curious_crowds": Vector2(400.0, 82.0),
+    "pilgrimage": Vector2(400.0, 142.0),
+    "wandering_faith": Vector2(400.0, 202.0),
+    "sacred_ground": Vector2(400.0, 262.0),
+    "cult_leaders": Vector2(550.0, 202.0),
+    "prophecy": Vector2(550.0, 262.0),
+    "skeptic_hunt": Vector2(400.0, 292.0),
+    "divine_aura": Vector2(550.0, 82.0),
+    "cult_expansion": Vector2(550.0, 142.0),
+    "worship_wave": Vector2(550.0, 292.0),
+    "they_can_see_you": Vector2(275.0, 292.0)
 }
 
 static var DEPENDENCY_EDGES: Array[PackedStringArray] = [
@@ -337,9 +337,9 @@ func _build_ui() -> void:
 	tree_title.modulate = Color(0.96, 0.93, 0.84, 0.96)
 	_tree_root.add_child(tree_title)
 
-	_add_branch_label("Conversion", Vector2(90.0, 52.0))
-	_add_branch_label("Faith Flow", Vector2(290.0, 52.0))
-	_add_branch_label("World Control", Vector2(472.0, 52.0))
+	_add_branch_label("Conversion", Vector2(22.0, 58.0))
+	_add_branch_label("Faith Flow", Vector2(212.0, 58.0))
+	_add_branch_label("World Control", Vector2(398.0, 58.0))
 
 	_run_summary_panel = Panel.new()
 	_run_summary_panel.name = "RunSummaryPanel"
@@ -529,7 +529,7 @@ func _build_tree_nodes() -> void:
 
 func _scaled_position(upgrade_id: String) -> Vector2:
 	var raw: Vector2 = NODE_POSITIONS.get(upgrade_id, Vector2.ZERO) as Vector2
-	return Vector2(raw.x * LAYOUT_SCALE_X, raw.y * LAYOUT_SCALE_Y) + Vector2(40.0, 68.0)
+	return Vector2(raw.x * LAYOUT_SCALE_X, raw.y * LAYOUT_SCALE_Y)
 
 func _node_size_for(upgrade_id: String) -> Vector2:
 	if upgrade_id == "awakening":
