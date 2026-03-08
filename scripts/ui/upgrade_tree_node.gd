@@ -35,6 +35,8 @@ var _dependencies: PackedStringArray = PackedStringArray()
 var _visual_state: String = "locked"
 
 func _ready() -> void:
+	_background.stretch_mode = TextureRect.STRETCH_SCALE
+	_pulse_overlay.stretch_mode = TextureRect.STRETCH_SCALE
 	_hit_button.pressed.connect(_on_pressed)
 	_hit_button.mouse_entered.connect(_on_mouse_entered)
 	_hit_button.mouse_exited.connect(_on_mouse_exited)

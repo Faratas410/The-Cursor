@@ -191,9 +191,9 @@ const ICON_ROLE_BY_ID: Dictionary = {
 
 const LAYOUT_SCALE_X: float = 0.38
 const LAYOUT_SCALE_Y: float = 0.15
-const BASE_NODE_SIZE: Vector2 = Vector2(140.0, 72.0)
-const ROOT_NODE_SIZE: Vector2 = Vector2(170.0, 84.0)
-const FINAL_NODE_SIZE: Vector2 = Vector2(190.0, 92.0)
+const BASE_NODE_SIZE: Vector2 = Vector2(132.0, 68.0)
+const ROOT_NODE_SIZE: Vector2 = Vector2(156.0, 78.0)
+const FINAL_NODE_SIZE: Vector2 = Vector2(176.0, 86.0)
 
 const NODE_POSITIONS: Dictionary = {
 	"awakening": Vector2(600.0, 20.0),
@@ -305,7 +305,7 @@ func _build_ui() -> void:
 	_tree_root.offset_top = 0.0
 	_tree_root.offset_right = 0.0
 	_tree_root.offset_bottom = 0.0
-	_tree_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_tree_root.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(_tree_root)
 
 	var tree_background: TextureRect = TextureRect.new()
@@ -328,7 +328,7 @@ func _build_ui() -> void:
 	_node_layer.name = "NodeLayer"
 	_node_layer.anchor_right = 1.0
 	_node_layer.anchor_bottom = 1.0
-	_node_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_node_layer.mouse_filter = Control.MOUSE_FILTER_PASS
 	_tree_root.add_child(_node_layer)
 
 	var tree_title: Label = Label.new()
@@ -410,16 +410,16 @@ func _apply_layout() -> void:
 		return
 
 	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
-	var panel_size: Vector2 = Vector2(720.0, 390.0)
+	var panel_size: Vector2 = Vector2(700.0, 360.0)
 	var panel_pos: Vector2 = Vector2(
 		(viewport_size.x - panel_size.x) * 0.5,
-		max(95.0, (viewport_size.y - panel_size.y) * 0.34)
+		max(92.0, (viewport_size.y - panel_size.y) * 0.36)
 	)
 
 	_tree_root.position = panel_pos
 	_tree_root.size = panel_size
 
-	var summary_size: Vector2 = Vector2(240.0, 120.0)
+	var summary_size: Vector2 = Vector2(230.0, 120.0)
 	var summary_pos: Vector2 = Vector2(max(24.0, panel_pos.x - summary_size.x - 24.0), panel_pos.y)
 	_run_summary_panel.position = summary_pos
 	_run_summary_panel.size = summary_size
@@ -431,7 +431,7 @@ func _apply_layout() -> void:
 	)
 	_continue_button.size = continue_size
 
-	var tooltip_size: Vector2 = Vector2(240.0, 170.0)
+	var tooltip_size: Vector2 = Vector2(235.0, 165.0)
 	_tooltip_panel.size = tooltip_size
 	_tooltip_default_position = Vector2(panel_pos.x + panel_size.x + 24.0, panel_pos.y)
 	if _tooltip_default_position.x + tooltip_size.x > viewport_size.x - 12.0:
