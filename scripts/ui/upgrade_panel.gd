@@ -189,8 +189,8 @@ const ICON_ROLE_BY_ID: Dictionary = {
 	"they_can_see_you": "final"
 }
 
-const LAYOUT_SCALE_X: float = 0.42
-const LAYOUT_SCALE_Y: float = 0.188
+const LAYOUT_SCALE_X: float = 0.38
+const LAYOUT_SCALE_Y: float = 0.15
 const BASE_NODE_SIZE: Vector2 = Vector2(140.0, 72.0)
 const ROOT_NODE_SIZE: Vector2 = Vector2(170.0, 84.0)
 const FINAL_NODE_SIZE: Vector2 = Vector2(190.0, 92.0)
@@ -297,14 +297,14 @@ func _build_ui() -> void:
 
 	_tree_root = Control.new()
 	_tree_root.name = "TreeRoot"
-	_tree_root.anchor_left = 0.5
+	_tree_root.anchor_left = 0.0
 	_tree_root.anchor_top = 0.0
-	_tree_root.anchor_right = 0.5
+	_tree_root.anchor_right = 0.0
 	_tree_root.anchor_bottom = 0.0
-	_tree_root.offset_left = -420.0
-	_tree_root.offset_top = 95.0
-	_tree_root.offset_right = 420.0
-	_tree_root.offset_bottom = 735.0
+	_tree_root.offset_left = 0.0
+	_tree_root.offset_top = 0.0
+	_tree_root.offset_right = 0.0
+	_tree_root.offset_bottom = 0.0
 	_tree_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_tree_root)
 
@@ -529,7 +529,7 @@ func _build_tree_nodes() -> void:
 
 func _scaled_position(upgrade_id: String) -> Vector2:
 	var raw: Vector2 = NODE_POSITIONS.get(upgrade_id, Vector2.ZERO) as Vector2
-	return Vector2(raw.x * LAYOUT_SCALE_X, raw.y * LAYOUT_SCALE_Y) + Vector2(48.0, 38.0)
+	return Vector2(raw.x * LAYOUT_SCALE_X, raw.y * LAYOUT_SCALE_Y) + Vector2(40.0, 68.0)
 
 func _node_size_for(upgrade_id: String) -> Vector2:
 	if upgrade_id == "awakening":
