@@ -13,6 +13,10 @@ attraction_radius = 60.0
 modulate = Color(1, 1, 1, 0.35)
 z_index = -1
 
+[node name="AuraPulse" type="Sprite2D" parent="."]
+modulate = Color(0.92, 0.78, 1, 0.25)
+z_index = -1
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
 modulate = Color(1, 1, 1, 1)
 

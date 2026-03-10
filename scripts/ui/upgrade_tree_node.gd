@@ -33,18 +33,34 @@ var _short_desc: String = ""
 var _cost: float = 0.0
 var _dependencies: PackedStringArray = PackedStringArray()
 var _visual_state: String = "locked"
+var _hover_tween: Tween
+var _final_aura_tween: Tween
+var _purchase_tween: Tween
+var _is_hovered: bool = false
 
 func _ready() -> void:
 	_background.stretch_mode = TextureRect.STRETCH_SCALE
+	_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_icon.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+	_icon.pivot_offset = _icon.size * 0.5
 	_pulse_overlay.stretch_mode = TextureRect.STRETCH_SCALE
 	_hit_button.pressed.connect(_on_pressed)
 	_hit_button.mouse_entered.connect(_on_mouse_entered)
 	_hit_button.mouse_exited.connect(_on_mouse_exited)
 	_hit_button.focus_entered.connect(_on_mouse_entered)
 	_hit_button.focus_exited.connect(_on_mouse_exited)
+	_background.z_index = 0
+	_lock_overlay.z_index = 1
+	_icon.z_index = 2
+	_name_label.z_index = 2
+	_short_desc_label.z_index = 2
+	_cost_label.z_index = 2
+	_purchased_mark.z_index = 2
+	_pulse_overlay.z_index = 3
 	_pulse_overlay.texture = UPGRADE_PULSE_TEXTURE
 	_pulse_overlay.visible = false
 	_apply_visual_state()
+	_update_final_aura()
 
 func set_upgrade_data(data: Dictionary) -> void:
 	_upgrade_id = String(data.get("id", ""))
@@ -58,10 +74,12 @@ func set_upgrade_data(data: Dictionary) -> void:
 	_short_desc_label.text = _short_desc
 	_cost_label.text = "Cost: %.0f Faith" % _cost
 	_icon.texture = data.get("icon_texture", null) as Texture2D
+	_update_final_aura()
 
 func set_visual_state(state: String) -> void:
 	_visual_state = state
 	_apply_visual_state()
+	_update_final_aura()
 
 func set_selected(is_selected: bool) -> void:
 	if is_selected:
@@ -88,10 +106,18 @@ func get_dependencies() -> PackedStringArray:
 	return _dependencies
 
 func pulse_purchased() -> void:
-	var base_scale: Vector2 = scale
-	var tween: Tween = create_tween()
-	tween.tween_property(self, "scale", base_scale * 1.05, 0.1)
-	tween.tween_property(self, "scale", base_scale, 0.12)
+	if _purchase_tween != null and _purchase_tween.is_running():
+		_purchase_tween.kill()
+
+	_stop_hover_animation()
+	_icon.scale = Vector2.ONE
+	_icon.modulate = Color(1.0, 1.0, 1.0, 1.0)
+	_purchase_tween = create_tween()
+	_purchase_tween.tween_property(_icon, "scale", Vector2(1.15, 1.15), 0.15)
+	_purchase_tween.parallel().tween_property(_icon, "modulate", Color(1.08, 1.05, 1.0, 1.0), 0.15)
+	_purchase_tween.tween_property(_icon, "scale", Vector2.ONE, 0.15)
+	_purchase_tween.parallel().tween_property(_icon, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.15)
+	_purchase_tween.finished.connect(_on_purchase_pulse_finished)
 
 	_pulse_overlay.modulate = Color(1.0, 1.0, 1.0, 0.0)
 	_pulse_overlay.visible = true
@@ -106,6 +132,7 @@ func flash_invalid() -> void:
 	tween.tween_property(self, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.12)
 
 func _apply_visual_state() -> void:
+	_icon.modulate = Color(1.0, 1.0, 1.0, 1.0)
 	var available_texture: Texture2D = _get_base_available_texture()
 	var hover_texture: Texture2D = NODE_TEXTURES["hover"] as Texture2D
 	var locked_texture: Texture2D = NODE_TEXTURES["locked"] as Texture2D
@@ -156,7 +183,53 @@ func _on_pressed() -> void:
 	node_pressed.emit(_upgrade_id)
 
 func _on_mouse_entered() -> void:
+	_is_hovered = true
+	_start_hover_animation()
 	node_hover_started.emit(_upgrade_id, get_global_rect().end)
 
 func _on_mouse_exited() -> void:
+	_is_hovered = false
+	_stop_hover_animation()
 	node_hover_ended.emit()
+
+func _start_hover_animation() -> void:
+	if _hover_tween != null and _hover_tween.is_running():
+		return
+	if _icon == null:
+		return
+	_icon.scale = Vector2.ONE
+	_hover_tween = create_tween()
+	_hover_tween.set_loops()
+	_hover_tween.tween_property(_icon, "scale", Vector2(1.05, 1.05), 0.6)
+	_hover_tween.tween_property(_icon, "scale", Vector2.ONE, 0.6)
+
+func _stop_hover_animation() -> void:
+	if _hover_tween != null and _hover_tween.is_running():
+		_hover_tween.kill()
+	_hover_tween = null
+	if _icon != null:
+		_icon.scale = Vector2.ONE
+
+func _update_final_aura() -> void:
+	var should_run: bool = _upgrade_id == "they_can_see_you"
+	if not should_run:
+		_stop_final_aura()
+		return
+	if _final_aura_tween != null and _final_aura_tween.is_running():
+		return
+	_icon.modulate = Color(1.0, 1.0, 1.0, 1.0)
+	_final_aura_tween = create_tween()
+	_final_aura_tween.set_loops()
+	_final_aura_tween.tween_property(_icon, "modulate", Color(1.1, 1.05, 1.0, 1.0), 0.75)
+	_final_aura_tween.tween_property(_icon, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.75)
+
+func _stop_final_aura() -> void:
+	if _final_aura_tween != null and _final_aura_tween.is_running():
+		_final_aura_tween.kill()
+	_final_aura_tween = null
+	if _icon != null:
+		_icon.modulate = Color(1.0, 1.0, 1.0, 1.0)
+
+func _on_purchase_pulse_finished() -> void:
+	if _is_hovered:
+		_start_hover_animation()

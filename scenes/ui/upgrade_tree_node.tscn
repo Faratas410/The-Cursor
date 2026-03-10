@@ -13,35 +13,35 @@ mouse_filter = 2
 stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="."]
-offset_left = 8.0
-offset_top = 8.0
-offset_right = 28.0
-offset_bottom = 28.0
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 44.0
+offset_bottom = 44.0
 mouse_filter = 2
 stretch_mode = 5
 expand_mode = 1
 
 [node name="NameLabel" type="Label" parent="."]
-offset_left = 34.0
+offset_left = 48.0
 offset_top = 6.0
 offset_right = 154.0
-offset_bottom = 34.0
+offset_bottom = 26.0
 mouse_filter = 2
 autowrap_mode = 2
 
 [node name="ShortDescLabel" type="Label" parent="."]
-offset_left = 10.0
-offset_top = 34.0
+offset_left = 48.0
+offset_top = 24.0
 offset_right = 154.0
-offset_bottom = 60.0
+offset_bottom = 40.0
 mouse_filter = 2
 autowrap_mode = 2
 
 [node name="CostLabel" type="Label" parent="."]
-offset_left = 10.0
-offset_top = 62.0
+offset_left = 48.0
+offset_top = 38.0
 offset_right = 154.0
-offset_bottom = 84.0
+offset_bottom = 52.0
 mouse_filter = 2
 
 [node name="PurchasedMark" type="Label" parent="."]
@@ -58,7 +58,7 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-color = Color(0, 0, 0, 0.3)
+color = Color(0, 0, 0, 0.22)
 
 [node name="PulseOverlay" type="TextureRect" parent="."]
 anchor_right = 1.0

@@ -164,29 +164,29 @@ const UPGRADE_COPY_BY_ID: Dictionary = {
 	}
 }
 
-const ICON_ROLE_BY_ID: Dictionary = {
-	"awakening": "cult",
-	"magnetic_presence": "conversion",
-	"faster_conversion": "conversion",
-	"conversion_pulse": "conversion",
-	"conversion_chain": "conversion",
-	"mass_conversion": "conversion",
-	"faith_amplifier": "faith",
-	"cult_donations": "faith",
-	"sacred_economy": "faith",
-	"divine_harvest": "faith",
-	"overflow_faith": "faith",
-	"curious_crowds": "spawn",
-	"pilgrimage": "spawn",
-	"wandering_faith": "spawn",
-	"sacred_ground": "spawn",
-	"cult_leaders": "cult",
-	"prophecy": "cult",
-	"skeptic_hunt": "cult",
-	"divine_aura": "aura_ui",
-	"cult_expansion": "final",
-	"worship_wave": "final",
-	"they_can_see_you": "final"
+const UPGRADE_ICON_KEY_BY_ID: Dictionary = {
+	"awakening": "divine_favor",
+	"magnetic_presence": "cult_influence",
+	"faster_conversion": "conversion_speed",
+	"conversion_pulse": "dark_ritual",
+	"conversion_chain": "conversion_chain",
+	"mass_conversion": "mass_conversion",
+	"faith_amplifier": "faith_multiplier",
+	"cult_donations": "faith_multiplier",
+	"sacred_economy": "cult_growth",
+	"divine_harvest": "forbidden_knowledge",
+	"overflow_faith": "corruption_power",
+	"curious_crowds": "cult_growth",
+	"pilgrimage": "cult_influence",
+	"wandering_faith": "corruption_power",
+	"sacred_ground": "dark_ritual",
+	"cult_leaders": "cult_dominion",
+	"prophecy": "divine_favor",
+	"skeptic_hunt": "corruption_power",
+	"divine_aura": "cult_influence",
+	"cult_expansion": "cult_growth",
+	"worship_wave": "ritual_mastery",
+	"they_can_see_you": "cult_dominion"
 }
 
 const LAYOUT_SCALE_X: float = 1.0
@@ -596,10 +596,13 @@ func _apply_display_copy(definition: Dictionary) -> Dictionary:
 	return patched
 
 func _icon_texture_for_upgrade(upgrade_id: String) -> Texture2D:
-	var role: String = String(ICON_ROLE_BY_ID.get(upgrade_id, "cult"))
-	if ICON_TEXTURES.has(role):
-		return ICON_TEXTURES[role] as Texture2D
-	return ICON_TEXTURES["cult"] as Texture2D
+	var icon_key: String = String(UPGRADE_ICON_KEY_BY_ID.get(upgrade_id, "cult_dominion"))
+	var registry_icon: Texture2D = IconRegistry.get_upgrade_icon(icon_key)
+	if registry_icon != null:
+		return registry_icon
+	if ICON_TEXTURES.has("cult"):
+		return ICON_TEXTURES["cult"] as Texture2D
+	return null
 
 func _rebuild_connections() -> void:
 	for child: Node in _connection_layer.get_children():
@@ -711,3 +714,5 @@ func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return
 	_game_manager.continue_from_upgrade()
+
+
