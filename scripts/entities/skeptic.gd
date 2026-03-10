@@ -131,7 +131,7 @@ func _pick_new_direction() -> void:
 	_direction_timer = _rng.randf_range(0.8, 1.8)
 
 func _bounce_at_edges() -> void:
-	var view_size: Vector2 = get_viewport_rect().size
+	var view_size: Vector2 = get_viewport().get_visible_rect().size
 	var bounced: bool = false
 
 	if global_position.x < 0.0:
@@ -155,5 +155,6 @@ func _bounce_at_edges() -> void:
 	if bounced:
 		_direction = _direction.normalized()
 		_direction_timer = _rng.randf_range(0.6, 1.2)
+
 
 

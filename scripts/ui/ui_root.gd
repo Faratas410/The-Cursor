@@ -7,6 +7,7 @@ extends CanvasLayer
 @export var cult_power_label_path: NodePath
 @export var run_timer_label_path: NodePath
 @export var upgrade_panel_path: NodePath
+@export var enable_runtime_debug_overlay: bool = true
 
 var _game_manager: GameManager
 var _followers_label: Label
@@ -15,6 +16,9 @@ var _followers_per_second_label: Label
 var _cult_power_label: Label
 var _run_timer_label: Label
 var _upgrade_panel: Control
+var _cursor: CursorEntity
+var _debug_panel: PanelContainer
+var _debug_label: Label
 
 var _cult_moment_shown: bool = false
 var _final_sequence_running: bool = false
@@ -47,8 +51,10 @@ func _ready() -> void:
 	_cult_power_label = get_node_or_null(cult_power_label_path) as Label
 	_run_timer_label = get_node_or_null(run_timer_label_path) as Label
 	_upgrade_panel = get_node_or_null(upgrade_panel_path) as Control
+	_cursor = get_tree().get_first_node_in_group("cursor") as CursorEntity
 
 	_setup_ui_visuals()
+	_setup_debug_overlay()
 
 	if _game_manager != null:
 		_game_manager.state_changed.connect(_on_state_changed)
@@ -58,6 +64,9 @@ func _ready() -> void:
 		_game_manager.final_sequence_started.connect(_on_final_sequence_started)
 
 	_on_state_changed()
+
+func _process(_delta: float) -> void:
+	_refresh_debug_overlay()
 
 func _setup_ui_visuals() -> void:
 	var top_bar: HBoxContainer = _get_top_bar()
@@ -376,6 +385,67 @@ func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Textur
 	top_bar.add_child(row)
 	top_bar.move_child(row, original_index)
 
+func _setup_debug_overlay() -> void:
+	if not enable_runtime_debug_overlay:
+		return
+	_debug_panel = PanelContainer.new()
+	_debug_panel.name = "RuntimeDebugOverlay"
+	_debug_panel.anchor_left = 0.0
+	_debug_panel.anchor_top = 1.0
+	_debug_panel.anchor_right = 0.0
+	_debug_panel.anchor_bottom = 1.0
+	_debug_panel.offset_left = 12.0
+	_debug_panel.offset_top = -116.0
+	_debug_panel.offset_right = 292.0
+	_debug_panel.offset_bottom = -12.0
+	_debug_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	var style: StyleBoxFlat = StyleBoxFlat.new()
+	style.bg_color = Color(0.05, 0.05, 0.08, 0.72)
+	style.border_color = Color(0.75, 0.67, 0.34, 0.8)
+	style.set_border_width_all(1)
+	style.corner_radius_top_left = 6
+	style.corner_radius_top_right = 6
+	style.corner_radius_bottom_left = 6
+	style.corner_radius_bottom_right = 6
+	_debug_panel.add_theme_stylebox_override("panel", style)
+
+	_debug_label = Label.new()
+	_debug_label.name = "RuntimeDebugLabel"
+	_debug_label.offset_left = 10.0
+	_debug_label.offset_top = 8.0
+	_debug_label.offset_right = -10.0
+	_debug_label.offset_bottom = -8.0
+	_debug_label.anchor_right = 1.0
+	_debug_label.anchor_bottom = 1.0
+	_debug_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_debug_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_debug_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	_debug_label.text = "Momentum: -\nPressure: -\nInfluence Radius: -"
+	_debug_panel.add_child(_debug_label)
+	add_child(_debug_panel)
+
+func _refresh_debug_overlay() -> void:
+	if not enable_runtime_debug_overlay:
+		if _debug_panel != null:
+			_debug_panel.visible = false
+		return
+	if _debug_panel == null or _debug_label == null:
+		return
+	if _cursor == null:
+		_cursor = get_tree().get_first_node_in_group("cursor") as CursorEntity
+	if _cursor == null:
+		_debug_label.text = "Momentum: -\nPressure: -\nInfluence Radius: -"
+		return
+
+	_debug_panel.visible = true
+	_debug_label.text = "Momentum: %.1f / %.1f\nPressure: %.1f / %.1f\nInfluence Radius: %.1f" % [
+		_cursor.cult_momentum,
+		CursorEntity.MOMENTUM_MAX,
+		_cursor.cult_pressure,
+		CursorEntity.PRESSURE_MAX,
+		_cursor.influence_radius,
+	]
 func _format_run_time(seconds: float) -> String:
 	return "%.1fs" % max(0.0, seconds)
 
@@ -389,3 +459,8 @@ func _format_int(value: int) -> String:
 		if count % 3 == 0 and i > 0:
 			out = "," + out
 	return out
+
+
+
+
+

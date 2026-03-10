@@ -665,7 +665,7 @@ func _on_node_hover_started(upgrade_id: String, screen_position: Vector2) -> voi
 	if _game_manager != null:
 		state = _game_manager.get_upgrade_display_state(upgrade_id)
 
-	var lines: PackedStringArray = PackedStringArray()
+	var lines: Array[String] = []
 	lines.append(title)
 	lines.append(tooltip_desc)
 	if state == "purchased":
@@ -689,7 +689,7 @@ func _on_node_hover_started(upgrade_id: String, screen_position: Vector2) -> voi
 	)
 
 func _format_dependency_names(dependencies: PackedStringArray) -> String:
-	var display_names: PackedStringArray = PackedStringArray()
+	var display_names: Array[String] = []
 	for dependency_id: String in dependencies:
 		display_names.append(_display_name_for_id(dependency_id))
 	return ", ".join(display_names)
@@ -714,5 +714,7 @@ func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return
 	_game_manager.continue_from_upgrade()
+
+
 
 
