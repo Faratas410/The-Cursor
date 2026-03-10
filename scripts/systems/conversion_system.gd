@@ -141,7 +141,7 @@ func _can_add_active_follower() -> bool:
 
 func _generate_follow_slot() -> Dictionary:
 	var follower_count: int = get_tree().get_nodes_in_group("followers").size()
-	var ring_index: int = int(follower_count / 10)
+	var ring_index: int = int(float(follower_count) / 10.0)
 	var ring_distance: float = 46.0 + (float(ring_index) * 18.0)
 	var angle: float = _rng.randf() * TAU
 	return {"angle": angle, "distance": ring_distance}
@@ -218,6 +218,7 @@ func _find_nearest_wild_npc(origin: Vector2, radius: float) -> NPC:
 
 func play_convert_sound() -> void:
 	pass
+
 
 
 

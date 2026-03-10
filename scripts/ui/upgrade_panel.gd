@@ -9,6 +9,9 @@ static var UI_TEXTURES: Dictionary = {
 	"panel_main": preload("res://assets/ui/panels/panel_main.png"),
 	"panel_upgrade": preload("res://assets/ui/panels/panel_upgrade.png"),
 	"panel_popup": preload("res://assets/ui/panels/panel_popup.png"),
+	"panel_main_9slice": preload("res://assets/ui/panels/panel_main_9slice.png"),
+	"panel_card_9slice": preload("res://assets/ui/panels/panel_card_9slice.png"),
+	"panel_tooltip_9slice": preload("res://assets/ui/panels/panel_tooltip_9slice.png"),
 	"overlay_dark": preload("res://assets/ui/overlays/ui_dark_overlay.png"),
 	"tooltip_panel": preload("res://assets/ui/tooltips/tooltip_panel.png"),
 	"tooltip_label_bg": preload("res://assets/ui/tooltips/label_bg.png"),
@@ -251,6 +254,7 @@ static var DEPENDENCY_EDGES: Array[PackedStringArray] = [
 var _game_manager: GameManager
 var _dark_overlay: TextureRect
 var _tree_root: Control
+var _main_panel_frame: Panel
 var _connection_layer: Control
 var _node_layer: Control
 var _tooltip_panel: Panel
@@ -308,34 +312,44 @@ func _build_ui() -> void:
 	_tree_root.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(_tree_root)
 
-	var tree_background: TextureRect = TextureRect.new()
-	tree_background.name = "TreeBackground"
-	tree_background.anchor_right = 1.0
-	tree_background.anchor_bottom = 1.0
-	tree_background.texture = UI_TEXTURES["panel_upgrade"] as Texture2D
-	tree_background.stretch_mode = TextureRect.STRETCH_SCALE
-	tree_background.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_tree_root.add_child(tree_background)
+	_main_panel_frame = Panel.new()
+	_main_panel_frame.name = "MainPanelFrame"
+	_main_panel_frame.anchor_right = 1.0
+	_main_panel_frame.anchor_bottom = 1.0
+	_main_panel_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_main_panel_frame.clip_contents = true
+	var main_panel_style: StyleBoxTexture = StyleBoxTexture.new()
+	main_panel_style.texture = UI_TEXTURES["panel_main_9slice"] as Texture2D
+	main_panel_style.texture_margin_left = 28.0
+	main_panel_style.texture_margin_top = 28.0
+	main_panel_style.texture_margin_right = 28.0
+	main_panel_style.texture_margin_bottom = 28.0
+	main_panel_style.content_margin_left = 18.0
+	main_panel_style.content_margin_top = 14.0
+	main_panel_style.content_margin_right = 18.0
+	main_panel_style.content_margin_bottom = 14.0
+	_main_panel_frame.add_theme_stylebox_override("panel", main_panel_style)
+	_tree_root.add_child(_main_panel_frame)
 
 	_connection_layer = Control.new()
 	_connection_layer.name = "ConnectionLayer"
 	_connection_layer.anchor_right = 1.0
 	_connection_layer.anchor_bottom = 1.0
 	_connection_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_tree_root.add_child(_connection_layer)
+	_main_panel_frame.add_child(_connection_layer)
 
 	_node_layer = Control.new()
 	_node_layer.name = "NodeLayer"
 	_node_layer.anchor_right = 1.0
 	_node_layer.anchor_bottom = 1.0
 	_node_layer.mouse_filter = Control.MOUSE_FILTER_PASS
-	_tree_root.add_child(_node_layer)
+	_main_panel_frame.add_child(_node_layer)
 
 	var tree_title: Label = Label.new()
 	tree_title.text = "UPGRADE TREE"
 	tree_title.position = Vector2(316.0, 10.0)
 	tree_title.modulate = Color(0.96, 0.93, 0.84, 0.96)
-	_tree_root.add_child(tree_title)
+	_main_panel_frame.add_child(tree_title)
 
 	_add_branch_label("Conversion", Vector2(22.0, 58.0))
 	_add_branch_label("Faith Flow", Vector2(212.0, 58.0))
@@ -348,8 +362,15 @@ func _build_ui() -> void:
 	_run_summary_panel.offset_right = 310.0
 	_run_summary_panel.offset_bottom = 215.0
 	var summary_style: StyleBoxTexture = StyleBoxTexture.new()
-	summary_style.texture = UI_TEXTURES["panel_main"] as Texture2D
-	summary_style.set_texture_margin_all(10.0)
+	summary_style.texture = UI_TEXTURES["panel_tooltip_9slice"] as Texture2D
+	summary_style.texture_margin_left = 16.0
+	summary_style.texture_margin_top = 16.0
+	summary_style.texture_margin_right = 16.0
+	summary_style.texture_margin_bottom = 16.0
+	summary_style.content_margin_left = 10.0
+	summary_style.content_margin_top = 8.0
+	summary_style.content_margin_right = 10.0
+	summary_style.content_margin_bottom = 8.0
 	_run_summary_panel.add_theme_stylebox_override("panel", summary_style)
 	add_child(_run_summary_panel)
 
@@ -390,8 +411,15 @@ func _build_ui() -> void:
 	_tooltip_panel.visible = false
 	_tooltip_panel.size = Vector2(280.0, 136.0)
 	var tooltip_style: StyleBoxTexture = StyleBoxTexture.new()
-	tooltip_style.texture = UI_TEXTURES["tooltip_panel"] as Texture2D
-	tooltip_style.set_texture_margin_all(10.0)
+	tooltip_style.texture = UI_TEXTURES["panel_tooltip_9slice"] as Texture2D
+	tooltip_style.texture_margin_left = 16.0
+	tooltip_style.texture_margin_top = 16.0
+	tooltip_style.texture_margin_right = 16.0
+	tooltip_style.texture_margin_bottom = 16.0
+	tooltip_style.content_margin_left = 10.0
+	tooltip_style.content_margin_top = 8.0
+	tooltip_style.content_margin_right = 10.0
+	tooltip_style.content_margin_bottom = 8.0
 	_tooltip_panel.add_theme_stylebox_override("panel", tooltip_style)
 	add_child(_tooltip_panel)
 
@@ -447,8 +475,15 @@ func _notification(what: int) -> void:
 func _build_summary_row(parent: VBoxContainer) -> Label:
 	var container: PanelContainer = PanelContainer.new()
 	var style: StyleBoxTexture = StyleBoxTexture.new()
-	style.texture = UI_TEXTURES["tooltip_label_bg"] as Texture2D
-	style.set_texture_margin_all(6.0)
+	style.texture = UI_TEXTURES["panel_card_9slice"] as Texture2D
+	style.texture_margin_left = 18.0
+	style.texture_margin_top = 18.0
+	style.texture_margin_right = 18.0
+	style.texture_margin_bottom = 18.0
+	style.content_margin_left = 8.0
+	style.content_margin_top = 4.0
+	style.content_margin_right = 8.0
+	style.content_margin_bottom = 4.0
 	container.add_theme_stylebox_override("panel", style)
 	container.custom_minimum_size = Vector2(0.0, 26.0)
 	parent.add_child(container)
@@ -491,7 +526,7 @@ func _add_branch_label(text_value: String, local_position: Vector2) -> void:
 	label.text = text_value
 	label.position = local_position
 	label.modulate = Color(0.88, 0.88, 0.9, 0.85)
-	_tree_root.add_child(label)
+	_main_panel_frame.add_child(label)
 
 func _build_tree_nodes() -> void:
 	_nodes_by_id.clear()
@@ -652,7 +687,7 @@ func _on_upgrade_node_pressed(upgrade_id: String) -> void:
 		if node_control != null:
 			node_control.flash_invalid()
 
-func _on_node_hover_started(upgrade_id: String, screen_position: Vector2) -> void:
+func _on_node_hover_started(upgrade_id: String, _screen_position: Vector2) -> void:
 	if not _defs_by_id.has(upgrade_id):
 		_hide_tooltip()
 		return
@@ -677,7 +712,12 @@ func _on_node_hover_started(upgrade_id: String, screen_position: Vector2) -> voi
 		if not deps.is_empty():
 			lines.append("Requires: %s" % _format_dependency_names(deps))
 
-	_tooltip_label.text = "\n".join(lines)
+	var tooltip_text: String = ""
+	for i: int in range(lines.size()):
+		tooltip_text += lines[i]
+		if i < lines.size() - 1:
+			tooltip_text += "\n"
+	_tooltip_label.text = tooltip_text
 	_tooltip_panel.visible = true
 
 	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
@@ -692,7 +732,12 @@ func _format_dependency_names(dependencies: PackedStringArray) -> String:
 	var display_names: Array[String] = []
 	for dependency_id: String in dependencies:
 		display_names.append(_display_name_for_id(dependency_id))
-	return ", ".join(display_names)
+	var out: String = ""
+	for i: int in range(display_names.size()):
+		out += display_names[i]
+		if i < display_names.size() - 1:
+			out += ", "
+	return out
 
 func _display_name_for_id(upgrade_id: String) -> String:
 	if UPGRADE_COPY_BY_ID.has(upgrade_id):
@@ -714,6 +759,19 @@ func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return
 	_game_manager.continue_from_upgrade()
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

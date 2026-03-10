@@ -199,9 +199,7 @@ func _ensure_world_vfx_layer() -> void:
 	var layer: Node2D = Node2D.new()
 	layer.name = "CursorVFXLayer"
 	layer.z_index = -1
-	parent_node.add_child(layer)
-	if owner != null:
-		layer.owner = owner
+	parent_node.call_deferred("add_child", layer)
 	_world_vfx_layer = layer
 
 func _spawn_movement_trail() -> void:
@@ -216,8 +214,6 @@ func _spawn_movement_trail() -> void:
 	trail.scale = Vector2(0.42, 0.42)
 	trail.z_index = -1
 	_world_vfx_layer.add_child(trail)
-	if owner != null:
-		trail.owner = owner
 	var tween: Tween = trail.create_tween()
 	tween.tween_property(trail, "scale", Vector2(0.2, 0.2), 0.3)
 	tween.parallel().tween_property(trail, "modulate:a", 0.0, 0.3)
@@ -235,8 +231,6 @@ func _spawn_conversion_flash(world_position: Vector2, intensity: float = 1.0) ->
 	flash.scale = Vector2(0.8, 0.8) * intensity
 	flash.z_index = 1
 	_world_vfx_layer.add_child(flash)
-	if owner != null:
-		flash.owner = owner
 	var tween: Tween = flash.create_tween()
 	tween.tween_property(flash, "scale", Vector2(1.4, 1.4) * intensity, 0.25)
 	tween.parallel().tween_property(flash, "modulate:a", 0.0, 0.25)
@@ -254,8 +248,6 @@ func _spawn_conversion_ripple(world_position: Vector2, intensity: float = 1.0) -
 	ripple.scale = Vector2.ONE * max(0.75, intensity * 0.92)
 	ripple.z_index = 0
 	_world_vfx_layer.add_child(ripple)
-	if owner != null:
-		ripple.owner = owner
 	var tween: Tween = ripple.create_tween()
 	tween.tween_property(ripple, "scale", Vector2(2.5, 2.5) * intensity, 0.4)
 	tween.parallel().tween_property(ripple, "modulate:a", 0.0, 0.4)
@@ -332,6 +324,8 @@ func _get_momentum_fx_intensity() -> float:
 func _queue_free_if_valid(node: Node) -> void:
 	if node != null and is_instance_valid(node):
 		node.queue_free()
+
+
 
 
 

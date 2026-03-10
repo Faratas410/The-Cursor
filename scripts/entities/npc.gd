@@ -194,7 +194,7 @@ func _get_final_circle_target() -> Vector2:
 
 	var count: int = max(1, followers.size())
 	var angle: float = (TAU * float(index)) / float(count)
-	var radius: float = 120.0 + (float(int(index / 20)) * 18.0)
+	var radius: float = 120.0 + (floor(float(index) / 20.0) * 18.0)
 	return _cursor.global_position + Vector2.RIGHT.rotated(angle) * radius
 
 func _update_state_from_cursor() -> void:
@@ -282,7 +282,7 @@ func _get_procession_target() -> Vector2:
 	var spacing_back: float = 18.0
 	var spacing_side: float = 10.0
 	var side_sign: float = -1.0 if row % 2 == 0 else 1.0
-	var side_step: float = float((row + 1) / 2)
+	var side_step: float = floor(float(row + 1) / 2.0)
 	var offset: Vector2 = behind * (28.0 + float(row) * spacing_back) + lateral * side_sign * side_step * spacing_side
 	return _cursor.global_position + offset
 
@@ -576,9 +576,7 @@ func _ensure_conversion_vfx_layer() -> Node2D:
 	var layer: Node2D = Node2D.new()
 	layer.name = "ConversionVFXLayer"
 	layer.z_index = -1
-	parent_node.add_child(layer)
-	if owner != null:
-		layer.owner = owner
+	parent_node.call_deferred("add_child", layer)
 	return layer
 
 func _spawn_conversion_fx(
@@ -603,8 +601,6 @@ func _spawn_conversion_fx(
 	fx.modulate = Color(base_color.r, base_color.g, base_color.b, start_alpha)
 	fx.z_index = 0
 	vfx_layer.add_child(fx)
-	if owner != null:
-		fx.owner = owner
 	var tween: Tween = fx.create_tween()
 	tween.tween_property(fx, "scale", end_scale, duration)
 	tween.parallel().tween_property(fx, "rotation", end_rotation, duration)
@@ -646,6 +642,8 @@ func _bounce_at_edges() -> void:
 	if did_bounce:
 		_direction = _direction.normalized()
 		_direction_timer = _rng.randf_range(0.6, 1.2)
+
+
 
 
 
