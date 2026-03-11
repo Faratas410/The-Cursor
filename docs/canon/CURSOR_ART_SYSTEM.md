@@ -582,3 +582,28 @@ lacks shading
 → regenerate.
 
 The game uses sprites, not icons.
+
+---
+
+# 19. Visual References
+
+The following reference sprites define the intended visual style.
+
+They must be used as guidance for all asset generation.
+
+docs/art/reference/cursor_reference.png
+docs/art/reference/prophet_reference.png
+docs/art/reference/cultist_reference.png
+docs/art/reference/skeptic_reference.png
+docs/art/reference/civilian_reference.png
+docs/art/reference/ui_panel_reference.png
+docs/art/reference/environment_reference.png
+
+Generated assets must visually resemble these references.
+
+Exact copying is not required, but the style language must match:
+
+- outline thickness
+- shading style
+- silhouette proportions
+- color palette
