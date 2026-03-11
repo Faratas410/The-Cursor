@@ -1,4 +1,4 @@
-﻿# CURSOR — ASSET LIST (DRAFT)
+# CURSOR � ASSET LIST (DRAFT)
 
 This document defines the draft canonical asset inventory for THE CURSOR.
 
@@ -35,7 +35,15 @@ Variant policy:
 
 ## 2. Characters
 
-Suggested folder: `assets/characters/`
+Canonical root: `assets/sprites/characters/`
+
+Subfolders:
+
+- `assets/sprites/characters/civilians/`
+- `assets/sprites/characters/skeptics/`
+- `assets/sprites/characters/cultists/`
+- `assets/sprites/characters/prophets/`
+- `assets/sprites/characters/` (shared utility only)
 
 ### 2.1 Civilians
 
@@ -87,7 +95,7 @@ Suggested folder: `assets/characters/`
 
 ## 3. Cursor System
 
-Suggested folder: `assets/cursor/`
+Canonical root: `assets/sprites/cursor/`
 
 ### 3.1 Core Cursor Progression
 
@@ -229,11 +237,11 @@ Suggested folder: `assets/ui/`
 
 ### 6.1 Panels
 
+Canonical root: `assets/ui/panels/`
+
 - `panel_main.png`
 - `panel_upgrade.png`
 - `panel_popup.png`
-- `panel_card.png`
-- `panel_tooltip.png`
 - `panel_main_9slice.png`
 - `panel_card_9slice.png`
 - `panel_tooltip_9slice.png`
@@ -282,11 +290,10 @@ Suggested folder: `assets/ui/`
 
 ## 7. VFX
 
-Suggested folders:
+Canonical roots:
 
-- `assets/vfx/cursor/`
-- `assets/vfx/conversion/`
-- `assets/ui/effects/`
+- runtime VFX: `assets/vfx/`
+- UI-only decorative effects: `assets/ui/effects/`
 
 ### 7.1 Conversion Effects
 
@@ -358,4 +365,5 @@ PATCH RESULT
 Art canon harmonized.
 Asset generation protocol integrated.
 No gameplay systems modified.
+
 
