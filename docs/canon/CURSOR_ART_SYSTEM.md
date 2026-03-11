@@ -416,3 +416,169 @@ Codex can safely generate new assets using a consistent visual grammar.
 No runtime code affected.
 
 No gameplay systems modified.
+
+---
+
+# 18. Visual Style Technical Rules
+
+This section defines the concrete technical rules that ensure assets match the intended cult-cartoon aesthetic.
+
+These rules exist to guide automated asset generation.
+
+---
+
+## 18.1 Outline Rules
+
+All characters and props must use a visible outline.
+
+Outline characteristics:
+
+color: very dark purple or near black  
+thickness: clearly visible at gameplay scale  
+style: smooth and rounded  
+
+The outline is essential to preserve silhouette readability.
+
+Assets without visible outlines are invalid.
+
+---
+
+## 18.2 Two-Tone Shading Rule
+
+Assets must never be fully flat.
+
+Every object must contain at least:
+
+base color  
+shadow color  
+
+The shadow tone is slightly darker and used for:
+
+lower areas  
+inside folds  
+under objects  
+
+Realistic shading is forbidden, but minimal cartoon shading is required.
+
+---
+
+## 18.3 Silhouette Fill Ratio
+
+Sprites must occupy most of their canvas.
+
+Characters should fill approximately:
+
+70–80% of the sprite height.
+
+Sprites that occupy too little space appear like icons and break readability.
+
+---
+
+## 18.4 Character Readability
+
+Characters must remain readable when zoomed out.
+
+Key elements that must remain visible:
+
+cultist glowing eyes  
+civilian head shape  
+skeptic crossed arms silhouette  
+prophet staff or aura  
+
+If a character loses readability at small size → regenerate.
+
+---
+
+## 18.5 Head Proportion Emphasis
+
+Characters follow exaggerated cartoon proportions.
+
+Recommended ratio:
+
+head ≈ 60%  
+body ≈ 30%  
+legs ≈ 10%
+
+Large heads are required for readability.
+
+---
+
+## 18.6 Color Palette
+
+The visual palette should revolve around these tones.
+
+Primary purple range:
+
+dark purple #2A1A38  
+mid purple #4E2C68  
+light purple #7B4FA1  
+
+Gold accents:
+
+gold dark #B0892C  
+gold light #F0D97A  
+
+Environmental greens:
+
+grass green #7DA65D  
+tree green #3F7A4A  
+
+These values are guidelines and may vary slightly.
+
+---
+
+## 18.7 Eye Visibility Rule
+
+Cultist and prophet eyes must remain visible even at small scale.
+
+Eyes should use bright tones:
+
+yellow  
+white  
+light gold  
+
+This ensures faction readability.
+
+---
+
+## 18.8 Cursor Visual Priority
+
+The cursor represents the primary gameplay entity.
+
+It must remain visually dominant through:
+
+glow  
+contrast  
+symbol complexity  
+
+The cursor must always remain readable even inside large groups of followers.
+
+---
+
+## 18.9 Prop Simplification
+
+Environment props must remain simple and readable.
+
+Trees, houses and fences must:
+
+use rounded shapes  
+avoid excessive detail  
+preserve clear silhouettes  
+
+Props must support gameplay readability and never dominate characters.
+
+---
+
+## 18.10 Anti-Icon Rule
+
+Assets must never resemble UI icons.
+
+If an asset:
+
+contains a single flat color  
+occupies less than half the canvas  
+lacks shading  
+
+→ regenerate.
+
+The game uses sprites, not icons.

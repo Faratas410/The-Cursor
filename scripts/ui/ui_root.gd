@@ -1,4 +1,4 @@
-extends CanvasLayer
+﻿extends CanvasLayer
 
 @export var game_manager_path: NodePath
 @export var followers_label_path: NodePath
@@ -18,7 +18,9 @@ var _run_timer_label: Label
 var _upgrade_panel: Control
 var _cursor: CursorEntity
 var _debug_panel: PanelContainer
-var _debug_label: Label
+var _debug_momentum_label: Label
+var _debug_pressure_label: Label
+var _debug_influence_label: Label
 
 var _cult_moment_shown: bool = false
 var _final_sequence_running: bool = false
@@ -38,9 +40,14 @@ static var UI_TEXTURES: Dictionary = {
 	"panel_upgrade": preload("res://assets/ui/panels/panel_upgrade.png"),
 	"panel_popup": preload("res://assets/ui/panels/panel_popup.png"),
 	"label_bg": preload("res://assets/ui/labels/label_bg.png"),
-	"icon_follower": preload("res://assets/ui/icons/icon_follower.png"),
-	"icon_faith": preload("res://assets/ui/icons/icon_faith.png"),
-	"icon_cult_power": preload("res://assets/ui/icons/icon_cult_power.png")
+	"followers_icon": preload("res://assets/ui/icons/followers_icon.png"),
+	"faith_icon": preload("res://assets/ui/icons/faith_icon.png"),
+	"cult_power_icon": preload("res://assets/ui/icons/cult_power_icon.png"),
+	"conversion_icon": preload("res://assets/ui/icons/conversion_icon.png"),
+	"upgrade_icon": preload("res://assets/ui/icons/upgrade_icon.png"),
+	"momentum_icon": preload("res://assets/ui/icons/momentum_icon.png"),
+	"pressure_icon": preload("res://assets/ui/icons/pressure_icon.png"),
+	"influence_icon": preload("res://assets/ui/icons/influence_icon.png")
 }
 
 func _ready() -> void:
@@ -72,11 +79,11 @@ func _setup_ui_visuals() -> void:
 	var top_bar: HBoxContainer = _get_top_bar()
 	if top_bar != null:
 		_ensure_panel_background("TopBarBackground", top_bar, UI_TEXTURES["panel_main"] as Texture2D)
-		_wrap_stat_label(top_bar, _followers_label, UI_TEXTURES["icon_follower"] as Texture2D, "Followers")
-		_wrap_stat_label(top_bar, _faith_label, UI_TEXTURES["icon_faith"] as Texture2D, "Faith")
-		_wrap_stat_label(top_bar, _followers_per_second_label, UI_TEXTURES["icon_follower"] as Texture2D, "FollowersPerSecond")
-		_wrap_stat_label(top_bar, _cult_power_label, UI_TEXTURES["icon_cult_power"] as Texture2D, "CultPower")
-		_wrap_stat_label(top_bar, _run_timer_label, UI_TEXTURES["icon_faith"] as Texture2D, "RunTimer")
+		_wrap_stat_label(top_bar, _followers_label, UI_TEXTURES["followers_icon"] as Texture2D, "Followers")
+		_wrap_stat_label(top_bar, _faith_label, UI_TEXTURES["faith_icon"] as Texture2D, "Faith")
+		_wrap_stat_label(top_bar, _followers_per_second_label, UI_TEXTURES["conversion_icon"] as Texture2D, "FollowersPerSecond")
+		_wrap_stat_label(top_bar, _cult_power_label, UI_TEXTURES["cult_power_icon"] as Texture2D, "CultPower")
+		_wrap_stat_label(top_bar, _run_timer_label, UI_TEXTURES["upgrade_icon"] as Texture2D, "RunTimer")
 
 
 func _setup_upgrade_overlay() -> void:
@@ -410,19 +417,27 @@ func _setup_debug_overlay() -> void:
 	style.corner_radius_bottom_right = 6
 	_debug_panel.add_theme_stylebox_override("panel", style)
 
-	_debug_label = Label.new()
-	_debug_label.name = "RuntimeDebugLabel"
-	_debug_label.offset_left = 10.0
-	_debug_label.offset_top = 8.0
-	_debug_label.offset_right = -10.0
-	_debug_label.offset_bottom = -8.0
-	_debug_label.anchor_right = 1.0
-	_debug_label.anchor_bottom = 1.0
-	_debug_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_debug_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	_debug_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-	_debug_label.text = "Momentum: -\nPressure: -\nInfluence Radius: -"
-	_debug_panel.add_child(_debug_label)
+	var rows: VBoxContainer = VBoxContainer.new()
+	rows.anchor_right = 1.0
+	rows.anchor_bottom = 1.0
+	rows.offset_left = 10.0
+	rows.offset_top = 8.0
+	rows.offset_right = -10.0
+	rows.offset_bottom = -8.0
+	rows.add_theme_constant_override("separation", 4)
+	_debug_panel.add_child(rows)
+
+	var momentum_row: HBoxContainer = _create_debug_icon_row(UI_TEXTURES["momentum_icon"] as Texture2D, "Momentum: -")
+	_debug_momentum_label = momentum_row.get_node("Value") as Label
+	rows.add_child(momentum_row)
+
+	var pressure_row: HBoxContainer = _create_debug_icon_row(UI_TEXTURES["pressure_icon"] as Texture2D, "Pressure: -")
+	_debug_pressure_label = pressure_row.get_node("Value") as Label
+	rows.add_child(pressure_row)
+
+	var influence_row: HBoxContainer = _create_debug_icon_row(UI_TEXTURES["influence_icon"] as Texture2D, "Influence Radius: -")
+	_debug_influence_label = influence_row.get_node("Value") as Label
+	rows.add_child(influence_row)
 	add_child(_debug_panel)
 
 func _refresh_debug_overlay() -> void:
@@ -430,22 +445,40 @@ func _refresh_debug_overlay() -> void:
 		if _debug_panel != null:
 			_debug_panel.visible = false
 		return
-	if _debug_panel == null or _debug_label == null:
+	if _debug_panel == null or _debug_momentum_label == null or _debug_pressure_label == null or _debug_influence_label == null:
 		return
 	if _cursor == null:
 		_cursor = get_tree().get_first_node_in_group("cursor") as CursorEntity
 	if _cursor == null:
-		_debug_label.text = "Momentum: -\nPressure: -\nInfluence Radius: -"
+		_debug_momentum_label.text = "Momentum: -"
+		_debug_pressure_label.text = "Pressure: -"
+		_debug_influence_label.text = "Influence Radius: -"
 		return
 
 	_debug_panel.visible = true
-	_debug_label.text = "Momentum: %.1f / %.1f\nPressure: %.1f / %.1f\nInfluence Radius: %.1f" % [
-		_cursor.cult_momentum,
-		CursorEntity.MOMENTUM_MAX,
-		_cursor.cult_pressure,
-		CursorEntity.PRESSURE_MAX,
-		_cursor.influence_radius,
-	]
+	_debug_momentum_label.text = "Momentum: %.1f / %.1f" % [_cursor.cult_momentum, CursorEntity.MOMENTUM_MAX]
+	_debug_pressure_label.text = "Pressure: %.1f / %.1f" % [_cursor.cult_pressure, CursorEntity.PRESSURE_MAX]
+	_debug_influence_label.text = "Influence Radius: %.1f" % _cursor.influence_radius
+
+func _create_debug_icon_row(icon_texture: Texture2D, text: String) -> HBoxContainer:
+	var row: HBoxContainer = HBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+
+	var icon: TextureRect = TextureRect.new()
+	icon.texture = icon_texture
+	icon.custom_minimum_size = Vector2(16.0, 16.0)
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+	row.add_child(icon)
+
+	var label: Label = Label.new()
+	label.name = "Value"
+	label.text = text
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(label)
+
+	return row
 func _format_run_time(seconds: float) -> String:
 	return "%.1fs" % max(0.0, seconds)
 
@@ -459,6 +492,8 @@ func _format_int(value: int) -> String:
 		if count % 3 == 0 and i > 0:
 			out = "," + out
 	return out
+
+
 
 
 

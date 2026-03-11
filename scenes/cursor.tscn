@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3]
+﻿[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/entities/cursor.gd" id="1"]
 
@@ -19,6 +19,7 @@ z_index = -1
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 modulate = Color(1, 1, 1, 1)
+scale = Vector2(1.26, 1.26)
 
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 2
@@ -27,3 +28,5 @@ monitoring = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("1")
+
+
