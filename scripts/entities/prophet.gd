@@ -3,7 +3,7 @@ class_name Prophet
 
 static var PROPHET_TEXTURES: Array[Texture2D] = [
 	preload("res://assets/sprites/characters/prophets/prophet_01.png"),
-	preload("res://assets/sprites/characters/prophets/prophet_02.png"),
+	preload("res://assets/sprites/characters/prophets/prophet_01.png"),
 	preload("res://assets/sprites/characters/prophets/prophet_03.png")
 ]
 

@@ -14,7 +14,7 @@ static var NODE_TEXTURES: Dictionary = {
 	"final": preload("res://assets/ui/nodes/upgrade_node_final.png")
 }
 
-const UPGRADE_PULSE_TEXTURE: Texture2D = preload("res://assets/ui/effects/upgrade_pulse.png")
+const UPGRADE_PULSE_TEXTURE: Texture2D = preload("res://assets/ui/effects/divine_pulse.png")
 
 @onready var _background: TextureRect = $Background
 @onready var _icon: TextureRect = $Icon
@@ -233,3 +233,4 @@ func _stop_final_aura() -> void:
 func _on_purchase_pulse_finished() -> void:
 	if _is_hovered:
 		_start_hover_animation()
+

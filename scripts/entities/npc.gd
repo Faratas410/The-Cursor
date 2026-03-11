@@ -18,8 +18,8 @@ static var CULTIST_TEXTURES: Array[Texture2D] = [
 ]
 
 const CONVERSION_GLYPH_TEXTURE: Texture2D = preload("res://assets/vfx/conversion/conversion_glyph.png")
-const CONVERSION_FLASH_TEXTURE: Texture2D = preload("res://assets/vfx/conversion/conversion_flash.png")
-const CONVERSION_SMOKE_TEXTURE: Texture2D = preload("res://assets/vfx/conversion/conversion_smoke.png")
+const CONVERSION_FLASH_TEXTURE: Texture2D = preload("res://assets/ui/effects/divine_pulse.png")
+const CONVERSION_SMOKE_TEXTURE: Texture2D = preload("res://assets/vfx/cursor/cursor_trail.png")
 @export var speed: float = 60.0
 @export var crowd_reaction_radius: float = 120.0
 @export var crowd_reaction_cooldown_min: float = 1.5
@@ -642,6 +642,7 @@ func _bounce_at_edges() -> void:
 	if did_bounce:
 		_direction = _direction.normalized()
 		_direction_timer = _rng.randf_range(0.6, 1.2)
+
 
 
 

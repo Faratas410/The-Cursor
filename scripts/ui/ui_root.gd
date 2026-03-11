@@ -1,4 +1,4 @@
-﻿extends CanvasLayer
+extends CanvasLayer
 
 @export var game_manager_path: NodePath
 @export var followers_label_path: NodePath
@@ -37,7 +37,7 @@ const END_SCREEN_SCENE: PackedScene = preload("res://scenes/ui/end_screen.tscn")
 
 static var UI_TEXTURES: Dictionary = {
 	"panel_main": preload("res://assets/ui/panels/panel_main.png"),
-	"panel_upgrade": preload("res://assets/ui/panels/panel_upgrade.png"),
+	"panel_upgrade": preload("res://assets/ui/panels/panel_main.png"),
 	"panel_popup": preload("res://assets/ui/panels/panel_popup.png"),
 	"label_bg": preload("res://assets/ui/labels/label_bg.png"),
 	"followers_icon": preload("res://assets/ui/icons/followers_icon.png"),
@@ -492,6 +492,7 @@ func _format_int(value: int) -> String:
 		if count % 3 == 0 and i > 0:
 			out = "," + out
 	return out
+
 
 
 

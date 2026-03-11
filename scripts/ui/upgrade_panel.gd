@@ -7,14 +7,14 @@ const UPGRADE_TREE_NODE_SCENE: PackedScene = preload("res://scenes/ui/upgrade_tr
 
 static var UI_TEXTURES: Dictionary = {
 	"panel_main": preload("res://assets/ui/panels/panel_main.png"),
-	"panel_upgrade": preload("res://assets/ui/panels/panel_upgrade.png"),
+	"panel_upgrade": preload("res://assets/ui/panels/panel_main.png"),
 	"panel_popup": preload("res://assets/ui/panels/panel_popup.png"),
-	"panel_main_9slice": preload("res://assets/ui/panels/panel_main_9slice.png"),
-	"panel_card_9slice": preload("res://assets/ui/panels/panel_card_9slice.png"),
+	"panel_main_9slice": preload("res://assets/ui/panels/panel_main.png"),
+	"panel_card_9slice": preload("res://assets/ui/panels/panel_main.png"),
 	"panel_tooltip_9slice": preload("res://assets/ui/panels/panel_tooltip_9slice.png"),
 	"overlay_dark": preload("res://assets/ui/overlays/ui_dark_overlay.png"),
 	"tooltip_panel": preload("res://assets/ui/tooltips/tooltip_panel.png"),
-	"tooltip_label_bg": preload("res://assets/ui/tooltips/label_bg.png"),
+	"tooltip_label_bg": preload("res://assets/ui/labels/label_bg.png"),
 	"continue_idle": preload("res://assets/ui/buttons/btn_continue_idle.png"),
 	"continue_hover": preload("res://assets/ui/buttons/btn_continue_hover.png"),
 	"continue_pressed": preload("res://assets/ui/buttons/btn_continue_pressed.png"),
@@ -28,7 +28,7 @@ static var ICON_TEXTURES: Dictionary = {
 	"spawn": preload("res://assets/ui/icons/icon_spawn.png"),
 	"cult": preload("res://assets/ui/icons/icon_cult.png"),
 	"aura": preload("res://assets/ui/icons/icon_aura.png"),
-	"aura_ui": preload("res://assets/ui/effects/cursor_aura_ui.png"),
+	"aura_ui": preload("res://assets/vfx/cursor/cursor_ripple.png"),
 	"final": preload("res://assets/ui/icons/icon_final.png")
 }
 
@@ -759,6 +759,7 @@ func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return
 	_game_manager.continue_from_upgrade()
+
 
 
 

@@ -20,7 +20,7 @@ static var CURSOR_TEXTURES: Dictionary = {
 
 const CURSOR_AURA_TEXTURE: Texture2D = preload("res://assets/vfx/cursor/cursor_aura.png")
 const CURSOR_TRAIL_TEXTURE: Texture2D = preload("res://assets/vfx/cursor/cursor_trail.png")
-const CURSOR_FLASH_TEXTURE: Texture2D = preload("res://assets/vfx/cursor/cursor_flash.png")
+const CURSOR_FLASH_TEXTURE: Texture2D = preload("res://assets/ui/effects/divine_pulse.png")
 const CURSOR_RIPPLE_TEXTURE: Texture2D = preload("res://assets/vfx/cursor/cursor_ripple.png")
 const MOMENTUM_MAX: float = 10.0
 const MOMENTUM_DECAY_STEP: float = 1.0
@@ -324,6 +324,7 @@ func _get_momentum_fx_intensity() -> float:
 func _queue_free_if_valid(node: Node) -> void:
 	if node != null and is_instance_valid(node):
 		node.queue_free()
+
 
 
 
