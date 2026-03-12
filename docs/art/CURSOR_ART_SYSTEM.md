@@ -1,4 +1,4 @@
-ï»¿# CURSOR â€” ART SYSTEM CANON
+# CURSOR — ART SYSTEM CANON
 
 ## Purpose
 
@@ -6,14 +6,14 @@ This document defines the visual grammar and asset generation rules for **THE CU
 
 Its goals are:
 
-â€¢ ensure consistent art direction  
-â€¢ allow automated asset generation by Codex  
-â€¢ preserve readability for incremental gameplay  
-â€¢ maintain stylistic coherence across the project  
+• ensure consistent art direction  
+• allow automated asset generation by Codex  
+• preserve readability for incremental gameplay  
+• maintain stylistic coherence across the project  
 
 This document is **canonical**.
 
-If any asset conflicts with this document â†’ the asset must be corrected.
+If any asset conflicts with this document ? the asset must be corrected.
 
 ---
 
@@ -73,9 +73,9 @@ Characters follow a **big-head small-body cartoon proportion**.
 
 Base proportions:
 
-head Ëœ 55%  
-body Ëœ 35%  
-legs Ëœ 10%
+head ˜ 55%  
+body ˜ 35%  
+legs ˜ 10%
 
 Silhouettes must remain readable at small scale.
 
@@ -95,6 +95,77 @@ larger robe, staff, mystical elements
 
 ---
 
+# 4. Character Visual Grammar
+
+Character readability is driven first by silhouette, then by color and detail.
+
+Core structure rules:
+
+- head is the primary identity carrier
+- body is a simple supporting mass
+- limbs are simplified and secondary
+- robe mass defines cultist readability
+- hooded face cavity is darker than the robe surface
+
+At gameplay scale, a character must remain recognizable by silhouette alone.
+
+---
+
+## 4.1 Silhouette Priority System
+
+When designing or validating a character, prioritize this hierarchy:
+
+1. head or hood shape
+2. eye glow visibility
+3. robe/body mass
+4. accessories (staff, emblems, ornaments)
+5. limb detail
+
+Lower-priority details must never compromise higher-priority readability.
+
+---
+
+## 4.2 Character Class Differentiation
+
+Classes must be distinguishable at thumbnail scale.
+
+CIVILIAN
+
+- open face
+- visible hair or head
+- simple clothing silhouette
+
+SKEPTIC
+
+- civilian base silhouette
+- defensive posture or crossed-arm cue
+- slightly heavier/darker visual mass than civilian
+
+CULTIST
+
+- dominant hood silhouette
+- dark inner face cavity
+- glowing eyes as focal point
+
+PROPHET
+
+- expanded cultist silhouette
+- ritual ornamentation and layered robes
+- staff and/or aura presence
+
+---
+
+## 4.3 Hood and Face Rules
+
+Rules for cultist and prophet heads:
+
+- hood silhouette must dominate the head shape
+- face area should read as a dark cavity
+- glowing eyes must remain readable at small scale
+- avoid realistic facial anatomy or facial micro-detail
+- hood opening should frame the eyes as the primary focal feature
+
+---
 
 # 4.5 Character Variant Generation
 
@@ -450,7 +521,7 @@ Sprites must occupy most of their canvas.
 
 Characters should fill approximately:
 
-70â€“80% of the sprite height.
+70–80% of the sprite height.
 
 Sprites that occupy too little space appear like icons and break readability.
 
@@ -467,7 +538,7 @@ civilian head shape
 skeptic crossed arms silhouette  
 prophet staff or aura  
 
-If a character loses readability at small size â†’ regenerate.
+If a character loses readability at small size ? regenerate.
 
 ---
 
@@ -477,9 +548,9 @@ Characters follow exaggerated cartoon proportions.
 
 Recommended ratio:
 
-head â‰ˆ 60%  
-body â‰ˆ 30%  
-legs â‰ˆ 10%
+head ˜ 60%  
+body ˜ 30%  
+legs ˜ 10%
 
 Large heads are required for readability.
 
@@ -561,30 +632,65 @@ contains a single flat color
 occupies less than half the canvas  
 lacks shading  
 
-â†’ regenerate.
+? regenerate.
 
 The game uses sprites, not icons.
 
 ---
 
 
-Generated assets must visually match the reference images
-located in:
+## 18.11 Anti-Drift Validation
 
-docs/art/reference/
+Generated character assets are invalid if they drift toward:
+
+- anime proportions
+- realistic anatomy
+- glossy mobile-game chibi styling
+- flat vector icon characters
+- pixel-art character rendering
+
+If drift is detected, regenerate using this canon and official references.
+
+---
+
+## 18.12 Character Silhouette Test
+
+Validation step for every character export:
+
+1. view the sprite in grayscale or as a filled silhouette
+2. remove color-based readability cues
+3. verify class identity remains clear (civilian, skeptic, cultist, prophet)
+
+If class identity is unclear without color detail, regenerate the asset.
+
+---
+
+# 19. Visual References
+
+Generated assets must visually match the reference images located in:
+
+- docs/art/reference/cursor_reference.png
+- docs/art/reference/prophet_reference.png
+- docs/art/reference/cultist_reference.png
+- docs/art/reference/skeptic_reference.png
+- docs/art/reference/civilian_reference.png
+- docs/art/reference/ui_panel_reference.png
+- docs/art/reference/environment_reference.png
 
 The references define:
 
 - outline thickness
 - shading style
 - silhouette proportions
-- palette range
+- color palette range
 
-Assets may vary in design but must remain stylistically consistent.
+Assets may vary in design, but the style language must remain consistent.
 
 PATCH RESULT
 
 Art canon harmonized.
 Asset generation protocol integrated.
 No gameplay systems modified.
+
+
 

@@ -1,4 +1,4 @@
-ï»¿# CURSOR â€” STYLE SHEET
+# CURSOR — STYLE SHEET
 
 This document defines the official visual reference for THE CURSOR.
 
@@ -8,7 +8,7 @@ This file complements:
 
 CURSOR_ART_SYSTEM.md
 
-If an asset conflicts with this sheet â†’ regenerate it.
+If an asset conflicts with this sheet ? regenerate it.
 
 ---
 
@@ -67,15 +67,29 @@ Avoid complex shapes.
 
 ---
 
+## 2.1 Shading and Outline System
+
+Character and prop rendering must follow these constraints:
+
+- thick outer outline for silhouette lock
+- minimal interior lines (only where needed for form separation)
+- two-tone shading only (base + shadow)
+- no painterly gradients
+- no texture noise or gritty surface overlays
+
+At reduced gameplay scale, shape readability has priority over decorative detail.
+
+---
+
 # 3. Character Proportions
 
 Characters use exaggerated proportions.
 
 Recommended ratio:
 
-head â‰ˆ 60%  
-body â‰ˆ 30%  
-legs â‰ˆ 10%
+head ˜ 60%  
+body ˜ 30%  
+legs ˜ 10%
 
 Large heads improve readability.
 
@@ -87,7 +101,7 @@ Characters must fill most of the sprite.
 
 Target:
 
-70â€“80% of sprite height.
+70–80% of sprite height.
 
 Sprites that occupy too little canvas appear like icons.
 
@@ -216,7 +230,7 @@ outline visible
 shadow tone present  
 eyes readable (for characters)
 
-If any condition fails â†’ regenerate.
+If any condition fails ? regenerate.
 
 ---
 
@@ -234,15 +248,41 @@ These must be regenerated.
 
 ---
 
-# 9. Canon Authority
+# 9. Anti-Drift Validation
 
-This document defines the **visual reference style**.
+Reject generated assets that resemble:
 
-If generated assets deviate â†’ they must be corrected.
+- anime-proportioned characters
+- realistic anatomy studies
+- glossy mobile-game chibi style
+- flat vector icon characters
+- pixel-art character systems
+
+If any of these drifts appear, regenerate using the canonical references.
 
 ---
 
-# 10. VFX Style Rules
+# 10. Character Silhouette Test
+
+For every character class (civilian, skeptic, cultist, prophet):
+
+1. convert preview to grayscale or pure silhouette
+2. hide color and material cues
+3. verify class identity remains recognizable
+
+If class identity is unclear, the asset is invalid and must be regenerated.
+
+---
+
+# 11. Canon Authority
+
+This document defines the **visual reference style**.
+
+If generated assets deviate ? they must be corrected.
+
+---
+
+# 12. VFX Style Rules
 
 Visual effects must follow the same cult-cartoon aesthetic.
 
@@ -272,4 +312,5 @@ PATCH RESULT
 Art canon harmonized.
 Asset generation protocol integrated.
 No gameplay systems modified.
+
 

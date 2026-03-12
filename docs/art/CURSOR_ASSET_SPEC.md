@@ -1,4 +1,4 @@
-ï»¿# CURSOR â€” ASSET SPECIFICATION
+# CURSOR — ASSET SPECIFICATION
 
 This document defines the technical specifications for all art assets.
 
@@ -49,11 +49,11 @@ UI panels
 
 All assets MUST:
 
-â€¢ use full alpha transparency  
-â€¢ contain NO background color  
-â€¢ never contain white background pixels  
+• use full alpha transparency  
+• contain NO background color  
+• never contain white background pixels  
 
-If any white pixels exist outside the asset silhouette â†’ asset is invalid.
+If any white pixels exist outside the asset silhouette ? asset is invalid.
 
 ---
 
@@ -69,11 +69,19 @@ Props must not contain large empty areas.
 
 ---
 
+# 4 Character Canvas Occupancy
 
-Characters must occupy approximately 70â€“80% of the sprite height.
+Characters must occupy approximately 70–80% of sprite height.
 
-Sprites that occupy less space reduce gameplay readability
-and must be regenerated.---
+Occupancy constraints:
+
+- silhouettes must not appear tiny inside the frame
+- negative space must remain controlled and intentional
+- avoid excessive empty margins above or beside the silhouette
+
+Sprites that occupy too little canvas reduce gameplay readability and must be regenerated.
+
+---
 
 # 5 Cursor System
 
@@ -165,12 +173,14 @@ No high-saturation neon colors allowed.
 
 Assets must pass these checks:
 
-â€¢ correct resolution  
-â€¢ transparent background  
-â€¢ centered composition  
-â€¢ readable silhouette  
+• correct resolution  
+• transparent background  
+• centered composition  
+• readable silhouette  
+• class readability preserved at gameplay scale  
+• silhouette remains identifiable in grayscale preview  
 
-If an asset fails any rule â†’ regenerate.
+If an asset fails any rule ? regenerate.
 
 ---
 
@@ -184,4 +194,5 @@ PATCH RESULT
 Art canon harmonized.
 Asset generation protocol integrated.
 No gameplay systems modified.
+
 

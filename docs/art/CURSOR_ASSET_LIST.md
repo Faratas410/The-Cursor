@@ -47,6 +47,8 @@ Subfolders:
 
 ### 2.1 Civilians
 
+Guidance: prioritize open-face readability and clear hair/head silhouette.
+
 - `civilian_01.png`
 - `civilian_02.png`
 - `civilian_03.png`
@@ -60,12 +62,16 @@ Subfolders:
 
 ### 2.2 Skeptics
 
+Guidance: retain civilian base but emphasize defensive posture/crossed-arm readability.
+
 - `skeptic_01.png`
 - `skeptic_02.png`
 - `skeptic_03.png`
 - `skeptic_04.png`
 
 ### 2.3 Cultists
+
+Guidance: prioritize dominant hood silhouette, dark face cavity, and glowing-eye focal point.
 
 - `cultist_01.png`
 - `cultist_02.png`
@@ -75,6 +81,8 @@ Subfolders:
 - `cultist_06.png`
 
 ### 2.4 Prophets
+
+Guidance: prioritize ritual silhouette expansion (layered robes, staff/aura, elite cult identity).
 
 - `prophet_01.png`
 - `prophet_02.png`
@@ -365,5 +373,7 @@ PATCH RESULT
 Art canon harmonized.
 Asset generation protocol integrated.
 No gameplay systems modified.
+
+
 
 
