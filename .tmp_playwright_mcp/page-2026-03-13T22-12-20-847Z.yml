@@ -1,0 +1,50 @@
+- <changed> generic [ref=e6]:
+  - generic [ref=e9]:
+    - application [ref=e18]
+    - ref=e19 [unchanged]
+    - generic:
+      - generic:
+        - generic:
+          - region "Comments on canvas":
+            - button "Create new comment"
+    - generic:
+      - region "Left sidebar":
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - ref=e22 [unchanged]
+            - ref=e33 [unchanged]
+            - generic [ref=e50]:
+              - ref=e51 [unchanged]
+              - generic [ref=e63]:
+                - ref=e64 [unchanged]
+                - generic [ref=e71]:
+                  - generic [ref=e75]:
+                    - generic [ref=e77]:
+                      - ref=e81 [unchanged]
+                      - textbox "Page name" [active] [ref=e340]: Page 2
+                    - paragraph [ref=e88]:
+                      - text: 1 free page left.
+                      - generic [ref=e89] [cursor=pointer]: Get unlimited pages & more
+                  - ref=e90 [unchanged]
+              - ref=e93 [unchanged]
+          - ref=e118 [unchanged]
+    - generic:
+      - generic:
+        - region "Right sidebar":
+          - generic [ref=e119]:
+            - generic [ref=e121]:
+              - ref=e123 [unchanged]
+              - generic [ref=e149]:
+                - ref=e151 [unchanged]
+                - button "100%" [ref=e342]:
+                  - text: 100%
+                  - img
+              - ref=e165 [unchanged]
+            - ref=e210 [unchanged]
+  - generic:
+    - generic:
+      - generic:
+        - region "Application toolbar":
+          - toolbar "Editor" [ref=e213]:
+            - ref=e226 [unchanged]
+            - ref=e301 [unchanged]

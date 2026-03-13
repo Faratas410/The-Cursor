@@ -1,0 +1,33 @@
+- <changed> generic [ref=e9]:
+  - application [active] [ref=e18]
+  - ref=e19 [unchanged]
+  - generic:
+    - generic:
+      - generic:
+        - region "Comments on canvas":
+          - button "Create new comment"
+  - generic:
+    - region "Left sidebar":
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - ref=e22 [unchanged]
+          - ref=e33 [unchanged]
+          - generic [ref=e50]:
+            - ref=e51 [unchanged]
+            - generic [ref=e63]:
+              - ref=e64 [unchanged]
+              - generic [ref=e71]:
+                - generic [ref=e75]:
+                  - generic [ref=e77]:
+                    - ref=e81 [unchanged]
+                    - ref=e343 [unchanged]
+                    - button "03 Icons & FX" [ref=e350]:
+                      - generic [ref=e352]: 03 Icons & FX
+                  - ref=e88 [unchanged]
+                - ref=e90 [unchanged]
+            - ref=e93 [unchanged]
+        - ref=e118 [unchanged]
+  - generic:
+    - generic:
+      - region "Right sidebar":
+        - ref=e119 [unchanged]
