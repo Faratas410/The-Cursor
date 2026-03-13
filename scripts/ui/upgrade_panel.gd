@@ -1,4 +1,4 @@
-extends Control
+﻿extends Control
 
 @warning_ignore("unused_signal")
 signal upgrade_purchased(upgrade: Dictionary)
@@ -535,38 +535,42 @@ func _apply_layout() -> void:
 		return
 
 	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
+	var top_safe: float = 86.0
+	var bottom_reserved: float = 230.0
 	var panel_size: Vector2 = Vector2(
 		clamp(viewport_size.x - 90.0, 860.0, 1180.0),
-		clamp(viewport_size.y - 250.0, 420.0, 560.0)
+		clamp(viewport_size.y - (top_safe + bottom_reserved), 360.0, 520.0)
 	)
 	var panel_pos: Vector2 = Vector2(
 		(viewport_size.x - panel_size.x) * 0.5,
-		max(68.0, (viewport_size.y - panel_size.y) * 0.22)
+		top_safe
 	)
 
 	_tree_root.position = panel_pos
 	_tree_root.size = panel_size
 
+	var continue_size: Vector2 = Vector2(240.0, 56.0)
+	_continue_button.position = Vector2(
+		panel_pos.x + (panel_size.x - continue_size.x) * 0.5,
+		viewport_size.y - continue_size.y - 10.0
+	)
+	_continue_button.size = continue_size
+
 	var summary_size: Vector2 = Vector2(300.0, 118.0)
-	var summary_pos: Vector2 = Vector2(panel_pos.x, panel_pos.y + panel_size.y + 10.0)
+	var summary_pos: Vector2 = Vector2(panel_pos.x, panel_pos.y + panel_size.y + 8.0)
+	var summary_max_y: float = _continue_button.position.y - summary_size.y - 8.0
+	summary_pos.y = min(summary_pos.y, summary_max_y)
 	_run_summary_panel.position = summary_pos
 	_run_summary_panel.size = summary_size
 
 	if _sacrifice_panel != null:
 		var sacrifice_size: Vector2 = Vector2(360.0, 156.0)
 		var sacrifice_x: float = panel_pos.x + panel_size.x - sacrifice_size.x
-		var sacrifice_y: float = panel_pos.y + panel_size.y + 10.0
-		if sacrifice_y + sacrifice_size.y > viewport_size.y - 62.0:
-			sacrifice_y = viewport_size.y - sacrifice_size.y - 62.0
+		var sacrifice_y: float = panel_pos.y + panel_size.y + 8.0
+		var sacrifice_max_y: float = _continue_button.position.y - sacrifice_size.y - 8.0
+		sacrifice_y = min(sacrifice_y, sacrifice_max_y)
 		_sacrifice_panel.position = Vector2(sacrifice_x, sacrifice_y)
 		_sacrifice_panel.size = sacrifice_size
-
-	var continue_size: Vector2 = Vector2(240.0, 56.0)
-	_continue_button.position = Vector2(
-		panel_pos.x + (panel_size.x - continue_size.x) * 0.5,
-		viewport_size.y - continue_size.y - 8.0
-	)
-	_continue_button.size = continue_size
 
 	var tooltip_size: Vector2 = Vector2(265.0, 180.0)
 	_tooltip_panel.size = tooltip_size
@@ -959,6 +963,7 @@ func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return
 	_game_manager.continue_from_upgrade()
+
 
 
 

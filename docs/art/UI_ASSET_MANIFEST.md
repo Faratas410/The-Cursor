@@ -24,8 +24,6 @@ This manifest defines canonical intent for the current UI pipeline output.
 | `glow_ring.png` | fx | Soft ritual glow FX | temporary | yes |
 | `sparkle.png` | fx | Sparkle burst FX | temporary | yes |
 | `selection_ring.png` | fx | Selection ring highlight FX | temporary | yes |
-| `panel_ninepatch_presets.tres` | resources | NinePatch patch-margin presets for panel textures | temporary | yes |
-| `texture_button_presets.tres` | resources | Texture mapping presets for `TextureButton` states | temporary | yes |
 
 Notes:
 - Temporary assets are now reference-derived PNG extracts, but still not canonical Figma component exports.

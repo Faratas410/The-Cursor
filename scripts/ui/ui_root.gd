@@ -1,4 +1,4 @@
-extends CanvasLayer
+﻿extends CanvasLayer
 
 @export var game_manager_path: NodePath
 @export var followers_label_path: NodePath
@@ -84,8 +84,9 @@ func _setup_ui_visuals() -> void:
 		top_bar.offset_left = 16.0
 		top_bar.offset_right = -16.0
 		top_bar.clip_contents = true
-		top_bar.add_theme_constant_override("separation", 6)
-		_ensure_panel_background("TopBarBackground", top_bar, UI_TEXTURES["panel_main"] as Texture2D)
+		top_bar.add_theme_constant_override("separation", 4)
+		# Remove stretched top-bar background texture to avoid bright lower fringe.
+		_remove_panel_background("TopBarBackground")
 		_wrap_stat_label(top_bar, _followers_label, UI_TEXTURES["followers_icon"] as Texture2D, "Followers")
 		_wrap_stat_label(top_bar, _faith_label, UI_TEXTURES["faith_icon"] as Texture2D, "Faith")
 		_wrap_stat_label(top_bar, _followers_per_second_label, UI_TEXTURES["conversion_icon"] as Texture2D, "FollowersPerSecond")
@@ -365,6 +366,11 @@ func _ensure_panel_background(node_name: String, target: Control, texture: Textu
 	if background.get_index() >= target_index:
 		move_child(background, target_index)
 
+func _remove_panel_background(node_name: String) -> void:
+	var background: TextureRect = get_node_or_null(node_name) as TextureRect
+	if background != null:
+		background.queue_free()
+
 func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Texture2D, row_name: String) -> void:
 	if top_bar == null or label == null or icon_texture == null:
 		return
@@ -536,6 +542,12 @@ func _format_int(value: int) -> String:
 		if count % 3 == 0 and i > 0:
 			out = "," + out
 	return out
+
+
+
+
+
+
 
 
 

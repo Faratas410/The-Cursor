@@ -24,5 +24,3 @@ Scope: assets produced/added in the current UI asset pipeline pass.
 | `assets/ui/fx/glow_ring.png` | 135x135 | yes | no | derived asset | no |
 | `assets/ui/fx/sparkle.png` | 132x123 | yes | no | derived asset | no |
 | `assets/ui/fx/selection_ring.png` | 140x133 | yes | no | derived asset | no |
-| `assets/ui/resources/panel_ninepatch_presets.tres` | n/a | n/a | n/a | derived asset | no |
-| `assets/ui/resources/texture_button_presets.tres` | n/a | n/a | n/a | derived asset | no |
