@@ -18,11 +18,11 @@ static var UI_TEXTURES: Dictionary = {
 	"continue_idle": preload("res://assets/ui/buttons/btn_continue_idle.png"),
 	"continue_hover": preload("res://assets/ui/buttons/btn_continue_hover.png"),
 	"continue_pressed": preload("res://assets/ui/buttons/btn_continue_pressed.png"),
-	"button_primary": preload("res://assets/ui/buttons/button_primary.png"),
-	"button_secondary": preload("res://assets/ui/buttons/button_secondary.png"),
-	"button_disabled": preload("res://assets/ui/buttons/button_danger.png"),
-	"connector_line": preload("res://assets/ui/connectors/connector_line.png"),
-	"connector_active": preload("res://assets/ui/connectors/connector_highlight.png")
+	"button_primary": preload("res://assets/ui/buttons/btn_upgrade_hover.png"),
+	"button_secondary": preload("res://assets/ui/buttons/btn_upgrade.png"),
+	"button_disabled": preload("res://assets/ui/buttons/btn_upgrade_disabled.png"),
+	"connector_line": preload("res://assets/ui/connectors/tree_connector_line.png"),
+	"connector_active": preload("res://assets/ui/connectors/tree_connector_active.png")
 }
 
 static var ICON_TEXTURES: Dictionary = {
@@ -556,7 +556,7 @@ func _apply_layout() -> void:
 	)
 	_continue_button.size = continue_size
 
-	var summary_size: Vector2 = Vector2(320.0, 132.0)
+	var summary_size: Vector2 = Vector2(300.0, 118.0)
 	var summary_pos: Vector2 = Vector2(panel_pos.x, panel_pos.y + panel_size.y + 8.0)
 	var summary_max_y: float = _continue_button.position.y - summary_size.y - 8.0
 	summary_pos.y = min(summary_pos.y, summary_max_y)
@@ -564,7 +564,7 @@ func _apply_layout() -> void:
 	_run_summary_panel.size = summary_size
 
 	if _sacrifice_panel != null:
-		var sacrifice_size: Vector2 = Vector2(420.0, 208.0)
+		var sacrifice_size: Vector2 = Vector2(360.0, 156.0)
 		var sacrifice_x: float = panel_pos.x + panel_size.x - sacrifice_size.x
 		var sacrifice_y: float = panel_pos.y + panel_size.y + 8.0
 		var sacrifice_max_y: float = _continue_button.position.y - sacrifice_size.y - 8.0
@@ -651,7 +651,7 @@ func _apply_small_button_visual(button: Button, emphasize: bool) -> void:
 	disabled_style.texture = disabled
 	disabled_style.set_texture_margin_all(8.0)
 
-	button.custom_minimum_size = Vector2(184.0, 44.0)
+	button.custom_minimum_size = Vector2(132.0, 34.0)
 	button.add_theme_stylebox_override("normal", normal_style)
 	button.add_theme_stylebox_override("hover", hover_style)
 	button.add_theme_stylebox_override("pressed", pressed_style)
@@ -963,6 +963,7 @@ func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return
 	_game_manager.continue_from_upgrade()
+
 
 
 
