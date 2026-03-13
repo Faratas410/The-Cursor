@@ -1,1 +1,13 @@
-CON
+﻿CON
+
+# Godot cache/editor artifacts
+.godot/
+
+# OS noise
+Desktop.ini
+desktop.ini
+Thumbs.db
+
+# Local temp/tooling artifacts
+.tmp_*
+.tmp_playwright_mcp/

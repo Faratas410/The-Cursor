@@ -380,22 +380,22 @@ func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Textur
 	var min_width: float = 170.0
 	match row_name:
 		"Followers":
-			min_width = 258.0
+			min_width = 340.0
 		"Faith":
-			min_width = 168.0
+			min_width = 190.0
 		"FollowersPerSecond":
-			min_width = 220.0
+			min_width = 210.0
 		"CultPower":
-			min_width = 168.0
+			min_width = 190.0
 		"RunTimer":
-			min_width = 124.0
+			min_width = 146.0
 		_:
 			min_width = 160.0
 
 	var row: PanelContainer = PanelContainer.new()
 	row.name = "StatRow_%s" % row_name
 	row.custom_minimum_size = Vector2(min_width, 34.0)
-	row.size_flags_horizontal = Control.SIZE_FILL
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 	var row_style: StyleBoxTexture = StyleBoxTexture.new()
 	row_style.texture = UI_TEXTURES["label_bg"] as Texture2D
@@ -432,7 +432,7 @@ func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Textur
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.clip_text = true
+	label.clip_text = false
 	content.add_child(label)
 
 	top_bar.add_child(row)
@@ -542,6 +542,8 @@ func _format_int(value: int) -> String:
 		if count % 3 == 0 and i > 0:
 			out = "," + out
 	return out
+
+
 
 
 
