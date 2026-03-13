@@ -1,0 +1,4 @@
+﻿UPDATED assets/props/cult/altar_01.png <= C:\Users\dovig\Downloads\prop_pack_wave1_cult_village\ritual_altar_01.png
+UPDATED assets/props/cult/cult_banner_01.png <= C:\Users\dovig\Downloads\prop_pack_wave1_cult_village\cult_banner_01.png
+UPDATED assets/props/cult/bone_pile_01.png <= C:\Users\dovig\Downloads\prop_pack_wave1_cult_village\bone_pile_01.png
+UPDATED assets/props/cult/candle_cluster_01.png <= C:\Users\dovig\Downloads\prop_pack_wave1_cult_village\candle_cluster_01.png
