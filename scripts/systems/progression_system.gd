@@ -1,15 +1,15 @@
-extends Node
+﻿extends Node
 
 @warning_ignore("unused_signal")
 signal dimension_changed(level: int)
 
 static var BACKGROUND_TEXTURES: Array[Texture2D] = [
-	preload("res://assets/backgrounds/bg_village_topdown.png"),
-	preload("res://assets/backgrounds/bg_town_topdown.png"),
-	preload("res://assets/backgrounds/bg_city_topdown.png"),
-	preload("res://assets/backgrounds/bg_metropolis_topdown.png"),
-	preload("res://assets/backgrounds/bg_planet_topdown.png"),
-	preload("res://assets/backgrounds/bg_cult_world_topdown.png")
+	preload("res://assets/backgrounds/bg_village.png"),
+	preload("res://assets/backgrounds/bg_town.png"),
+	preload("res://assets/backgrounds/bg_city.png"),
+	preload("res://assets/backgrounds/bg_metropolis.png"),
+	preload("res://assets/backgrounds/bg_planet.png"),
+	preload("res://assets/backgrounds/bg_cult_world.png")
 ]
 
 @export var game_manager_path: NodePath
@@ -316,4 +316,5 @@ func _calculate_level(value: int, thresholds: PackedInt32Array) -> int:
 
 func _update_world_transform_background() -> void:
 	apply_dimension_background(5)
+
 

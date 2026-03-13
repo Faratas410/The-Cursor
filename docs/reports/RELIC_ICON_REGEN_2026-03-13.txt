@@ -1,0 +1,11 @@
+﻿Regenerated relic icons: 10
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_bone.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_book.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_candle.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_coin.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_dagger.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_eye.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_halo.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_idol.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_orb.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_skull.png

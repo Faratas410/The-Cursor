@@ -314,6 +314,131 @@ gold highlight: #F0D97A
 
 ---
 
+# 11.1 Ritual Icon System
+
+UI icons, upgrade icons, and relic icons follow a ritual symbol language.
+
+These are not generic UI icons.
+
+They represent cult insignia, sacred relics, and occult artifacts.
+
+Icon categories
+
+Three icon types exist:
+
+HUD icons  
+Upgrade icons  
+Relic icons  
+
+Each category follows different visual rules.
+
+HUD Icons
+
+HUD icons represent gameplay resources.
+
+Examples:
+
+followers  
+faith  
+influence  
+conversion power  
+
+Rules:
+
+• must remain simple  
+• must remain readable  
+• must resemble cult symbols  
+
+Example motifs:
+
+eye  
+halo  
+cult mark  
+ritual glyph  
+
+HUD icons may be symbolic, not physical objects.
+
+Upgrade Icons
+
+Upgrade icons represent ritual powers or cult doctrines.
+
+They must resemble occult sigils, not UI symbols.
+
+Upgrade icons should look like:
+
+• ritual circles  
+• sacred glyphs  
+• cult seals  
+• mystical diagrams  
+
+They should not resemble modern interface icons.
+
+Good examples:
+
+radiating eye sigil  
+crown inside ritual circle  
+cult symbol surrounded by energy  
+
+Bad examples:
+
+progress arrows  
+generic target symbols  
+dashboard-style pictograms  
+
+Relic Icons
+
+Relics represent physical cult artifacts.
+
+They must resemble objects, not symbols.
+
+Examples:
+
+idol statue  
+ritual dagger  
+occult book  
+ceremonial skull  
+sacred candle  
+relic coin  
+
+Relic icons must appear as:
+
+• stylized physical objects  
+• cult artifacts  
+• altar relics  
+
+Relics must never appear as abstract glyphs.
+
+Outline Rules
+
+Icons must still follow the global outline rule:
+
+dark purple outline  
+thick enough to remain visible  
+
+Shading Rules
+
+Icons must follow the two-tone shading rule.
+
+Flat icons are forbidden.
+
+Canvas Occupancy
+
+Icons must fill at least 60% of the canvas.
+
+Tiny silhouettes are invalid.
+
+Anti-UI Rule
+
+Icons must not resemble:
+
+mobile app icons  
+dashboard symbols  
+infographic pictograms  
+modern minimalist logos  
+
+If an icon looks like a generic UI symbol → regenerate.
+
+---
 # 12. UI Component Hierarchy
 
 UI components include:
@@ -607,3 +732,4 @@ Exact copying is not required, but the style language must match:
 - shading style
 - silhouette proportions
 - color palette
+

@@ -240,6 +240,31 @@ Legacy/non-canonical (keep only if explicitly rewired):
 - `pressure_icon.png`
 - `influence_icon.png`
 
+### 6.2.1 UI Icons — Upgrade & Relic
+
+- upgrade_conversion_speed.png
+- upgrade_corruption_power.png
+- upgrade_cult_dominion.png
+- upgrade_cult_growth.png
+- upgrade_cult_influence.png
+- upgrade_dark_ritual.png
+- upgrade_divine_favor.png
+- upgrade_faith_multiplier.png
+- upgrade_forbidden_knowledge.png
+- upgrade_mass_conversion.png
+- upgrade_ritual_mastery.png
+- upgrade_conversion_chain.png
+
+- elic_idol.png
+- elic_orb.png
+- elic_skull.png
+- elic_bone.png
+- elic_book.png
+- elic_candle.png
+- elic_coin.png
+- elic_dagger.png
+- elic_eye.png
+- elic_halo.png
 ### 6.3 Buttons
 
 - `btn_continue_idle.png`
@@ -342,5 +367,6 @@ Rule of use:
 
 - Missing gameplay-critical assets should be added immediately.
 - Optional planned assets can be scheduled in production waves.
+
 
 

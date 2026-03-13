@@ -232,6 +232,8 @@ missing outline
 
 These must be regenerated.
 
+Icons used for upgrades and relics must resemble ritual sigils or cult artifacts rather than modern UI pictograms.
+
 ---
 
 # 9. Canon Authority
@@ -239,3 +241,4 @@ These must be regenerated.
 This document defines the **visual reference style**.
 
 If generated assets deviate → they must be corrected.
+
