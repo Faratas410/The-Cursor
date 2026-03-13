@@ -76,6 +76,7 @@ func _ensure_background_sprite() -> Sprite2D:
 	world.add_child(created)
 	world.move_child(created, 0)
 	return created
+
 func _process(_delta: float) -> void:
 	if _game_manager == null:
 		return

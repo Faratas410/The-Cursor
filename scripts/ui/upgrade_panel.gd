@@ -555,13 +555,12 @@ func _build_tree_nodes() -> void:
 		node_control.custom_minimum_size = node_size
 		node_control.size = node_size
 		node_control.position = _scaled_position(id)
+		_node_layer.add_child(node_control)
 		node_control.set_upgrade_data(_defs_by_id[id] as Dictionary)
 		node_control.node_pressed.connect(_on_upgrade_node_pressed)
 		node_control.node_hover_started.connect(_on_node_hover_started)
 		node_control.node_hover_ended.connect(_on_node_hover_ended)
-		_node_layer.add_child(node_control)
 		_nodes_by_id[id] = node_control
-
 func _scaled_position(upgrade_id: String) -> Vector2:
 	var raw: Vector2 = NODE_POSITIONS.get(upgrade_id, Vector2.ZERO) as Vector2
 	return Vector2(raw.x * LAYOUT_SCALE_X, raw.y * LAYOUT_SCALE_Y)
@@ -715,12 +714,12 @@ func _on_node_hover_started(upgrade_id: String, _screen_position: Vector2) -> vo
 		if not deps.is_empty():
 			lines.append("Requires: %s" % _format_dependency_names(deps))
 
-	var tooltip_text: String = ""
+	var tooltip_body: String = ""
 	for i: int in range(lines.size()):
-		tooltip_text += lines[i]
+		tooltip_body += lines[i]
 		if i < lines.size() - 1:
-			tooltip_text += "\n"
-	_tooltip_label.text = tooltip_text
+			tooltip_body += "\n"
+	_tooltip_label.text = tooltip_body
 	_tooltip_panel.visible = true
 
 	var viewport_size: Vector2 = get_viewport().get_visible_rect().size

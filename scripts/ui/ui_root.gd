@@ -78,15 +78,18 @@ func _process(_delta: float) -> void:
 func _setup_ui_visuals() -> void:
 	var top_bar: HBoxContainer = _get_top_bar()
 	if top_bar != null:
-		top_bar.add_theme_constant_override("separation", 10)
+		top_bar.anchor_left = 0.0
+		top_bar.anchor_right = 1.0
+		top_bar.offset_left = 16.0
+		top_bar.offset_right = -16.0
+		top_bar.clip_contents = true
+		top_bar.add_theme_constant_override("separation", 6)
 		_ensure_panel_background("TopBarBackground", top_bar, UI_TEXTURES["panel_main"] as Texture2D)
 		_wrap_stat_label(top_bar, _followers_label, UI_TEXTURES["followers_icon"] as Texture2D, "Followers")
 		_wrap_stat_label(top_bar, _faith_label, UI_TEXTURES["faith_icon"] as Texture2D, "Faith")
 		_wrap_stat_label(top_bar, _followers_per_second_label, UI_TEXTURES["conversion_icon"] as Texture2D, "FollowersPerSecond")
 		_wrap_stat_label(top_bar, _cult_power_label, UI_TEXTURES["cult_power_icon"] as Texture2D, "CultPower")
 		_wrap_stat_label(top_bar, _run_timer_label, UI_TEXTURES["upgrade_icon"] as Texture2D, "RunTimer")
-
-
 func _setup_upgrade_overlay() -> void:
 	_upgrade_overlay = ColorRect.new()
 	_upgrade_overlay.name = "UpgradeOverlay"
@@ -364,47 +367,52 @@ func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Textur
 	if label.get_parent() != top_bar:
 		return
 
-	var min_width: float = 190.0
+	var min_width: float = 170.0
 	match row_name:
 		"Followers":
-			min_width = 250.0
+			min_width = 225.0
 		"Faith":
-			min_width = 170.0
+			min_width = 145.0
 		"FollowersPerSecond":
-			min_width = 200.0
+			min_width = 190.0
 		"CultPower":
-			min_width = 170.0
+			min_width = 145.0
 		"RunTimer":
-			min_width = 120.0
+			min_width = 105.0
 		_:
-			min_width = 180.0
+			min_width = 160.0
 
 	var row: PanelContainer = PanelContainer.new()
 	row.name = "StatRow_%s" % row_name
-	row.custom_minimum_size = Vector2(min_width, 36.0)
+	row.custom_minimum_size = Vector2(min_width, 34.0)
 	row.size_flags_horizontal = Control.SIZE_FILL
 
 	var row_style: StyleBoxTexture = StyleBoxTexture.new()
 	row_style.texture = UI_TEXTURES["label_bg"] as Texture2D
-	row_style.set_texture_margin_all(8.0)
-	row_style.content_margin_left = 8.0
-	row_style.content_margin_right = 8.0
+	row_style.texture_margin_left = 8.0
+	row_style.texture_margin_top = 8.0
+	row_style.texture_margin_right = 8.0
+	row_style.texture_margin_bottom = 8.0
+	row_style.content_margin_left = 7.0
+	row_style.content_margin_top = 3.0
+	row_style.content_margin_right = 7.0
+	row_style.content_margin_bottom = 3.0
 	row.add_theme_stylebox_override("panel", row_style)
 
 	var content: HBoxContainer = HBoxContainer.new()
-	content.add_theme_constant_override("separation", 7)
+	content.add_theme_constant_override("separation", 6)
 	content.anchor_right = 1.0
 	content.anchor_bottom = 1.0
-	content.offset_left = 6.0
-	content.offset_top = 4.0
-	content.offset_right = -6.0
-	content.offset_bottom = -4.0
+	content.offset_left = 5.0
+	content.offset_top = 3.0
+	content.offset_right = -5.0
+	content.offset_bottom = -3.0
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(content)
 
 	var icon: TextureRect = TextureRect.new()
 	icon.texture = icon_texture
-	icon.custom_minimum_size = Vector2(20.0, 20.0)
+	icon.custom_minimum_size = Vector2(16.0, 16.0)
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
 	content.add_child(icon)
@@ -412,6 +420,8 @@ func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Textur
 	var original_index: int = label.get_index()
 	top_bar.remove_child(label)
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.clip_text = true
 	content.add_child(label)
 

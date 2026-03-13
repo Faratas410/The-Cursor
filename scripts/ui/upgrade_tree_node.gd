@@ -16,15 +16,15 @@ static var NODE_TEXTURES: Dictionary = {
 
 const UPGRADE_PULSE_TEXTURE: Texture2D = preload("res://assets/ui/effects/divine_pulse.png")
 
-@onready var _background: TextureRect = $Background
-@onready var _icon: TextureRect = $Icon
-@onready var _name_label: Label = $NameLabel
-@onready var _short_desc_label: Label = $ShortDescLabel
-@onready var _cost_label: Label = $CostLabel
-@onready var _purchased_mark: Label = $PurchasedMark
-@onready var _lock_overlay: ColorRect = $LockOverlay
-@onready var _hit_button: Button = $HitButton
-@onready var _pulse_overlay: TextureRect = $PulseOverlay
+var _background: TextureRect
+var _icon: TextureRect
+var _name_label: Label
+var _short_desc_label: Label
+var _cost_label: Label
+var _purchased_mark: Label
+var _lock_overlay: ColorRect
+var _hit_button: Button
+var _pulse_overlay: TextureRect
 
 var _upgrade_id: String = ""
 var _tooltip_title: String = ""
@@ -39,6 +39,9 @@ var _purchase_tween: Tween
 var _is_hovered: bool = false
 
 func _ready() -> void:
+	_ensure_node_refs()
+	if not _has_valid_node_refs():
+		return
 	_background.stretch_mode = TextureRect.STRETCH_SCALE
 	_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_icon.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
@@ -62,6 +65,29 @@ func _ready() -> void:
 	_apply_visual_state()
 	_update_final_aura()
 
+func _ensure_node_refs() -> void:
+	if _background == null:
+		_background = get_node_or_null("Background") as TextureRect
+	if _icon == null:
+		_icon = get_node_or_null("Icon") as TextureRect
+	if _name_label == null:
+		_name_label = get_node_or_null("NameLabel") as Label
+	if _short_desc_label == null:
+		_short_desc_label = get_node_or_null("ShortDescLabel") as Label
+	if _cost_label == null:
+		_cost_label = get_node_or_null("CostLabel") as Label
+	if _purchased_mark == null:
+		_purchased_mark = get_node_or_null("PurchasedMark") as Label
+	if _lock_overlay == null:
+		_lock_overlay = get_node_or_null("LockOverlay") as ColorRect
+	if _hit_button == null:
+		_hit_button = get_node_or_null("HitButton") as Button
+	if _pulse_overlay == null:
+		_pulse_overlay = get_node_or_null("PulseOverlay") as TextureRect
+
+func _has_valid_node_refs() -> bool:
+	return _background != null and _icon != null and _name_label != null and _short_desc_label != null and _cost_label != null and _purchased_mark != null and _lock_overlay != null and _hit_button != null and _pulse_overlay != null
+
 func set_upgrade_data(data: Dictionary) -> void:
 	_upgrade_id = String(data.get("id", ""))
 	_tooltip_title = String(data.get("tooltip_title", data.get("name", _upgrade_id)))
@@ -70,14 +96,20 @@ func set_upgrade_data(data: Dictionary) -> void:
 	_cost = float(data.get("cost", 0.0))
 	_dependencies = data.get("dependencies", PackedStringArray()) as PackedStringArray
 
+	_ensure_node_refs()
+	if not _has_valid_node_refs():
+		return
+
 	_name_label.text = String(data.get("name", _upgrade_id))
 	_short_desc_label.text = _short_desc
 	_cost_label.text = "Cost: %.0f Faith" % _cost
 	_icon.texture = data.get("icon_texture", null) as Texture2D
 	_update_final_aura()
-
 func set_visual_state(state: String) -> void:
 	_visual_state = state
+	_ensure_node_refs()
+	if not _has_valid_node_refs():
+		return
 	_apply_visual_state()
 	_update_final_aura()
 
