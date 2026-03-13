@@ -28,5 +28,5 @@ This manifest defines canonical intent for the current UI pipeline output.
 | `texture_button_presets.tres` | resources | Texture mapping presets for `TextureButton` states | temporary | yes |
 
 Notes:
-- Assets marked temporary are currently derived/reused placeholders and are not treated as canonical Figma exports.
-- Canonical final status is reserved for directly reusable originals already matching intended runtime usage and quality checks.
+- Temporary assets are now reference-derived PNG extracts, but still not canonical Figma component exports.
+- Final status is only for the approved canonical baseline files.
