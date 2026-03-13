@@ -1,0 +1,27 @@
+﻿[gd_resource type="Resource" format=3]
+
+[resource]
+button_primary = {
+"texture_normal": "res://assets/ui/buttons/button_primary.png",
+"texture_hover": "res://assets/ui/buttons/button_primary.png",
+"texture_pressed": "res://assets/ui/buttons/button_secondary.png",
+"texture_disabled": "res://assets/ui/buttons/button_danger.png"
+}
+button_secondary = {
+"texture_normal": "res://assets/ui/buttons/button_secondary.png",
+"texture_hover": "res://assets/ui/buttons/button_primary.png",
+"texture_pressed": "res://assets/ui/buttons/button_secondary.png",
+"texture_disabled": "res://assets/ui/buttons/button_danger.png"
+}
+button_small = {
+"texture_normal": "res://assets/ui/buttons/button_small.png",
+"texture_hover": "res://assets/ui/buttons/button_primary.png",
+"texture_pressed": "res://assets/ui/buttons/button_secondary.png",
+"texture_disabled": "res://assets/ui/buttons/button_danger.png"
+}
+button_icon = {
+"texture_normal": "res://assets/ui/buttons/button_icon.png",
+"texture_hover": "res://assets/ui/buttons/button_primary.png",
+"texture_pressed": "res://assets/ui/buttons/button_secondary.png",
+"texture_disabled": "res://assets/ui/buttons/button_danger.png"
+}

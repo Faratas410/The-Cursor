@@ -1,0 +1,31 @@
+﻿[gd_resource type="Resource" format=3]
+
+[resource]
+panel_main = {
+"path": "res://assets/ui/panels/panel_main.png",
+"patch_margin_left": 28,
+"patch_margin_top": 28,
+"patch_margin_right": 28,
+"patch_margin_bottom": 28
+}
+panel_card = {
+"path": "res://assets/ui/panels/panel_card.png",
+"patch_margin_left": 28,
+"patch_margin_top": 28,
+"patch_margin_right": 28,
+"patch_margin_bottom": 28
+}
+panel_popup = {
+"path": "res://assets/ui/panels/panel_popup.png",
+"patch_margin_left": 22,
+"patch_margin_top": 22,
+"patch_margin_right": 22,
+"patch_margin_bottom": 22
+}
+panel_tooltip = {
+"path": "res://assets/ui/panels/panel_tooltip.png",
+"patch_margin_left": 16,
+"patch_margin_top": 16,
+"patch_margin_right": 16,
+"patch_margin_bottom": 16
+}

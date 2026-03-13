@@ -39,6 +39,7 @@ var _purchase_tween: Tween
 var _is_hovered: bool = false
 
 func _ready() -> void:
+	clip_contents = true
 	_ensure_node_refs()
 	if not _has_valid_node_refs():
 		return
@@ -291,3 +292,4 @@ func _stop_final_aura() -> void:
 func _on_purchase_pulse_finished() -> void:
 	if _is_hovered:
 		_start_hover_animation()
+
