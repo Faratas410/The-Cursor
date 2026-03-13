@@ -475,29 +475,29 @@ func _notification(what: int) -> void:
 func _build_summary_row(parent: VBoxContainer) -> Label:
 	var container: PanelContainer = PanelContainer.new()
 	var style: StyleBoxTexture = StyleBoxTexture.new()
-	style.texture = UI_TEXTURES["panel_card_9slice"] as Texture2D
-	style.texture_margin_left = 18.0
-	style.texture_margin_top = 18.0
-	style.texture_margin_right = 18.0
-	style.texture_margin_bottom = 18.0
-	style.content_margin_left = 8.0
-	style.content_margin_top = 4.0
-	style.content_margin_right = 8.0
-	style.content_margin_bottom = 4.0
+	style.texture = UI_TEXTURES["tooltip_label_bg"] as Texture2D
+	style.texture_margin_left = 8.0
+	style.texture_margin_top = 8.0
+	style.texture_margin_right = 8.0
+	style.texture_margin_bottom = 8.0
+	style.content_margin_left = 10.0
+	style.content_margin_top = 6.0
+	style.content_margin_right = 10.0
+	style.content_margin_bottom = 6.0
 	container.add_theme_stylebox_override("panel", style)
-	container.custom_minimum_size = Vector2(0.0, 26.0)
+	container.custom_minimum_size = Vector2(0.0, 34.0)
 	parent.add_child(container)
 
 	var label: Label = Label.new()
 	label.anchor_right = 1.0
 	label.anchor_bottom = 1.0
-	label.offset_left = 8.0
-	label.offset_top = 3.0
-	label.offset_right = -8.0
-	label.offset_bottom = -3.0
+	label.offset_left = 10.0
+	label.offset_top = 5.0
+	label.offset_right = -10.0
+	label.offset_bottom = -5.0
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	container.add_child(label)
 	return label
-
 func _apply_continue_button_visual(button: Button) -> void:
 	var idle: Texture2D = UI_TEXTURES["continue_idle"] as Texture2D
 	var hover: Texture2D = UI_TEXTURES["continue_hover"] as Texture2D
@@ -593,6 +593,9 @@ func _refresh_tree() -> void:
 	_apply_layout()
 
 	var definitions: Array[Dictionary] = _game_manager.get_upgrade_definitions()
+	if _nodes_by_id.is_empty() and not definitions.is_empty():
+		_build_tree_nodes()
+
 	for definition: Dictionary in definitions:
 		var patched: Dictionary = _apply_display_copy(definition)
 		var id: String = String(patched.get("id", ""))

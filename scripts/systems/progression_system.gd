@@ -1,4 +1,4 @@
-﻿extends Node
+extends Node
 
 @warning_ignore("unused_signal")
 signal dimension_changed(level: int)
@@ -43,6 +43,8 @@ var _last_cult_power: int = -1
 func _ready() -> void:
 	_game_manager = get_node_or_null(game_manager_path) as GameManager
 	_background = get_node_or_null(background_path) as Sprite2D
+	if _background == null:
+		_background = _ensure_background_sprite()
 	if _game_manager == null:
 		return
 
@@ -50,6 +52,30 @@ func _ready() -> void:
 	apply_dimension_background(_game_manager.current_dimension)
 	_refresh_world_overlays()
 
+func _ensure_background_sprite() -> Sprite2D:
+	var systems_root: Node = get_parent()
+	if systems_root == null:
+		return null
+
+	var main_root: Node = systems_root.get_parent()
+	if main_root == null:
+		return null
+
+	var world: Node = main_root.get_node_or_null("World")
+	if world == null:
+		return null
+
+	var existing: Sprite2D = world.get_node_or_null("Background") as Sprite2D
+	if existing != null:
+		return existing
+
+	var created: Sprite2D = Sprite2D.new()
+	created.name = "Background"
+	created.centered = false
+	created.z_index = -5
+	world.add_child(created)
+	world.move_child(created, 0)
+	return created
 func _process(_delta: float) -> void:
 	if _game_manager == null:
 		return
