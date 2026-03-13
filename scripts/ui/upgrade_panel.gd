@@ -1,4 +1,4 @@
-﻿extends Control
+extends Control
 
 @warning_ignore("unused_signal")
 signal upgrade_purchased(upgrade: Dictionary)
@@ -342,6 +342,7 @@ func _build_ui() -> void:
 	_main_panel_frame.anchor_bottom = 1.0
 	_main_panel_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_main_panel_frame.clip_contents = true
+	_main_panel_frame.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	var main_panel_style: StyleBoxTexture = StyleBoxTexture.new()
 	main_panel_style.texture = UI_TEXTURES["panel_main_9slice"] as Texture2D
 	main_panel_style.texture_margin_left = 28.0
@@ -382,6 +383,7 @@ func _build_ui() -> void:
 	_add_branch_label("Cult Power", Vector2(606.0, 68.0))
 	_add_branch_label("Ritual", Vector2(806.0, 68.0))
 	_run_summary_panel = Panel.new()
+	_run_summary_panel.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_run_summary_panel.name = "RunSummaryPanel"
 	_run_summary_panel.offset_left = 60.0
 	_run_summary_panel.offset_top = 95.0
@@ -418,6 +420,7 @@ func _build_ui() -> void:
 	_run_faith_label = _build_summary_row(summary_box)
 
 	_sacrifice_panel = Panel.new()
+	_sacrifice_panel.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_sacrifice_panel.name = "SacrificePanel"
 	var sacrifice_style: StyleBoxTexture = StyleBoxTexture.new()
 	sacrifice_style.texture = UI_TEXTURES["panel_tooltip_9slice"] as Texture2D
@@ -489,6 +492,7 @@ func _build_ui() -> void:
 	sacrifice_row_b.add_child(_sacrifice_button_max)
 
 	_continue_button = Button.new()
+	_continue_button.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_continue_button.name = "ContinueButton"
 	_continue_button.anchor_left = 0.0
 	_continue_button.anchor_top = 0.0
@@ -504,6 +508,7 @@ func _build_ui() -> void:
 	add_child(_continue_button)
 
 	_tooltip_panel = Panel.new()
+	_tooltip_panel.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_tooltip_panel.name = "TooltipPanel"
 	_tooltip_panel.visible = false
 	_tooltip_panel.size = Vector2(280.0, 136.0)
@@ -535,11 +540,11 @@ func _apply_layout() -> void:
 		return
 
 	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
-	var top_safe: float = 86.0
-	var bottom_reserved: float = 230.0
+	var top_safe: float = 94.0
+	var bottom_reserved: float = 250.0
 	var panel_size: Vector2 = Vector2(
 		clamp(viewport_size.x - 90.0, 860.0, 1180.0),
-		clamp(viewport_size.y - (top_safe + bottom_reserved), 340.0, 500.0)
+		clamp(viewport_size.y - (top_safe + bottom_reserved), 250.0, 460.0)
 	)
 	var panel_pos: Vector2 = Vector2(
 		(viewport_size.x - panel_size.x) * 0.5,
@@ -556,7 +561,7 @@ func _apply_layout() -> void:
 	)
 	_continue_button.size = continue_size
 
-	var summary_size: Vector2 = Vector2(300.0, 118.0)
+	var summary_size: Vector2 = Vector2(320.0, 132.0)
 	var summary_pos: Vector2 = Vector2(panel_pos.x, panel_pos.y + panel_size.y + 8.0)
 	var summary_max_y: float = _continue_button.position.y - summary_size.y - 8.0
 	summary_pos.y = min(summary_pos.y, summary_max_y)
@@ -564,7 +569,7 @@ func _apply_layout() -> void:
 	_run_summary_panel.size = summary_size
 
 	if _sacrifice_panel != null:
-		var sacrifice_size: Vector2 = Vector2(360.0, 156.0)
+		var sacrifice_size: Vector2 = Vector2(360.0, 176.0)
 		var sacrifice_x: float = panel_pos.x + panel_size.x - sacrifice_size.x
 		var sacrifice_y: float = panel_pos.y + panel_size.y + 8.0
 		var sacrifice_max_y: float = _continue_button.position.y - sacrifice_size.y - 8.0
@@ -970,6 +975,7 @@ func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return
 	_game_manager.continue_from_upgrade()
+
 
 
 

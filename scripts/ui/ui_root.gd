@@ -1,4 +1,4 @@
-﻿extends CanvasLayer
+extends CanvasLayer
 
 @export var game_manager_path: NodePath
 @export var followers_label_path: NodePath
@@ -176,6 +176,7 @@ func _refresh_labels() -> void:
 		_cult_power_label.text = "Cult Power: %s" % _format_int(_game_manager.cult_power)
 	if _run_timer_label != null:
 		_run_timer_label.text = "Run: %s" % _format_run_time(_game_manager.run_time_remaining)
+	_refresh_top_bar_row_sizes()
 
 func _refresh_phase_ui() -> void:
 	if _game_manager == null:
@@ -394,8 +395,9 @@ func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Textur
 
 	var row: PanelContainer = PanelContainer.new()
 	row.name = "StatRow_%s" % row_name
-	row.custom_minimum_size = Vector2(min_width, 34.0)
-	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.custom_minimum_size = Vector2(min_width, 38.0)
+	row.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	row.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 
 	var row_style: StyleBoxTexture = StyleBoxTexture.new()
 	row_style.texture = UI_TEXTURES["label_bg"] as Texture2D
@@ -437,6 +439,33 @@ func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Textur
 
 	top_bar.add_child(row)
 	top_bar.move_child(row, original_index)
+
+func _refresh_top_bar_row_sizes() -> void:
+	_resize_stat_row_for_label(_followers_label, 248.0)
+	_resize_stat_row_for_label(_faith_label, 150.0)
+	_resize_stat_row_for_label(_followers_per_second_label, 178.0)
+	_resize_stat_row_for_label(_cult_power_label, 160.0)
+	_resize_stat_row_for_label(_run_timer_label, 120.0)
+
+func _resize_stat_row_for_label(label: Label, base_min_width: float) -> void:
+	if label == null:
+		return
+	var content: HBoxContainer = label.get_parent() as HBoxContainer
+	if content == null:
+		return
+	var row: PanelContainer = content.get_parent() as PanelContainer
+	if row == null:
+		return
+
+	var font: Font = label.get_theme_font("font")
+	var font_size: int = label.get_theme_font_size("font_size")
+	var text_width: float = label.get_minimum_size().x
+	if font != null:
+		text_width = font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x
+
+	var icon_and_padding: float = 52.0
+	var required_width: float = ceil(text_width + icon_and_padding)
+	row.custom_minimum_size = Vector2(max(base_min_width, required_width), row.custom_minimum_size.y)
 func _setup_debug_overlay() -> void:
 	if not enable_runtime_debug_overlay:
 		return
@@ -542,6 +571,9 @@ func _format_int(value: int) -> String:
 		if count % 3 == 0 and i > 0:
 			out = "," + out
 	return out
+
+
+
 
 
 
