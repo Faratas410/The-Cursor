@@ -1,10 +1,14 @@
-extends CharacterBody2D
+﻿extends CharacterBody2D
 class_name Skeptic
 
 static var SKEPTIC_TEXTURES: Array[Texture2D] = [
 	preload("res://assets/sprites/characters/skeptics/skeptic_01.png"),
 	preload("res://assets/sprites/characters/skeptics/skeptic_02.png"),
-	preload("res://assets/sprites/characters/skeptics/skeptic_03.png")
+	preload("res://assets/sprites/characters/skeptics/skeptic_03.png"),
+	preload("res://assets/sprites/characters/skeptics/skeptic_04.png"),
+	preload("res://assets/sprites/characters/skeptics/skeptic_01_var_warm.png"),
+	preload("res://assets/sprites/characters/skeptics/skeptic_02_var_cool.png"),
+	preload("res://assets/sprites/characters/skeptics/skeptic_04_var_warm.png")
 ]
 
 @export var speed: float = 58.0
@@ -155,6 +159,7 @@ func _bounce_at_edges() -> void:
 	if bounced:
 		_direction = _direction.normalized()
 		_direction_timer = _rng.randf_range(0.6, 1.2)
+
 
 
 

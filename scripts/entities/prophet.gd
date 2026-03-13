@@ -1,10 +1,14 @@
-extends CharacterBody2D
+﻿extends CharacterBody2D
 class_name Prophet
 
 static var PROPHET_TEXTURES: Array[Texture2D] = [
 	preload("res://assets/sprites/characters/prophets/prophet_01.png"),
-	preload("res://assets/sprites/characters/prophets/prophet_01.png"),
-	preload("res://assets/sprites/characters/prophets/prophet_03.png")
+	preload("res://assets/sprites/characters/prophets/prophet_02.png"),
+	preload("res://assets/sprites/characters/prophets/prophet_03.png"),
+	preload("res://assets/sprites/characters/prophets/prophet_01_var_warm.png"),
+	preload("res://assets/sprites/characters/prophets/prophet_01_var_cool.png"),
+	preload("res://assets/sprites/characters/prophets/prophet_02_var_warm.png"),
+	preload("res://assets/sprites/characters/prophets/prophet_03_var_cool.png")
 ]
 
 @export var speed: float = 42.0
@@ -51,3 +55,4 @@ func _physics_process(_delta: float) -> void:
 	else:
 		velocity = to_cursor.normalized() * speed * speed_multiplier
 	move_and_slide()
+

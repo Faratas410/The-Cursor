@@ -1,4 +1,4 @@
-extends CharacterBody2D
+﻿extends CharacterBody2D
 class_name NPC
 
 const STATE_WANDER: int = 0
@@ -7,14 +7,22 @@ const STATE_FOLLOW: int = 2
 
 static var CIVILIAN_TEXTURES: Array[Texture2D] = [
 	preload("res://assets/sprites/characters/civilians/civilian_01.png"),
-	preload("res://assets/sprites/characters/civilians/civilian_02.png"),
-	preload("res://assets/sprites/characters/civilians/civilian_03.png")
+	preload("res://assets/sprites/characters/civilians/civilian_03.png"),
+	preload("res://assets/sprites/characters/civilians/civilian_05.png"),
+	preload("res://assets/sprites/characters/civilians/civilian_07.png"),
+	preload("res://assets/sprites/characters/civilians/civilian_09.png"),
+	preload("res://assets/sprites/characters/civilians/civilian_02_var_warm.png"),
+	preload("res://assets/sprites/characters/civilians/civilian_06_var_cool.png")
 ]
 
 static var CULTIST_TEXTURES: Array[Texture2D] = [
 	preload("res://assets/sprites/characters/cultists/cultist_01.png"),
 	preload("res://assets/sprites/characters/cultists/cultist_02.png"),
-	preload("res://assets/sprites/characters/cultists/cultist_03.png")
+	preload("res://assets/sprites/characters/cultists/cultist_03.png"),
+	preload("res://assets/sprites/characters/cultists/cultist_04.png"),
+	preload("res://assets/sprites/characters/cultists/cultist_05.png"),
+	preload("res://assets/sprites/characters/cultists/cultist_02_var_warm.png"),
+	preload("res://assets/sprites/characters/cultists/cultist_06_var_cool.png")
 ]
 
 const CONVERSION_GLYPH_TEXTURE: Texture2D = preload("res://assets/vfx/conversion/conversion_glyph.png")
@@ -642,6 +650,7 @@ func _bounce_at_edges() -> void:
 	if did_bounce:
 		_direction = _direction.normalized()
 		_direction_timer = _rng.randf_range(0.6, 1.2)
+
 
 
 
