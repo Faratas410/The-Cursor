@@ -197,9 +197,9 @@ const UPGRADE_ICON_KEY_BY_ID: Dictionary = {
 
 const LAYOUT_SCALE_X: float = 1.0
 const LAYOUT_SCALE_Y: float = 1.0
-const BASE_NODE_SIZE: Vector2 = Vector2(160.0, 56.0)
-const ROOT_NODE_SIZE: Vector2 = Vector2(178.0, 64.0)
-const FINAL_NODE_SIZE: Vector2 = Vector2(178.0, 64.0)
+const BASE_NODE_SIZE: Vector2 = Vector2(148.0, 48.0)
+const ROOT_NODE_SIZE: Vector2 = Vector2(160.0, 52.0)
+const FINAL_NODE_SIZE: Vector2 = Vector2(160.0, 52.0)
 
 const NODE_POSITIONS: Dictionary = {
     "awakening": Vector2(404.0, 24.0),
@@ -536,46 +536,44 @@ func _apply_layout() -> void:
 
 	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
 	var panel_size: Vector2 = Vector2(
-		clamp(viewport_size.x - 220.0, 900.0, 1140.0),
-		clamp(viewport_size.y - 170.0, 460.0, 620.0)
+		clamp(viewport_size.x - 90.0, 860.0, 1180.0),
+		clamp(viewport_size.y - 250.0, 420.0, 560.0)
 	)
 	var panel_pos: Vector2 = Vector2(
 		(viewport_size.x - panel_size.x) * 0.5,
-		max(72.0, (viewport_size.y - panel_size.y) * 0.30)
+		max(68.0, (viewport_size.y - panel_size.y) * 0.22)
 	)
 
 	_tree_root.position = panel_pos
 	_tree_root.size = panel_size
 
-	var summary_size: Vector2 = Vector2(248.0, 134.0)
-	var summary_pos: Vector2 = Vector2(max(24.0, panel_pos.x - summary_size.x - 18.0), panel_pos.y)
+	var summary_size: Vector2 = Vector2(300.0, 118.0)
+	var summary_pos: Vector2 = Vector2(panel_pos.x, panel_pos.y + panel_size.y + 10.0)
 	_run_summary_panel.position = summary_pos
 	_run_summary_panel.size = summary_size
 
 	if _sacrifice_panel != null:
-		var sacrifice_size: Vector2 = Vector2(300.0, 210.0)
-		var sacrifice_x: float = panel_pos.x + panel_size.x + 14.0
-		if sacrifice_x + sacrifice_size.x > viewport_size.x - 10.0:
-			sacrifice_x = summary_pos.x
-		var sacrifice_y: float = summary_pos.y + summary_size.y + 12.0
+		var sacrifice_size: Vector2 = Vector2(360.0, 156.0)
+		var sacrifice_x: float = panel_pos.x + panel_size.x - sacrifice_size.x
+		var sacrifice_y: float = panel_pos.y + panel_size.y + 10.0
+		if sacrifice_y + sacrifice_size.y > viewport_size.y - 62.0:
+			sacrifice_y = viewport_size.y - sacrifice_size.y - 62.0
 		_sacrifice_panel.position = Vector2(sacrifice_x, sacrifice_y)
 		_sacrifice_panel.size = sacrifice_size
 
-	var continue_size: Vector2 = Vector2(240.0, 58.0)
+	var continue_size: Vector2 = Vector2(240.0, 56.0)
 	_continue_button.position = Vector2(
 		panel_pos.x + (panel_size.x - continue_size.x) * 0.5,
-		panel_pos.y + panel_size.y + 14.0
+		viewport_size.y - continue_size.y - 8.0
 	)
 	_continue_button.size = continue_size
 
 	var tooltip_size: Vector2 = Vector2(265.0, 180.0)
 	_tooltip_panel.size = tooltip_size
-	_tooltip_default_position = Vector2(panel_pos.x + panel_size.x + 16.0, panel_pos.y)
+	_tooltip_default_position = Vector2(panel_pos.x + panel_size.x + 12.0, panel_pos.y)
 	if _tooltip_default_position.x + tooltip_size.x > viewport_size.x - 12.0:
-		_tooltip_default_position = Vector2(summary_pos.x, summary_pos.y + summary_size.y + 14.0)
+		_tooltip_default_position = Vector2(panel_pos.x + panel_size.x - tooltip_size.x, panel_pos.y + 8.0)
 
-	if _continue_button.position.y + continue_size.y > viewport_size.y - 8.0:
-		_continue_button.position.y = viewport_size.y - continue_size.y - 8.0
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		_apply_layout()
@@ -961,6 +959,8 @@ func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return
 	_game_manager.continue_from_upgrade()
+
+
 
 
 

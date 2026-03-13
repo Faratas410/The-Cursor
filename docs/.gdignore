@@ -1,0 +1,1 @@
+# Exclude docs from Godot import pipeline (prevents CSV/translation import noise).

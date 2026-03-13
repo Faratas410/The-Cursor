@@ -47,11 +47,14 @@ func _ready() -> void:
 	_icon.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
 	_icon.pivot_offset = _icon.size * 0.5
 	_name_label.clip_text = true
-	_name_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_name_label.max_lines_visible = 2
+	_name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_short_desc_label.visible = false
 	_short_desc_label.text = ""
 	_cost_label.clip_text = true
 	_cost_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_cost_label.visible = false
 	_pulse_overlay.stretch_mode = TextureRect.STRETCH_SCALE
 	_hit_button.pressed.connect(_on_pressed)
 	_hit_button.mouse_entered.connect(_on_mouse_entered)
@@ -106,10 +109,11 @@ func set_upgrade_data(data: Dictionary) -> void:
 	if not _has_valid_node_refs():
 		return
 
-	_name_label.text = String(data.get("name", _upgrade_id))
+	_name_label.text = _compact_node_title(String(data.get("name", _upgrade_id)))
 	_short_desc_label.text = ""
 	_short_desc_label.visible = false
 	_cost_label.text = "Cost: %.0f Faith" % _cost
+	_cost_label.visible = false
 	_icon.texture = data.get("icon_texture", null) as Texture2D
 	_update_final_aura()
 
@@ -226,6 +230,12 @@ func _get_base_available_texture() -> Texture2D:
 	if _upgrade_id == "they_can_see_you":
 		return NODE_TEXTURES["final"] as Texture2D
 	return NODE_TEXTURES["default"] as Texture2D
+
+func _compact_node_title(raw_title: String) -> String:
+	var title: String = raw_title.strip_edges()
+	if title.length() <= 18:
+		return title
+	return "%s..." % title.substr(0, 15)
 
 func _on_pressed() -> void:
 	node_pressed.emit(_upgrade_id)

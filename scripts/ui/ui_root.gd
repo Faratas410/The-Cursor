@@ -488,6 +488,9 @@ func _refresh_debug_overlay() -> void:
 		return
 	if _debug_panel == null or _debug_momentum_label == null or _debug_pressure_label == null or _debug_influence_label == null:
 		return
+	if _game_manager != null and _game_manager.is_upgrade_phase():
+		_debug_panel.visible = false
+		return
 	if _cursor == null:
 		_cursor = get_tree().get_first_node_in_group("cursor") as CursorEntity
 	if _cursor == null:
@@ -533,6 +536,9 @@ func _format_int(value: int) -> String:
 		if count % 3 == 0 and i > 0:
 			out = "," + out
 	return out
+
+
+
 
 
 
