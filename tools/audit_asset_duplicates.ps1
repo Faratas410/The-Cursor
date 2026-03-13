@@ -1,6 +1,8 @@
-param(
+﻿param(
   [string]$RepoRoot='.',
-  [string]$ReportPath='docs/reports/ASSET_DUPLICATION_AUDIT.md'
+  [string]$ReportPath='docs/reports/ASSET_DUPLICATION_AUDIT.md',
+  [switch]$Strict,
+  [switch]$FailOnSuspicious
 )
 $ErrorActionPreference='Stop'
 
@@ -150,7 +152,7 @@ $out.Add('This audit was read-only: no assets were deleted, renamed, moved, or r
 [IO.File]::WriteAllLines($reportFull,$out)
 
 $top=$safe | Sort-Object Path | Select-Object -First 10
-[pscustomobject]@{
+$summary=[pscustomobject]@{
   report_path=$ReportPath
   total_visual_assets=$rows.Count
   exact_duplicate_groups=$exact.Count
@@ -160,9 +162,22 @@ $top=$safe | Sort-Object Path | Select-Object -First 10
   referenced_duplicate_groups=$refDupGroups
   unreferenced_duplicate_files=$unrefDupFiles
   top_candidate_count=(($top|Measure-Object).Count)
-} | ConvertTo-Json -Compress
+}
+$jsonSummaryPath=[System.IO.Path]::Combine($reportDir,'ASSET_DUPLICATION_AUDIT_SUMMARY.json')
+$summary | ConvertTo-Json | Set-Content -Encoding UTF8 $jsonSummaryPath
+
+$summary | ConvertTo-Json -Compress
 if((($top|Measure-Object).Count) -gt 0){
   'TOP_CANDIDATES_START'
   foreach($c in $top){ "res://$($c.Path) -> keep res://$($c.Keep) ($($c.Reason))" }
   'TOP_CANDIDATES_END'
+}
+
+if($Strict){
+  $shouldFail = ($exact.Count -gt 0) -or ($sameName.Count -gt 0) -or ($refDupGroups -gt 0) -or ($unrefDupFiles -gt 0)
+  if($FailOnSuspicious -and $susp.Count -gt 0){ $shouldFail = $true }
+  if($shouldFail){
+    Write-Error ("Asset path canon violation. exact_duplicate_groups={0}, same_name_multi_path={1}, referenced_duplicate_groups={2}, unreferenced_duplicate_files={3}, suspicious_near_duplicates={4}" -f $exact.Count,$sameName.Count,$refDupGroups,$unrefDupFiles,$susp.Count)
+    exit 2
+  }
 }

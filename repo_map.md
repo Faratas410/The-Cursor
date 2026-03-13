@@ -62,3 +62,11 @@ Current result:
 3. Remove unreferenced duplicates.
 4. Re-run audit and confirm zeros for duplicate groups and same-name conflicts.
 
+## 6. Asset Canon Guard
+
+Strict check command (must pass):
+- `powershell -ExecutionPolicy Bypass -File tools/audit_asset_duplicates.ps1 -RepoRoot . -ReportPath docs/reports/ASSET_DUPLICATION_AUDIT.md -Strict`
+
+Automation:
+- CI workflow: `.github/workflows/asset-canon-guard.yml`
+- Optional local hook installer: `tools/install_asset_audit_hook.ps1`
