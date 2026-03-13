@@ -70,6 +70,7 @@ func _ready() -> void:
 	_pulse_overlay.visible = false
 	_apply_visual_state()
 	_update_final_aura()
+
 func _ensure_node_refs() -> void:
 	if _background == null:
 		_background = get_node_or_null("Background") as TextureRect
@@ -111,6 +112,7 @@ func set_upgrade_data(data: Dictionary) -> void:
 	_cost_label.text = "Cost: %.0f Faith" % _cost
 	_icon.texture = data.get("icon_texture", null) as Texture2D
 	_update_final_aura()
+
 func set_visual_state(state: String) -> void:
 	_visual_state = state
 	_ensure_node_refs()
@@ -201,6 +203,14 @@ func _apply_visual_state() -> void:
 			_name_label.modulate = Color(0.72, 1.0, 0.78, 1.0)
 			_short_desc_label.modulate = Color(0.72, 1.0, 0.78, 1.0)
 			_cost_label.modulate = Color(0.72, 1.0, 0.78, 1.0)
+		"choice_locked":
+			_background.texture = locked_texture
+			_lock_overlay.visible = true
+			_purchased_mark.visible = false
+			_hit_button.disabled = true
+			_name_label.modulate = Color(0.88, 0.64, 0.64, 1.0)
+			_short_desc_label.modulate = Color(0.82, 0.60, 0.60, 1.0)
+			_cost_label.modulate = Color(0.88, 0.64, 0.64, 1.0)
 		_:
 			_background.texture = locked_texture
 			_lock_overlay.visible = true
@@ -271,4 +281,3 @@ func _stop_final_aura() -> void:
 func _on_purchase_pulse_finished() -> void:
 	if _is_hovered:
 		_start_hover_animation()
-

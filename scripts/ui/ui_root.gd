@@ -166,8 +166,10 @@ func _refresh_labels() -> void:
 	if _faith_label != null:
 		_faith_label.text = "Faith: %.1f" % _game_manager.faith
 	if _followers_per_second_label != null:
-		var followers_per_second: float = float(_game_manager.followers) * _game_manager.faith_per_follower
-		_followers_per_second_label.text = "Followers/sec: %.2f" % followers_per_second
+		var follower_count: float = float(_game_manager.followers)
+		var faith_base_per_second: float = (follower_count * _game_manager.faith_per_follower) / (1.0 + (follower_count / 200.0))
+		var faith_per_second: float = (faith_base_per_second * _game_manager.get_faith_gain_multiplier()) + _game_manager.get_passive_faith_per_second()
+		_followers_per_second_label.text = "Faith/sec: %.2f" % faith_per_second
 	if _cult_power_label != null:
 		_cult_power_label.text = "Cult Power: %s" % _format_int(_game_manager.cult_power)
 	if _run_timer_label != null:

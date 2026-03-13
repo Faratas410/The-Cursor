@@ -50,7 +50,7 @@ text = "Followers: 0 / 1,000,000"
 text = "Faith: 0.0"
 
 [node name="FollowersPerSecondLabel" type="Label" parent="UI/TopBar"]
-text = "Followers/sec: 0.00"
+text = "Faith/sec: 0.00"
 
 [node name="CultPowerLabel" type="Label" parent="UI/TopBar"]
 text = "Cult Power: 0"
@@ -109,6 +109,7 @@ background_path = NodePath("../../World/Background")
 script = ExtResource("4")
 
 [connection signal="npc_detected" from="Cursor" to="Systems/ConversionSystem" method="_on_npc_detected"]
+
 
 
 

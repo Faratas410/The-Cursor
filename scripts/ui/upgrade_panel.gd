@@ -199,53 +199,65 @@ const ROOT_NODE_SIZE: Vector2 = Vector2(178.0, 64.0)
 const FINAL_NODE_SIZE: Vector2 = Vector2(178.0, 64.0)
 
 const NODE_POSITIONS: Dictionary = {
-    "awakening": Vector2(324.0, 26.0),
-    "magnetic_presence": Vector2(24.0, 98.0),
-    "faster_conversion": Vector2(24.0, 166.0),
-    "conversion_pulse": Vector2(24.0, 234.0),
-    "conversion_chain": Vector2(24.0, 302.0),
-    "mass_conversion": Vector2(24.0, 370.0),
-    "faith_amplifier": Vector2(224.0, 98.0),
-    "cult_donations": Vector2(224.0, 166.0),
-    "sacred_economy": Vector2(224.0, 234.0),
-    "divine_harvest": Vector2(224.0, 302.0),
-    "overflow_faith": Vector2(224.0, 370.0),
-    "curious_crowds": Vector2(424.0, 98.0),
-    "pilgrimage": Vector2(424.0, 166.0),
-    "wandering_faith": Vector2(424.0, 234.0),
-    "sacred_ground": Vector2(424.0, 302.0),
-    "skeptic_hunt": Vector2(424.0, 370.0),
-    "divine_aura": Vector2(624.0, 98.0),
-    "cult_expansion": Vector2(624.0, 166.0),
-    "cult_leaders": Vector2(624.0, 234.0),
-    "prophecy": Vector2(624.0, 302.0),
-    "worship_wave": Vector2(624.0, 370.0),
-    "they_can_see_you": Vector2(324.0, 370.0)
+    "awakening": Vector2(404.0, 24.0),
+    "magnetic_presence": Vector2(24.0, 96.0),
+    "faster_conversion": Vector2(24.0, 156.0),
+    "conversion_pulse": Vector2(24.0, 216.0),
+    "conversion_chain": Vector2(24.0, 276.0),
+    "mass_conversion": Vector2(24.0, 336.0),
+    "faith_amplifier": Vector2(214.0, 96.0),
+    "steady_worship": Vector2(214.0, 156.0),
+    "violent_faith": Vector2(214.0, 216.0),
+    "cult_donations": Vector2(214.0, 276.0),
+    "sacred_economy": Vector2(214.0, 336.0),
+    "divine_harvest": Vector2(214.0, 396.0),
+    "curious_crowds": Vector2(404.0, 96.0),
+    "path_growth": Vector2(404.0, 156.0),
+    "path_control": Vector2(404.0, 216.0),
+    "pilgrimage": Vector2(404.0, 276.0),
+    "sacred_ground": Vector2(404.0, 336.0),
+    "ritual_knife": Vector2(784.0, 96.0),
+    "blood_ledger": Vector2(784.0, 156.0),
+    "blood_tithe": Vector2(784.0, 216.0),
+    "grand_offering": Vector2(784.0, 276.0),
+    "cult_leaders": Vector2(594.0, 96.0),
+    "wide_influence": Vector2(594.0, 156.0),
+    "focused_conversion": Vector2(594.0, 216.0),
+    "divine_aura": Vector2(594.0, 336.0),
+    "cult_expansion": Vector2(594.0, 396.0),
+    "worship_wave": Vector2(784.0, 336.0),
+    "they_can_see_you": Vector2(784.0, 456.0)
 }
 static var DEPENDENCY_EDGES: Array[PackedStringArray] = [
-	PackedStringArray(["awakening", "magnetic_presence"]),
-	PackedStringArray(["awakening", "faster_conversion"]),
-	PackedStringArray(["awakening", "faith_amplifier"]),
-	PackedStringArray(["awakening", "curious_crowds"]),
-	PackedStringArray(["magnetic_presence", "conversion_pulse"]),
-	PackedStringArray(["faster_conversion", "conversion_chain"]),
-	PackedStringArray(["conversion_chain", "mass_conversion"]),
-	PackedStringArray(["faith_amplifier", "cult_donations"]),
-	PackedStringArray(["cult_donations", "sacred_economy"]),
-	PackedStringArray(["faith_amplifier", "divine_harvest"]),
-	PackedStringArray(["divine_harvest", "overflow_faith"]),
-	PackedStringArray(["curious_crowds", "pilgrimage"]),
-	PackedStringArray(["curious_crowds", "wandering_faith"]),
-	PackedStringArray(["pilgrimage", "sacred_ground"]),
-	PackedStringArray(["mass_conversion", "cult_leaders"]),
-	PackedStringArray(["sacred_economy", "cult_leaders"]),
-	PackedStringArray(["cult_leaders", "prophecy"]),
-	PackedStringArray(["cult_leaders", "skeptic_hunt"]),
-	PackedStringArray(["prophecy", "divine_aura"]),
-	PackedStringArray(["sacred_ground", "cult_expansion"]),
-	PackedStringArray(["divine_aura", "cult_expansion"]),
-	PackedStringArray(["cult_expansion", "worship_wave"]),
-	PackedStringArray(["worship_wave", "they_can_see_you"])
+    PackedStringArray(["awakening", "magnetic_presence"]),
+    PackedStringArray(["awakening", "faster_conversion"]),
+    PackedStringArray(["magnetic_presence", "conversion_pulse"]),
+    PackedStringArray(["faster_conversion", "conversion_chain"]),
+    PackedStringArray(["conversion_chain", "mass_conversion"]),
+    PackedStringArray(["awakening", "faith_amplifier"]),
+    PackedStringArray(["faith_amplifier", "steady_worship"]),
+    PackedStringArray(["faith_amplifier", "violent_faith"]),
+    PackedStringArray(["steady_worship", "cult_donations"]),
+    PackedStringArray(["cult_donations", "sacred_economy"]),
+    PackedStringArray(["violent_faith", "divine_harvest"]),
+    PackedStringArray(["awakening", "curious_crowds"]),
+    PackedStringArray(["curious_crowds", "path_growth"]),
+    PackedStringArray(["curious_crowds", "path_control"]),
+    PackedStringArray(["path_control", "pilgrimage"]),
+    PackedStringArray(["curious_crowds", "sacred_ground"]),
+    PackedStringArray(["awakening", "ritual_knife"]),
+    PackedStringArray(["ritual_knife", "blood_ledger"]),
+    PackedStringArray(["blood_ledger", "blood_tithe"]),
+    PackedStringArray(["blood_tithe", "grand_offering"]),
+    PackedStringArray(["mass_conversion", "cult_leaders"]),
+    PackedStringArray(["ritual_knife", "cult_leaders"]),
+    PackedStringArray(["cult_leaders", "wide_influence"]),
+    PackedStringArray(["cult_leaders", "focused_conversion"]),
+    PackedStringArray(["cult_leaders", "divine_aura"]),
+    PackedStringArray(["sacred_ground", "cult_expansion"]),
+    PackedStringArray(["divine_aura", "cult_expansion"]),
+    PackedStringArray(["cult_expansion", "worship_wave"]),
+    PackedStringArray(["worship_wave", "they_can_see_you"])
 ]
 
 @export var game_manager_path: NodePath
@@ -263,6 +275,15 @@ var _run_followers_label: Label
 var _run_faith_label: Label
 var _continue_button: Button
 var _tooltip_default_position: Vector2 = Vector2.ZERO
+var _sacrifice_panel: Panel
+var _sacrifice_preview_label: Label
+var _sacrifice_auto_status_label: Label
+var _sacrifice_countdown_label: Label
+var _sacrifice_button_50: Button
+var _sacrifice_button_100: Button
+var _sacrifice_button_25p: Button
+var _sacrifice_button_max: Button
+
 
 var _nodes_by_id: Dictionary = {}
 var _defs_by_id: Dictionary = {}
@@ -354,6 +375,8 @@ func _build_ui() -> void:
 	_add_branch_label("Faith Flow", Vector2(226.0, 68.0))
 	_add_branch_label("World Control", Vector2(426.0, 68.0))
 
+	_add_branch_label("Cult Power", Vector2(606.0, 68.0))
+	_add_branch_label("Ritual", Vector2(806.0, 68.0))
 	_run_summary_panel = Panel.new()
 	_run_summary_panel.name = "RunSummaryPanel"
 	_run_summary_panel.offset_left = 60.0
@@ -389,6 +412,73 @@ func _build_ui() -> void:
 
 	_run_followers_label = _build_summary_row(summary_box)
 	_run_faith_label = _build_summary_row(summary_box)
+
+	_sacrifice_panel = Panel.new()
+	_sacrifice_panel.name = "SacrificePanel"
+	var sacrifice_style: StyleBoxTexture = StyleBoxTexture.new()
+	sacrifice_style.texture = UI_TEXTURES["panel_tooltip_9slice"] as Texture2D
+	sacrifice_style.texture_margin_left = 16.0
+	sacrifice_style.texture_margin_top = 16.0
+	sacrifice_style.texture_margin_right = 16.0
+	sacrifice_style.texture_margin_bottom = 16.0
+	sacrifice_style.content_margin_left = 10.0
+	sacrifice_style.content_margin_top = 8.0
+	sacrifice_style.content_margin_right = 10.0
+	sacrifice_style.content_margin_bottom = 8.0
+	_sacrifice_panel.add_theme_stylebox_override("panel", sacrifice_style)
+	add_child(_sacrifice_panel)
+
+	var sacrifice_box: VBoxContainer = VBoxContainer.new()
+	sacrifice_box.anchor_right = 1.0
+	sacrifice_box.anchor_bottom = 1.0
+	sacrifice_box.offset_left = 12.0
+	sacrifice_box.offset_top = 10.0
+	sacrifice_box.offset_right = -12.0
+	sacrifice_box.offset_bottom = -10.0
+	sacrifice_box.add_theme_constant_override("separation", 5)
+	_sacrifice_panel.add_child(sacrifice_box)
+
+	var sacrifice_title: Label = Label.new()
+	sacrifice_title.text = "SACRIFICE"
+	sacrifice_box.add_child(sacrifice_title)
+
+	_sacrifice_preview_label = Label.new()
+	_sacrifice_preview_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	sacrifice_box.add_child(_sacrifice_preview_label)
+
+	_sacrifice_auto_status_label = Label.new()
+	sacrifice_box.add_child(_sacrifice_auto_status_label)
+
+	_sacrifice_countdown_label = Label.new()
+	sacrifice_box.add_child(_sacrifice_countdown_label)
+
+	var sacrifice_row_a: HBoxContainer = HBoxContainer.new()
+	sacrifice_row_a.add_theme_constant_override("separation", 6)
+	sacrifice_box.add_child(sacrifice_row_a)
+
+	_sacrifice_button_50 = Button.new()
+	_sacrifice_button_50.text = "Sacrifice 50"
+	_sacrifice_button_50.pressed.connect(_on_sacrifice_50_pressed)
+	sacrifice_row_a.add_child(_sacrifice_button_50)
+
+	_sacrifice_button_100 = Button.new()
+	_sacrifice_button_100.text = "Sacrifice 100"
+	_sacrifice_button_100.pressed.connect(_on_sacrifice_100_pressed)
+	sacrifice_row_a.add_child(_sacrifice_button_100)
+
+	var sacrifice_row_b: HBoxContainer = HBoxContainer.new()
+	sacrifice_row_b.add_theme_constant_override("separation", 6)
+	sacrifice_box.add_child(sacrifice_row_b)
+
+	_sacrifice_button_25p = Button.new()
+	_sacrifice_button_25p.text = "Sacrifice 25%"
+	_sacrifice_button_25p.pressed.connect(_on_sacrifice_25p_pressed)
+	sacrifice_row_b.add_child(_sacrifice_button_25p)
+
+	_sacrifice_button_max = Button.new()
+	_sacrifice_button_max.text = "Sacrifice MAX"
+	_sacrifice_button_max.pressed.connect(_on_sacrifice_max_pressed)
+	sacrifice_row_b.add_child(_sacrifice_button_max)
 
 	_continue_button = Button.new()
 	_continue_button.name = "ContinueButton"
@@ -438,12 +528,12 @@ func _apply_layout() -> void:
 
 	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
 	var panel_size: Vector2 = Vector2(
-		clamp(viewport_size.x - 150.0, 760.0, 920.0),
-		clamp(viewport_size.y - 170.0, 430.0, 560.0)
+		clamp(viewport_size.x - 220.0, 900.0, 1140.0),
+		clamp(viewport_size.y - 170.0, 460.0, 620.0)
 	)
 	var panel_pos: Vector2 = Vector2(
 		(viewport_size.x - panel_size.x) * 0.5,
-		max(78.0, (viewport_size.y - panel_size.y) * 0.34)
+		max(72.0, (viewport_size.y - panel_size.y) * 0.30)
 	)
 
 	_tree_root.position = panel_pos
@@ -453,6 +543,15 @@ func _apply_layout() -> void:
 	var summary_pos: Vector2 = Vector2(max(24.0, panel_pos.x - summary_size.x - 18.0), panel_pos.y)
 	_run_summary_panel.position = summary_pos
 	_run_summary_panel.size = summary_size
+
+	if _sacrifice_panel != null:
+		var sacrifice_size: Vector2 = Vector2(300.0, 210.0)
+		var sacrifice_x: float = panel_pos.x + panel_size.x + 14.0
+		if sacrifice_x + sacrifice_size.x > viewport_size.x - 10.0:
+			sacrifice_x = summary_pos.x
+		var sacrifice_y: float = summary_pos.y + summary_size.y + 12.0
+		_sacrifice_panel.position = Vector2(sacrifice_x, sacrifice_y)
+		_sacrifice_panel.size = sacrifice_size
 
 	var continue_size: Vector2 = Vector2(240.0, 58.0)
 	_continue_button.position = Vector2(
@@ -564,7 +663,9 @@ func _build_tree_nodes() -> void:
 		_nodes_by_id[id] = node_control
 func _scaled_position(upgrade_id: String) -> Vector2:
 	var raw: Vector2 = NODE_POSITIONS.get(upgrade_id, Vector2.ZERO) as Vector2
-	return raw`r`n`r`nfunc _node_size_for(upgrade_id: String) -> Vector2:
+	return raw
+
+func _node_size_for(upgrade_id: String) -> Vector2:
 	if upgrade_id == "awakening":
 		return ROOT_NODE_SIZE
 	if upgrade_id == "they_can_see_you":
@@ -616,6 +717,8 @@ func _refresh_tree() -> void:
 	if _run_faith_label != null:
 		_run_faith_label.text = "Faith gained: %.1f" % _game_manager.run_faith_gained
 
+
+	_refresh_sacrifice_panel()
 func _apply_display_copy(definition: Dictionary) -> Dictionary:
 	var patched: Dictionary = definition.duplicate(true)
 	var id: String = String(patched.get("id", ""))
@@ -668,7 +771,7 @@ func _is_edge_active(destination_id: String) -> bool:
 	if _game_manager == null:
 		return false
 	var state: String = _game_manager.get_upgrade_display_state(destination_id)
-	return state == "available" or state == "unaffordable" or state == "purchased"
+	return state == "available" or state == "unaffordable" or state == "purchased" or state == "choice_locked"
 
 func _on_upgrade_node_pressed(upgrade_id: String) -> void:
 	if _game_manager == null:
@@ -706,6 +809,11 @@ func _on_node_hover_started(upgrade_id: String, _screen_position: Vector2) -> vo
 	lines.append(tooltip_desc)
 	if state == "purchased":
 		lines.append("Status: Purchased")
+	elif state == "choice_locked":
+		var reason: String = _game_manager.get_choice_lock_reason(upgrade_id)
+		if reason.is_empty():
+			reason = "another upgrade in this group"
+		lines.append("Locked by choice: %s" % reason)
 	else:
 		lines.append("Cost: %.0f Faith" % cost)
 	if state == "locked":
@@ -749,6 +857,64 @@ func _display_name_for_id(upgrade_id: String) -> String:
 		return String(data.get("name", upgrade_id))
 	return upgrade_id
 
+func _refresh_sacrifice_panel() -> void:
+	if _game_manager == null or _sacrifice_preview_label == null:
+		return
+
+	var max_safe: int = _game_manager.get_manual_sacrifice_max_safe_amount()
+	var preview_faith: float = _game_manager.get_sacrifice_faith_preview(max_safe, "manual")
+	if _game_manager.sacrifice_unlocked:
+		_sacrifice_preview_label.text = "MAX sacrifice: %d followers -> %.1f faith" % [max_safe, preview_faith]
+	else:
+		_sacrifice_preview_label.text = "Manual sacrifice locked (Ritual Knife)."
+
+	if _game_manager.auto_sacrifice_enabled:
+		_sacrifice_auto_status_label.text = "Auto Sacrifice: Enabled"
+		if _game_manager.is_gameplay_phase():
+			_sacrifice_countdown_label.text = "Next auto in %.1fs" % _game_manager.get_auto_sacrifice_seconds_until_next()
+		else:
+			_sacrifice_countdown_label.text = "Auto paused (Upgrade Phase)"
+	else:
+		_sacrifice_auto_status_label.text = "Auto Sacrifice: Locked"
+		_sacrifice_countdown_label.text = "Unlock with Blood Tithe"
+
+	var can_manual: bool = _game_manager.sacrifice_unlocked and _game_manager.is_upgrade_phase()
+	if _sacrifice_button_50 != null:
+		_sacrifice_button_50.disabled = not can_manual
+	if _sacrifice_button_100 != null:
+		_sacrifice_button_100.disabled = not can_manual
+	if _sacrifice_button_25p != null:
+		_sacrifice_button_25p.disabled = not can_manual
+	if _sacrifice_button_max != null:
+		_sacrifice_button_max.disabled = not can_manual
+
+func _on_sacrifice_50_pressed() -> void:
+	if _game_manager == null:
+		return
+	_game_manager.perform_sacrifice(50, "manual")
+	_refresh_tree()
+
+func _on_sacrifice_100_pressed() -> void:
+	if _game_manager == null:
+		return
+	_game_manager.perform_sacrifice(100, "manual")
+	_refresh_tree()
+
+func _on_sacrifice_25p_pressed() -> void:
+	if _game_manager == null:
+		return
+	var safe: int = _game_manager.get_manual_sacrifice_max_safe_amount()
+	var amount: int = int(floor(float(safe) * 0.25))
+	_game_manager.perform_sacrifice(max(0, amount), "manual")
+	_refresh_tree()
+
+func _on_sacrifice_max_pressed() -> void:
+	if _game_manager == null:
+		return
+	var safe: int = _game_manager.get_manual_sacrifice_max_safe_amount()
+	_game_manager.perform_sacrifice(safe, "manual")
+	_refresh_tree()
+
 func _on_node_hover_ended() -> void:
 	_hide_tooltip()
 
@@ -760,6 +926,14 @@ func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return
 	_game_manager.continue_from_upgrade()
+
+
+
+
+
+
+
+
 
 
 
