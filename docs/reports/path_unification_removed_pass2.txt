@@ -1,0 +1,6 @@
+﻿assets\cursor\cursor_aura_final.png
+assets\cursor\cursor_aura_pulse.png
+assets\cursor\cursor_aura_soft.png
+assets\cursor\cursor_ring_inner.png
+assets\cursor\cursor_ring_outer.png
+assets/sprites/cursor/cursor_aura.png

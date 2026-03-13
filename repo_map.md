@@ -1,8 +1,6 @@
-# THE CURSOR � Repository Map (Canonical Paths)
+﻿# THE CURSOR — Repository Map (Canonical Paths)
 
-This file defines the **canonical repository paths** for production assets.
-
-Use this as the source of truth for path organization and duplicate cleanup.
+This file defines the canonical production paths for runtime assets.
 
 ## 1. Canonical Asset Roots
 
@@ -11,77 +9,56 @@ Use this as the source of truth for path organization and duplicate cleanup.
   - Skeptics: `res://assets/sprites/characters/skeptics/`
   - Cultists: `res://assets/sprites/characters/cultists/`
   - Prophets: `res://assets/sprites/characters/prophets/`
-- Cursor sprites (runtime): `res://assets/sprites/cursor/`
-- UI panels: `res://assets/ui/panels/`
-- UI icons: `res://assets/ui/icons/`
-- UI node skins: `res://assets/ui/nodes/`
-- UI buttons: `res://assets/ui/buttons/`
+- Cursor progression sprites: `res://assets/sprites/cursor/`
 - Runtime VFX: `res://assets/vfx/`
   - Cursor VFX: `res://assets/vfx/cursor/`
   - Conversion VFX: `res://assets/vfx/conversion/`
-- UI-only effects: `res://assets/ui/effects/`
-- Props (world art): `res://assets/props/`
+- Environment textures: `res://assets/environment/`
+- Scene backgrounds: `res://assets/backgrounds/`
+- Props: `res://assets/props/`
   - Cult props: `res://assets/props/cult/`
   - Village props: `res://assets/props/village/`
   - Small props: `res://assets/props/small/`
-- Environment/base textures: `res://assets/environment/`
-- Backgrounds: `res://assets/backgrounds/`
+- UI roots:
+  - Panels: `res://assets/ui/panels/`
+  - Icons: `res://assets/ui/icons/`
+  - Buttons: `res://assets/ui/buttons/`
+  - Nodes: `res://assets/ui/nodes/`
+  - Labels: `res://assets/ui/labels/`
+  - Overlays: `res://assets/ui/overlays/`
+  - Tooltips: `res://assets/ui/tooltips/`
+  - UI effects: `res://assets/ui/effects/`
 
-## 2. Legacy/Parallel Roots (Do Not Use for New References)
+## 2. Legacy Roots Policy
 
-Keep only for transition/manual review. Do not wire new runtime references here.
+Legacy roots are not canonical and must not receive new runtime references.
 
-- `res://assets/characters/`
-- `res://assets/cursor/`
-- flat UI panel files under `res://assets/ui/` (outside `res://assets/ui/panels/`)
+Legacy directories `assets/characters/` and `assets/cursor/` were removed from the repo.
+
+Rule:
+- do not recreate legacy roots; add assets only under canonical roots.
 
 ## 3. Canonicalization Rules
 
-- One family = one canonical root.
-- No parallel production storage for the same family.
-- No production suffixes like `_copy`, `_new`, `_old`, `_final`, `_v2` unless explicitly temporary.
-- Replacements must happen in-place for canonical files.
-- Never delete a referenced file.
-- Delete only files that are both:
-  - exact duplicate by hash
-  - unreferenced after verification
+- One asset family = one canonical root.
+- No parallel production roots for the same family.
+- Same filename across multiple roots is not allowed unless both files are intentionally different and both referenced (currently none).
+- Delete only files that are unreferenced and safe by audit.
 
-## 4. Duplicate Hotspots Detected (Latest Audit)
+## 4. Current Audit Status
 
-Source: `docs/reports/ASSET_DUPLICATION_AUDIT.md` (regenerated on 2026-03-12)
+Source: `docs/reports/ASSET_DUPLICATION_AUDIT.md`
 
-Summary:
-- visual assets scanned: `191`
-- exact duplicate groups: `19`
-- duplicate files: `48`
-- same-name multi-path conflicts: `10`
-- unreferenced duplicate files: `34`
+Current result:
+- exact duplicate groups: `0`
+- same-name multi-path conflicts: `0`
+- unreferenced duplicate files: `0`
 
-High-impact duplicate families still present:
-- `res://assets/characters/*` (legacy variants and special units; many unreferenced)
-- `res://assets/cursor/cursor_symbol.png` (duplicate hash of `res://assets/sprites/cursor/cursor_base.png`)
-- `res://assets/ui/panel_card.png` (duplicate hash of canonical panel family)
-- `res://assets/environment/*` internal duplicates (mostly unreferenced)
-- `res://assets/props/small/*` and `res://assets/props/village/*` repeated hash clusters (mostly unreferenced)
-- semantic referenced duplicates intentionally preserved for now:
-  - cult prop triplets (`altar_*`, `candle_cluster_*`, `cult_banner_*`, `bone_pile_*`, `ritual_stone_*`)
-  - VFX aliases (`divine_pulse`, `upgrade_pulse`, `conversion_flash`, `cursor_flash`)
-  - panel aliases (`panel_main`, `panel_main_9slice`, `panel_upgrade`, etc.)
+## 5. Operational Workflow
 
-## 5. Safe Cleanup Workflow (Operational)
+1. Run duplicate audit:
+   - `powershell -ExecutionPolicy Bypass -File tools/audit_asset_duplicates.ps1 -RepoRoot . -ReportPath docs/reports/ASSET_DUPLICATION_AUDIT.md`
+2. Migrate any non-canonical runtime references.
+3. Remove unreferenced duplicates.
+4. Re-run audit and confirm zeros for duplicate groups and same-name conflicts.
 
-1. Run audit:
-   - `powershell -ExecutionPolicy Bypass -File tools/audit_asset_duplicates.ps1`
-2. Migrate references in `.gd/.tscn/.tres/.res` toward canonical roots.
-3. Verify no non-canonical paths remain referenced.
-4. Delete only exact-hash + unreferenced duplicates.
-5. Re-run audit and record delta in `docs/reports/ASSET_DUPLICATION_AUDIT.md`.
-
-## 6. Practical Target State
-
-- Runtime uses only:
-  - `res://assets/sprites/characters/`
-  - `res://assets/sprites/cursor/`
-  - `res://assets/ui/panels/`
-  - `res://assets/vfx/` and `res://assets/ui/effects/` by scope
-- Legacy roots (`res://assets/characters/`, `res://assets/cursor/`, flat panel files) reduced to zero referenced files, then removed.

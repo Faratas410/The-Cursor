@@ -35,7 +35,7 @@ Variant policy:
 
 ## 2. Characters
 
-Suggested folder: `assets/characters/`
+Suggested folder: `assets/sprites/characters/`
 
 ### 2.1 Civilians
 
@@ -87,7 +87,7 @@ Suggested folder: `assets/characters/`
 
 ## 3. Cursor System
 
-Suggested folder: `assets/cursor/`
+Suggested folders: `assets/sprites/cursor/` (cursor states), `assets/vfx/cursor/` (runtime aura/trail/ripple)
 
 ### 3.1 Core Cursor Progression
 
@@ -100,15 +100,14 @@ Suggested folder: `assets/cursor/`
 ### 3.2 Layered Cursor Components
 
 - `cursor_symbol.png`
+
+### 3.3 Cursor Runtime VFX Layers
+
+Suggested folder: `assets/vfx/cursor/`
+
 - `cursor_aura.png`
-- `cursor_ring_outer.png` (planned)
-- `cursor_ring_inner.png` (planned)
-
-### 3.3 Cursor Aura Layers (Planned)
-
-- `cursor_aura_soft.png`
-- `cursor_aura_pulse.png`
-- `cursor_aura_final.png`
+- `cursor_trail.png`
+- `cursor_ripple.png`
 
 ---
 
@@ -209,8 +208,6 @@ Suggested folders:
 - `candle_cluster_02.png`
 - `candle_cluster_03.png`
 - `cult_banner_01.png`
-- `cult_banner_02.png`
-- `cult_banner_03.png`
 - `ritual_stone_01.png`
 - `ritual_stone_02.png`
 - `ritual_stone_03.png`
@@ -218,8 +215,7 @@ Suggested folders:
 - `bone_pile_02.png`
 - `bone_pile_03.png`
 - `altar_01.png`
-- `altar_02.png`
-- `altar_03.png`
+
 
 ---
 
@@ -229,16 +225,18 @@ Suggested folder: `assets/ui/`
 
 ### 6.1 Panels
 
+Canonical runtime set:
 - `panel_main.png`
-- `panel_upgrade.png`
 - `panel_popup.png`
 - `panel_card.png`
 - `panel_tooltip.png`
-- `panel_main_9slice.png`
 - `panel_card_9slice.png`
 - `panel_tooltip_9slice.png`
+
+Legacy/non-canonical (keep only if explicitly rewired):
 - `ui_panel_dark.png`
 - `ui_panel_gold.png`
+
 
 ### 6.2 Icons (HUD / Stats)
 
@@ -353,3 +351,4 @@ Rule of use:
 
 - Missing gameplay-critical assets should be added immediately.
 - Optional planned assets can be scheduled in production waves.
+
