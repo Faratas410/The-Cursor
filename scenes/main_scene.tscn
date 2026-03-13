@@ -1,4 +1,4 @@
-﻿[gd_scene load_steps=28 format=3]
+﻿[gd_scene load_steps=13 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/npc.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/cursor.tscn" id="2"]
@@ -11,103 +11,17 @@
 [ext_resource type="Script" path="res://scripts/ui/upgrade_panel.gd" id="10"]
 [ext_resource type="PackedScene" path="res://scenes/prophet.tscn" id="11"]
 [ext_resource type="PackedScene" path="res://scenes/skeptic.tscn" id="12"]
-[ext_resource type="Texture2D" path="res://assets/props/cult/ritual_stone_02.png" id="13"]
-[ext_resource type="Texture2D" path="res://assets/props/cult/candle_cluster_01.png" id="14"]
-[ext_resource type="Texture2D" path="res://assets/props/cult/bone_pile_01.png" id="15"]
-[ext_resource type="Texture2D" path="res://assets/props/cult/cult_banner_01.png" id="16"]
-[ext_resource type="Texture2D" path="res://assets/props/cult/altar_01.png" id="17"]
-[ext_resource type="Texture2D" path="res://assets/props/cult/ritual_stone_03.png" id="18"]
-[ext_resource type="Texture2D" path="res://assets/props/cult/candle_cluster_01.png" id="19"]
-[ext_resource type="Texture2D" path="res://assets/props/cult/cult_banner_01.png" id="20"]
-[ext_resource type="Texture2D" path="res://assets/props/cult/bone_pile_01.png" id="21"]
-[ext_resource type="Texture2D" path="res://assets/props/cult/altar_01.png" id="22"]
-[ext_resource type="Texture2D" path="res://assets/props/cult/ritual_stone_02.png" id="23"]
-[ext_resource type="Texture2D" path="res://assets/props/cult/candle_cluster_01.png" id="24"]
-[ext_resource type="Texture2D" path="res://assets/props/cult/cult_banner_01.png" id="25"]
-[ext_resource type="Texture2D" path="res://assets/props/cult/altar_01.png" id="26"]
-[ext_resource type="Texture2D" path="res://assets/props/cult/ritual_stone_03.png" id="27"]
-
 [node name="Main" type="Node2D"]
 
 [node name="World" type="Node2D" parent="."]
 
-[node name="Background" type="Sprite2D" parent="World"]
-position = Vector2(0, 0)
-centered = false
 
 [node name="DecorPropsLayer" type="Node2D" parent="World"]
 
-[node name="RitualStoneTL" type="Sprite2D" parent="World/DecorPropsLayer"]
-position = Vector2(120, 124)
-texture = ExtResource("13")
-
-[node name="CandleTL" type="Sprite2D" parent="World/DecorPropsLayer"]
-position = Vector2(252, 106)
-texture = ExtResource("16")
-rotation = -0.122173
-
-[node name="BoneTL" type="Sprite2D" parent="World/DecorPropsLayer"]
-position = Vector2(290, 168)
-texture = ExtResource("22")
-rotation = 0.174533
-
-[node name="BannerTR" type="Sprite2D" parent="World/DecorPropsLayer"]
-position = Vector2(1228, 120)
-texture = ExtResource("19")
-rotation = 0.0698132
-
-[node name="RitualStoneTR" type="Sprite2D" parent="World/DecorPropsLayer"]
-position = Vector2(1118, 156)
-texture = ExtResource("14")
-rotation = -0.10472
-
-[node name="CandleTR" type="Sprite2D" parent="World/DecorPropsLayer"]
-position = Vector2(1048, 118)
-texture = ExtResource("17")
-
-[node name="AltarBL" type="Sprite2D" parent="World/DecorPropsLayer"]
-position = Vector2(122, 604)
-texture = ExtResource("25")
-
-[node name="BannerBL" type="Sprite2D" parent="World/DecorPropsLayer"]
-position = Vector2(258, 638)
-texture = ExtResource("21")
-
-[node name="BoneBL" type="Sprite2D" parent="World/DecorPropsLayer"]
-position = Vector2(314, 578)
-texture = ExtResource("23")
-rotation = -0.139626
-
-[node name="AltarBR" type="Sprite2D" parent="World/DecorPropsLayer"]
-position = Vector2(1206, 598)
-texture = ExtResource("26")
-rotation = 0.0523599
-
-[node name="BannerBR" type="Sprite2D" parent="World/DecorPropsLayer"]
-position = Vector2(1078, 644)
-texture = ExtResource("20")
-rotation = -0.0698132
-
-[node name="RitualStoneBR" type="Sprite2D" parent="World/DecorPropsLayer"]
-position = Vector2(1012, 572)
-texture = ExtResource("15")
-rotation = 0.15708
-
-[node name="CandleBR" type="Sprite2D" parent="World/DecorPropsLayer"]
-position = Vector2(1122, 548)
-texture = ExtResource("18")
-
-[node name="BoneBR" type="Sprite2D" parent="World/DecorPropsLayer"]
-position = Vector2(934, 620)
-texture = ExtResource("24")
-rotation = -0.122173
-
-[node name="AltarTopMid" type="Sprite2D" parent="World/DecorPropsLayer"]
-position = Vector2(682, 86)
-texture = ExtResource("27")
-scale = Vector2(0.92, 0.92)
-
 [node name="NPCContainer" type="Node2D" parent="World"]
+
+
+
 
 [node name="Cursor" parent="." instance=ExtResource("2")]
 game_manager_path = NodePath("../Systems/GameManager")
@@ -195,5 +109,8 @@ background_path = NodePath("../../World/Background")
 script = ExtResource("4")
 
 [connection signal="npc_detected" from="Cursor" to="Systems/ConversionSystem" method="_on_npc_detected"]
+
+
+
 
 

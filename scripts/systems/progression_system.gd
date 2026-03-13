@@ -12,6 +12,15 @@ static var BACKGROUND_TEXTURES: Array[Texture2D] = [
 	preload("res://assets/backgrounds/bg_cult_world.png")
 ]
 
+const AMBIENT_OVERLAY_SCENES: Dictionary = {
+	"cult_candle_flicker": preload("res://scenes/ambient_overlays/cult_candle_flicker_01.tscn"),
+	"cult_embers_animated": preload("res://scenes/ambient_overlays/cult_embers_animated_01.tscn"),
+	"village_smoke_soft_animated": preload("res://scenes/ambient_overlays/village_smoke_soft_animated_01.tscn"),
+	"town_lantern_glow_animated": preload("res://scenes/ambient_overlays/town_lantern_glow_animated_01.tscn"),
+	"metropolis_rune_pulse_animated": preload("res://scenes/ambient_overlays/metropolis_rune_pulse_animated_01.tscn"),
+	"planet_spores_animated": preload("res://scenes/ambient_overlays/planet_spores_animated_01.tscn")
+}
+
 @export var game_manager_path: NodePath
 @export var background_path: NodePath
 
@@ -19,7 +28,12 @@ var _game_manager: GameManager
 var _background: Sprite2D
 var _ground_noise_overlay: Sprite2D
 var _edge_details_overlay: Sprite2D
+var _ambient_overlay_layer: Node2D
+var _ambient_overlay_a: Node2D
+var _ambient_overlay_b: Node2D
+var _ambient_overlay_c: Node2D
 var _overlay_view_size: Vector2 = Vector2.ZERO
+var _current_dimension_for_overlays: int = 0
 
 var _dimension_thresholds: PackedInt32Array = PackedInt32Array([100, 1000, 10000, 100000, 1000000])
 var _world_notice_thresholds: PackedInt32Array = PackedInt32Array([5000, 10000, 50000])
@@ -58,7 +72,9 @@ func apply_dimension_background(dimension: int) -> void:
 	_background.modulate = Color(1, 1, 1, 1)
 	_background.centered = false
 	_background.z_index = -5
+	_current_dimension_for_overlays = clamped_dimension
 	_fit_background_to_viewport()
+	_apply_ambient_overlays()
 
 func _fit_background_to_viewport() -> void:
 	if _background == null or _background.texture == null:
@@ -100,6 +116,34 @@ func _ensure_world_overlays() -> void:
 	_edge_details_overlay.position = Vector2.ZERO
 	_edge_details_overlay.z_index = -3
 
+	_ambient_overlay_layer = world.get_node_or_null("AmbientOverlayLayer") as Node2D
+	if _ambient_overlay_layer == null:
+		_ambient_overlay_layer = Node2D.new()
+		_ambient_overlay_layer.name = "AmbientOverlayLayer"
+		world.add_child(_ambient_overlay_layer)
+
+	_ambient_overlay_a = _ambient_overlay_layer.get_node_or_null("AmbientOverlayA") as Node2D
+	if _ambient_overlay_a == null:
+		_ambient_overlay_a = Node2D.new()
+		_ambient_overlay_a.name = "AmbientOverlayA"
+		_ambient_overlay_layer.add_child(_ambient_overlay_a)
+
+	_ambient_overlay_b = _ambient_overlay_layer.get_node_or_null("AmbientOverlayB") as Node2D
+	if _ambient_overlay_b == null:
+		_ambient_overlay_b = Node2D.new()
+		_ambient_overlay_b.name = "AmbientOverlayB"
+		_ambient_overlay_layer.add_child(_ambient_overlay_b)
+
+	_ambient_overlay_c = _ambient_overlay_layer.get_node_or_null("AmbientOverlayC") as Node2D
+	if _ambient_overlay_c == null:
+		_ambient_overlay_c = Node2D.new()
+		_ambient_overlay_c.name = "AmbientOverlayC"
+		_ambient_overlay_layer.add_child(_ambient_overlay_c)
+
+	_configure_ambient_overlay_slot(_ambient_overlay_a, -2)
+	_configure_ambient_overlay_slot(_ambient_overlay_b, -2)
+	_configure_ambient_overlay_slot(_ambient_overlay_c, -2)
+
 func _update_world_overlay_if_needed() -> void:
 	var view_size: Vector2 = get_viewport().get_visible_rect().size
 	if view_size == _overlay_view_size:
@@ -118,6 +162,118 @@ func _refresh_world_overlays() -> void:
 	var image_size: Vector2i = Vector2i(int(view_size.x), int(view_size.y))
 	_ground_noise_overlay.texture = _build_ground_noise_texture(image_size)
 	_edge_details_overlay.texture = _build_edge_details_texture(image_size)
+	_apply_ambient_overlays()
+
+func _configure_ambient_overlay_slot(slot: Node2D, z_index_value: int) -> void:
+	slot.z_index = z_index_value
+
+func _clear_ambient_overlay_slot(slot: Node2D) -> void:
+	for child: Node in slot.get_children():
+		slot.remove_child(child)
+		child.queue_free()
+
+func _apply_ambient_overlays() -> void:
+	if _ambient_overlay_a == null or _ambient_overlay_b == null or _ambient_overlay_c == null:
+		return
+
+	var view_size: Vector2 = get_viewport().get_visible_rect().size
+	if view_size.x <= 1.0 or view_size.y <= 1.0:
+		return
+
+	_clear_ambient_overlay_slot(_ambient_overlay_a)
+	_clear_ambient_overlay_slot(_ambient_overlay_b)
+	_clear_ambient_overlay_slot(_ambient_overlay_c)
+
+	var layouts: Array[Dictionary] = _build_ambient_layout(_current_dimension_for_overlays, view_size)
+	for i: int in range(min(layouts.size(), 3)):
+		var slot: Node2D = _ambient_overlay_a
+		if i == 1:
+			slot = _ambient_overlay_b
+		elif i == 2:
+			slot = _ambient_overlay_c
+		_assign_ambient_overlay(slot, layouts[i])
+
+func _assign_ambient_overlay(slot: Node2D, layout: Dictionary) -> void:
+	var key: String = String(layout.get("key", ""))
+	if not AMBIENT_OVERLAY_SCENES.has(key):
+		return
+
+	var scene: PackedScene = AMBIENT_OVERLAY_SCENES[key] as PackedScene
+	if scene == null:
+		return
+
+	var overlay_instance: Node2D = scene.instantiate() as Node2D
+	if overlay_instance == null:
+		return
+
+	overlay_instance.position = Vector2.ZERO
+	overlay_instance.scale = layout.get("scale", Vector2.ONE)
+	overlay_instance.modulate = Color(1, 1, 1, float(layout.get("alpha", 0.75)))
+	slot.position = layout.get("pos", Vector2.ZERO)
+	slot.add_child(overlay_instance)
+
+func _build_ambient_layout(dimension: int, view_size: Vector2) -> Array[Dictionary]:
+	var layouts: Array[Dictionary] = []
+	var w: float = view_size.x
+	var h: float = view_size.y
+
+	match dimension:
+		0:
+			layouts.append({
+				"key": "village_smoke_soft_animated",
+				"pos": Vector2(w * 0.88, h * 0.16),
+				"scale": Vector2(0.30, 0.30),
+				"alpha": 0.65
+			})
+		1:
+			layouts.append({
+				"key": "town_lantern_glow_animated",
+				"pos": Vector2(w * 0.90, h * 0.18),
+				"scale": Vector2(0.28, 0.28),
+				"alpha": 0.78
+			})
+		2:
+			layouts.append({
+				"key": "town_lantern_glow_animated",
+				"pos": Vector2(w * 0.90, h * 0.16),
+				"scale": Vector2(0.27, 0.27),
+				"alpha": 0.70
+			})
+			layouts.append({
+				"key": "cult_embers_animated",
+				"pos": Vector2(w * 0.12, h * 0.84),
+				"scale": Vector2(0.30, 0.30),
+				"alpha": 0.55
+			})
+		3:
+			layouts.append({
+				"key": "metropolis_rune_pulse_animated",
+				"pos": Vector2(w * 0.88, h * 0.84),
+				"scale": Vector2(0.29, 0.29),
+				"alpha": 0.76
+			})
+		4:
+			layouts.append({
+				"key": "planet_spores_animated",
+				"pos": Vector2(w * 0.90, h * 0.82),
+				"scale": Vector2(0.31, 0.31),
+				"alpha": 0.70
+			})
+		_:
+			layouts.append({
+				"key": "cult_candle_flicker",
+				"pos": Vector2(w * 0.10, h * 0.14),
+				"scale": Vector2(0.30, 0.30),
+				"alpha": 0.82
+			})
+			layouts.append({
+				"key": "cult_embers_animated",
+				"pos": Vector2(w * 0.90, h * 0.82),
+				"scale": Vector2(0.30, 0.30),
+				"alpha": 0.62
+			})
+
+	return layouts
 
 func _build_ground_noise_texture(size: Vector2i) -> Texture2D:
 	var image: Image = Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
@@ -316,5 +472,3 @@ func _calculate_level(value: int, thresholds: PackedInt32Array) -> int:
 
 func _update_world_transform_background() -> void:
 	apply_dimension_background(5)
-
-
