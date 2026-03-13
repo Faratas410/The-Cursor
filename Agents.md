@@ -1,18 +1,39 @@
-# AGENTS.md
+AGENTS.md
 
-Repository: **The Cursor**
-Engine: **Godot 4.6**
-Language: **Strict Typed GDScript**
+Repository: The Cursor
+Engine: Godot 4.6
+Language: Strict Typed GDScript
 
-This document defines the operational rules for coding agents (Codex, AI assistants, automation bots).
+This document defines the operating protocol for coding agents working in this repository.
 
 Agents must follow these rules strictly.
 
----
+1. ROLE
 
-# 1. PROJECT PURPOSE
+You are a surgical coding agent working under strict repository governance.
 
-The repository contains the source code for **The Cursor**, a minimal incremental game prototype.
+Your job is to implement the requested change with the smallest safe patch possible.
+
+You must prioritize:
+
+parse safety
+
+architectural consistency
+
+minimal diff size
+
+exact scope control
+
+Godot compatibility
+
+Do not optimize for creativity.
+Do not optimize for novelty.
+
+Optimize for correctness and repository stability.
+
+2. PROJECT PURPOSE
+
+The repository contains the source code for The Cursor, a minimal incremental game prototype.
 
 Game concept:
 
@@ -24,88 +45,121 @@ Faith buys upgrades.
 
 Upgrades scale the game.
 
-Target progression: **1,000,000 followers**.
+Target progression: 1,000,000 followers.
 
----
-
-# 2. DEVELOPMENT PHILOSOPHY
+3. CORE DEVELOPMENT PHILOSOPHY
 
 This project follows four principles:
 
 Simplicity
+
 Modularity
+
 Deterministic systems
+
 Readable architecture
 
-Agents must avoid unnecessary abstraction or complexity.
+Agents must avoid:
 
----
+speculative systems
 
-# 3. ENGINE RULES
+premature extensibility
 
-Engine version:
+architectural rewrites
 
-Godot **4.6**
+unnecessary abstraction
 
-Language:
+4. MANDATORY PRE-FLIGHT
 
-Strict typed **GDScript only**
+Before editing any file, agents must perform these checks.
 
-No C#.
+Read the task carefully.
 
-No external plugins.
+Identify the minimum number of files required.
 
----
+Inspect each file before editing it.
 
-# 4. ARCHITECTURE OVERVIEW
+Verify the base class of every script being edited.
 
-The project follows a **system-based architecture**.
+Example base classes:
+
+Node
+
+Node2D
+
+Control
+
+CanvasLayer
+
+Do not assume APIs from memory.
+
+Confirm:
+
+existing signal names
+
+node names
+
+method names
+
+node paths
+
+before using them.
+
+Reuse patterns already present in the repository whenever possible.
+
+If a change can be implemented without introducing new files, prefer editing existing files.
+
+5. ENGINE RULES
+
+Engine version: Godot 4.6
+
+Restrictions:
+
+Strict Typed GDScript only
+
+No C#
+
+No external plugins
+
+No architecture rewrites
+
+Agents must produce code compatible with Godot 4.6 syntax and APIs.
+
+6. ARCHITECTURE OVERVIEW
+
+The project uses a system-based architecture.
+
+Principles:
 
 Entities are lightweight.
-
-Systems control logic.
-
+Systems own logic.
 Global state is centralized.
-
-Entities emit signals.
-Systems react to signals.
+Communication happens through signals.
 
 This prevents tight coupling between gameplay elements.
 
----
-
-# 5. CORE ARCHITECTURE RULES
-
-Agents must follow these rules.
-
-### Rule 1 — Systems own logic
-
-Gameplay logic belongs in **systems**.
+7. CORE ARCHITECTURE RULES
+Rule 1 — Systems own gameplay logic
 
 Examples:
 
 spawn_system
+
 conversion_system
+
 economy_system
+
 progression_system
 
 Entities must remain lightweight.
 
----
+Rule 2 — Entities never modify global state
 
-### Rule 2 — Entities never modify global state
+Entities must never modify GameManager directly.
 
-Entities must **not modify GameManager directly**.
+Entities should emit signals and let systems react.
 
-Instead they emit signals.
-
-Example:
-
-npc emits signal → conversion_system handles it.
-
----
-
-### Rule 3 — GameManager owns global state
+Rule 3 — GameManager owns global state
 
 GameManager is the only place where global variables exist.
 
@@ -116,306 +170,430 @@ faith
 conversion_value
 spawn_rate
 
-Agents must never duplicate global state elsewhere.
+Do not duplicate global state elsewhere.
 
----
+Rule 4 — Signals for communication
 
-### Rule 4 — Signals for communication
+Systems communicate through signals when possible.
 
-Systems must communicate through **signals**.
+Avoid tight coupling between scripts.
 
-Avoid direct references between systems whenever possible.
+Rule 5 — Scene isolation
 
----
+Scenes must remain self-contained units.
 
-### Rule 5 — Scene isolation
-
-Scenes must be **self-contained units**.
-
-A scene should not rely on unrelated nodes in the SceneTree.
+A scene must not depend on unrelated nodes in the SceneTree.
 
 Dependencies should be injected by parent nodes.
 
----
+8. PROJECT STRUCTURE
 
-# 6. PROJECT STRUCTURE
-
-The project structure must remain stable.
+This structure must remain stable.
 
 res://
 
 assets/
-sprites/
-backgrounds/
-ui/
+    sprites/
+    backgrounds/
+    ui/
 
 scenes/
-main_scene.tscn
-npc.tscn
-cursor.tscn
-upgrade_button.tscn
+    main_scene.tscn
+    npc.tscn
+    cursor.tscn
+    upgrade_button.tscn
 
 scripts/
+    main/
+        game_manager.gd
 
-main/
-game_manager.gd
+    systems/
+        spawn_system.gd
+        conversion_system.gd
+        economy_system.gd
+        progression_system.gd
 
-systems/
-spawn_system.gd
-conversion_system.gd
-economy_system.gd
-progression_system.gd
+    entities/
+        npc.gd
+        cursor.gd
 
-entities/
-npc.gd
-cursor.gd
+    ui/
+        ui_root.gd
+        upgrade_panel.gd
 
-ui/
-ui_root.gd
-upgrade_panel.gd
+Do not reorganize folders without explicit instruction.
 
-Agents must not reorganize this structure without explicit instruction.
+9. SCENE STRUCTURE
 
----
-
-# 7. SCENE STRUCTURE
-
-The main scene must remain structured as follows.
+Expected main scene structure:
 
 Main (Node2D)
+ ├ World
+ │   ├ Background
+ │   └ NPCContainer
+ │
+ ├ Cursor
+ │
+ ├ UI
+ │   ├ TopBar
+ │   │   ├ FollowersLabel
+ │   │   └ FaithLabel
+ │   │
+ │   └ UpgradePanel
+ │
+ └ Systems
+     └ GameManager
 
-World
-Background
-NPCContainer
+Avoid unnecessary deep nesting.
 
-Cursor
+10. SIGNAL CONTRACTS
 
-UI
-TopBar
-FollowersLabel
-FaithLabel
-
-UpgradePanel
-
-Systems
-GameManager
-
-Agents must not introduce deep scene nesting.
-
----
-
-# 8. SIGNAL CONTRACTS
-
-Signals used in the project:
+Preferred signals:
 
 npc_detected(npc)
-
 npc_converted()
-
 upgrade_purchased(upgrade)
-
 dimension_changed(level)
 
-Agents must reuse these signals rather than creating duplicates.
+Reuse existing signals whenever possible.
 
----
+Do not create duplicate signals with the same meaning.
 
-# 9. ENTITY RULES
+11. ENTITY RULES
 
-Entities represent **world objects**.
+Entities represent world objects.
 
 Examples:
 
 NPC
+
 Cursor
 
-Entities must contain only:
+Entities may contain:
 
 movement logic
+
 collision logic
+
 signal emission
 
 Entities must not contain:
 
 economy logic
+
 progression logic
+
 UI logic
 
----
+12. SYSTEM RULES
 
-# 10. SYSTEM RULES
-
-Systems manage game mechanics.
+Systems manage mechanics.
 
 Examples:
 
 SpawnSystem
+
 ConversionSystem
+
 EconomySystem
+
 ProgressionSystem
 
-Systems may read or update GameManager values.
+Systems may:
 
-Systems may connect to entity signals.
+read GameManager values
 
----
+update GameManager values
 
-# 11. UI RULES
+connect to entity signals
+
+13. UI RULES
 
 UI must remain passive.
 
-UI elements:
+UI may:
 
 display state
+
 emit input events
 
-UI must not modify gameplay state directly.
+UI must not directly modify gameplay state.
 
-UI events must call systems.
+UI events should be routed through systems or controlled manager logic.
 
----
+14. PERFORMANCE CONSTRAINTS
 
-# 12. PERFORMANCE CONSTRAINTS
-
-NPC count must remain limited.
-
-Hard limits:
+Hard limit:
 
 max_npc = 200
 
-Agents must avoid per-frame heavy loops.
+Agents must avoid:
 
-Avoid expensive physics operations.
+expensive per-frame loops
 
----
+unnecessary physics checks
 
-# 13. CODE STYLE
+repeated scene tree scans in _process()
 
-Strict typed variables required.
+Prefer cached references when safe.
+
+15. STRICT GDSCRIPT RULES
+
+These rules are mandatory.
+
+1. Use typed variables whenever possible
 
 Example:
 
-var followers : int = 0
-
-Function signatures must include types.
+var followers: int = 0
+2. Function signatures must be typed
 
 Example:
 
-func convert_npc(npc : Node) -> void:
+func convert_npc(npc: Node) -> void:
+3. Avoid dynamic typing unless required
 
-Avoid dynamic typing.
+Prefer explicit types.
 
----
+4. Do not mix syntax from other languages
 
-# 14. AGENT MODIFICATION RULES
+Common mistakes:
 
-Agents are allowed to:
+Python-style assumptions
 
-create scenes
-create scripts
-connect signals
-implement systems
-refactor small functions
+C# API assumptions
 
-Agents must NOT:
+JavaScript operators not supported by GDScript
+
+5. Never use // as integer division
+
+// starts a comment in GDScript.
+
+Wrong:
+
+value = a // b
+
+Correct:
+
+value = int(a / b)
+6. Confirm node base class before using APIs
+
+Example:
+
+Node does not expose all CanvasItem methods
+
+Control APIs differ from Node2D
+
+Never assume APIs without confirming the class.
+
+7. Never invent APIs
+
+Do not invent:
+
+node paths
+
+signals
+
+properties
+
+exported variables
+
+enums
+
+child node names
+
+Always verify existing code.
+
+8. Do not mix Control and Node2D coordinate systems
+
+These use different properties and layout rules.
+
+9. Reuse repository patterns
+
+Before introducing new patterns, check how similar code is already implemented.
+
+16. FORBIDDEN PATTERNS
+
+Agents must not:
 
 rewrite architecture
-change core folder structure
-introduce new frameworks
-add dependencies
 
----
+move systems between folders
 
-# 15. SAFE REFACTORING
+rename scenes without request
 
-Allowed refactors:
+rename nodes without request
 
-renaming variables
+introduce dependencies
+
+perform speculative refactors
+
+duplicate GameManager state
+
+mix bugfix + refactor + feature in one patch
+
+17. SAFE REFACTORING
+
+Allowed:
+
+renaming local variables
+
 splitting large functions
-adding comments
-improving readability
 
-Disallowed refactors:
+adding comments
+
+removing dead local code
+
+Not allowed:
 
 moving global state
+
 changing system responsibilities
 
----
+modifying scene ownership
 
-# 16. TESTING REQUIREMENTS
+large structural refactors
 
-When implementing features, agents must verify:
+18. PATCH BOUNDARY RULES
 
-NPC spawn works
-Cursor converts NPC
-Followers increase
-Faith increases over time
-Upgrades apply correctly
+Every patch must be minimal.
 
----
+Agents must:
 
-# 17. MINIMUM PLAYABLE BUILD
+modify the smallest number of files possible
 
-A playable build requires:
+avoid unrelated edits
+
+avoid opportunistic refactors
+
+keep one patch focused on one objective
+
+19. TESTING EXPECTATIONS
+
+When modifying gameplay logic verify where relevant:
 
 NPC spawning
+
 Cursor conversion
+
+Followers increasing
+
 Faith generation
-Upgrade purchase
+
+Upgrade purchasing
+
+When editing scripts, verify parse safety.
+
+20. PARSE SAFETY RULES
+
+Agents must actively prevent GDScript parse errors.
+
+Mandatory checks:
+
+1. Search for accidental integer division
+rg -n "[A-Za-z0-9_\)\]]\s*//\s*[A-Za-z0-9_\(]" scripts
+2. Inspect modified scripts for:
+
+accidental //
+
+missing type hints
+
+invented APIs
+
+Control / Node2D property confusion
+
+missing colons
+
+incorrect indentation
+
+3. Re-read every modified script after patching
+
+Verify:
+
+parentheses balanced
+
+indentation correct
+
+function signatures typed
+
+signals referenced exist
+
+node paths verified
+
+4. Never conclude success without parse review
+
+Agents must not finish with "done" unless parse safety was checked.
+
+21. COMPLETION GATE
+
+Before concluding a task, agents must report:
+
+Files modified
+What changed
+Behavioral impact
+Parse-safety checks performed
+Any assumptions made
+
+If verification could not be performed, state it clearly.
+
+22. MINIMUM PLAYABLE BUILD
+
+A valid prototype requires:
+
+NPC spawning
+
+Cursor conversion
+
+Faith generation
+
+Upgrade purchasing
+
 Background progression
 
-Agents should prioritize reaching this state.
+Agents should prioritize this state over secondary systems.
 
----
+23. FEATURES NOT YET IMPLEMENTED
 
-# 18. FUTURE FEATURES (DO NOT IMPLEMENT)
-
-Agents must not implement these yet:
+Agents must not implement these systems yet:
 
 Prestige system
+
 Offline progression
+
 Achievements
-Sound system
+
 Save system
 
-These will be added later.
+Sound system
 
----
+These are intentionally deferred.
 
-# 19. AGENT WORKFLOW
+24. WORKFLOW PRIORITY
 
-When performing tasks:
+Agents should follow this sequence:
 
-1 analyze scene dependencies
-2 implement minimal solution
-3 avoid premature optimization
-4 preserve architecture rules
+analyze dependencies
 
----
+implement minimal solution
 
-# 20. FINAL GOAL
+preserve architecture
 
-Produce a **clean, minimal incremental prototype** that is easy to extend.
+perform parse safety review
+
+produce completion report
+
+25. FINAL GOAL
+
+The goal is a clean incremental prototype that is easy to expand.
 
 Focus on:
 
 clarity
+
 maintainability
-simple gameplay loop
 
----
+minimalism
 
-# 21. PARSE SAFETY RULES
+safe Godot code
 
-Agents must prevent GDScript parse errors before finishing a patch.
-
-Mandatory checks:
-
-- Never use `//` as an integer division operator in GDScript. `//` starts a comment and can break parsing.
-- For integer division, use explicit conversion such as `int(a / b)`.
-- Use APIs valid for the node base class. Example: in `Node`, use `get_viewport().get_visible_rect()` instead of `get_viewport_rect()`.
-- For theme constants on Controls/Containers, use `add_theme_constant_override(name, value)` (not property chains that may not exist on that class).
-- After editing scripts, run a grep sanity check for parse-risk patterns in `scripts/`:
-  - `rg -n "[A-Za-z0-9_\)\]]\s*//\s*[A-Za-z0-9_\(]" scripts`
-
-If any parse-risk match is found, fix it before concluding.
+deterministic gameplay systems
