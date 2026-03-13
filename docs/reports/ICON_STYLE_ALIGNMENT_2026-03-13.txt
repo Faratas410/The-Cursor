@@ -1,0 +1,23 @@
+﻿Updated icons: 22
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\upgrades\upgrade_conversion_chain.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\upgrades\upgrade_conversion_speed.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\upgrades\upgrade_corruption_power.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\upgrades\upgrade_cult_dominion.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\upgrades\upgrade_cult_growth.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\upgrades\upgrade_cult_influence.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\upgrades\upgrade_dark_ritual.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\upgrades\upgrade_divine_favor.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\upgrades\upgrade_faith_multiplier.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\upgrades\upgrade_forbidden_knowledge.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\upgrades\upgrade_mass_conversion.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\upgrades\upgrade_ritual_mastery.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_bone.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_book.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_candle.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_coin.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_dagger.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_eye.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_halo.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_idol.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_orb.png
+C:\Users\dovig\Documents\GitHub\The-Cursor\assets\icons\relics\relic_skull.png

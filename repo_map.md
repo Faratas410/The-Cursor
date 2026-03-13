@@ -14,7 +14,7 @@ This file defines the canonical production paths for runtime assets.
   - Cursor VFX: `res://assets/vfx/cursor/`
   - Conversion VFX: `res://assets/vfx/conversion/`
 - Environment textures: `res://assets/environment/`
-- Scene backgrounds: `res://assets/backgrounds/`
+- Scene backgrounds (runtime): `res://assets/backgrounds/` (canonical files: `bg_*_topdown.png`)
 - Props: `res://assets/props/`
   - Cult props: `res://assets/props/cult/`
   - Village props: `res://assets/props/village/`
@@ -70,3 +70,4 @@ Strict check command (must pass):
 Automation:
 - CI workflow: `.github/workflows/asset-canon-guard.yml`
 - Optional local hook installer: `tools/install_asset_audit_hook.ps1`
+

@@ -29,7 +29,7 @@ Variant policy:
 
 - Character variants: `_01`, `_02`, `_03`, ...
 - Small prop variants: `_a`, `_b`, `_c` or `_01`, `_02`, `_03`
-- Stage backgrounds: `bg_<stage>.png`
+- Stage backgrounds (runtime): `bg_<stage>_topdown.png`
 
 ---
 
@@ -158,16 +158,7 @@ Suggested folder: `assets/environment/`
 - `ritual_circle_ground.png` (planned)
 - `ritual_pillar_01.png` (planned)
 
-### 4.7 Stage Backgrounds
-
-- `bg_village.png`
-- `bg_town.png`
-- `bg_city.png`
-- `bg_metropolis.png`
-- `bg_planet.png`
-- `bg_cult_world.png`
-
-Optional top-down set (if active pipeline uses it):
+### 4.7 Stage Backgrounds (Canonical Runtime Set)
 
 - `bg_village_topdown.png`
 - `bg_town_topdown.png`
@@ -351,4 +342,5 @@ Rule of use:
 
 - Missing gameplay-critical assets should be added immediately.
 - Optional planned assets can be scheduled in production waves.
+
 

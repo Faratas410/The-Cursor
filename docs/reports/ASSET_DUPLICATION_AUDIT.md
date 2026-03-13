@@ -1,7 +1,7 @@
 # Asset Duplication Audit
 
 ## Summary
-- total visual asset files scanned: **213**
+- total visual asset files scanned: **207**
 - exact duplicate groups count: **0**
 - duplicate files count: **0**
 - same-name multi-path conflicts count: **0**
