@@ -916,14 +916,21 @@ func _refresh_sacrifice_panel() -> void:
 		_sacrifice_countdown_label.text = "Unlock with Blood Tithe"
 
 	var can_manual: bool = _game_manager.sacrifice_unlocked and _game_manager.is_upgrade_phase()
+	var show_manual_buttons: bool = _game_manager.sacrifice_unlocked
 	if _sacrifice_button_50 != null:
+		_sacrifice_button_50.visible = show_manual_buttons
 		_sacrifice_button_50.disabled = not can_manual
 	if _sacrifice_button_100 != null:
+		_sacrifice_button_100.visible = show_manual_buttons
 		_sacrifice_button_100.disabled = not can_manual
 	if _sacrifice_button_25p != null:
+		_sacrifice_button_25p.visible = show_manual_buttons
 		_sacrifice_button_25p.disabled = not can_manual
 	if _sacrifice_button_max != null:
+		_sacrifice_button_max.visible = show_manual_buttons
 		_sacrifice_button_max.disabled = not can_manual
+
+	_apply_layout()
 
 func _on_sacrifice_50_pressed() -> void:
 	if _game_manager == null:
@@ -963,6 +970,8 @@ func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return
 	_game_manager.continue_from_upgrade()
+
+
 
 
 

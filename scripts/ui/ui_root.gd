@@ -380,15 +380,15 @@ func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Textur
 	var min_width: float = 170.0
 	match row_name:
 		"Followers":
-			min_width = 340.0
+			min_width = 248.0
 		"Faith":
-			min_width = 190.0
+			min_width = 160.0
 		"FollowersPerSecond":
-			min_width = 210.0
+			min_width = 188.0
 		"CultPower":
-			min_width = 190.0
+			min_width = 160.0
 		"RunTimer":
-			min_width = 146.0
+			min_width = 120.0
 		_:
 			min_width = 160.0
 
@@ -432,7 +432,7 @@ func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Textur
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.clip_text = false
+	label.clip_text = true
 	content.add_child(label)
 
 	top_bar.add_child(row)
@@ -542,6 +542,7 @@ func _format_int(value: int) -> String:
 		if count % 3 == 0 and i > 0:
 			out = "," + out
 	return out
+
 
 
 
