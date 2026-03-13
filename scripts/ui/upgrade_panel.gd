@@ -200,6 +200,7 @@ const LAYOUT_SCALE_Y: float = 1.0
 const BASE_NODE_SIZE: Vector2 = Vector2(148.0, 48.0)
 const ROOT_NODE_SIZE: Vector2 = Vector2(160.0, 52.0)
 const FINAL_NODE_SIZE: Vector2 = Vector2(160.0, 52.0)
+const TREE_LAYOUT_REF_SIZE: Vector2 = Vector2(960.0, 520.0)
 
 const NODE_POSITIONS: Dictionary = {
     "awakening": Vector2(404.0, 24.0),
@@ -290,6 +291,7 @@ var _sacrifice_button_max: Button
 
 var _nodes_by_id: Dictionary = {}
 var _defs_by_id: Dictionary = {}
+var _tree_layout_scale: float = 1.0
 
 func _ready() -> void:
 	_game_manager = get_node_or_null(game_manager_path) as GameManager
@@ -553,6 +555,7 @@ func _apply_layout() -> void:
 
 	_tree_root.position = panel_pos
 	_tree_root.size = panel_size
+	_update_tree_layout_scale(panel_size)
 
 	var continue_size: Vector2 = Vector2(240.0, 56.0)
 	_continue_button.position = Vector2(
@@ -705,15 +708,31 @@ func _build_tree_nodes() -> void:
 		_nodes_by_id[id] = node_control
 func _scaled_position(upgrade_id: String) -> Vector2:
 	var raw: Vector2 = NODE_POSITIONS.get(upgrade_id, Vector2.ZERO) as Vector2
-	return raw
+	return raw * _tree_layout_scale
 
 func _node_size_for(upgrade_id: String) -> Vector2:
 	if upgrade_id == "awakening":
-		return ROOT_NODE_SIZE
+		return ROOT_NODE_SIZE * _tree_layout_scale
 	if upgrade_id == "they_can_see_you":
-		return FINAL_NODE_SIZE
-	return BASE_NODE_SIZE
+		return FINAL_NODE_SIZE * _tree_layout_scale
+	return BASE_NODE_SIZE * _tree_layout_scale
 
+func _update_tree_layout_scale(panel_size: Vector2) -> void:
+	var horizontal_ratio: float = panel_size.x / TREE_LAYOUT_REF_SIZE.x
+	var vertical_ratio: float = panel_size.y / TREE_LAYOUT_REF_SIZE.y
+	_tree_layout_scale = clamp(min(horizontal_ratio, vertical_ratio), 0.68, 1.0)
+
+	for upgrade_id: String in _nodes_by_id.keys():
+		var node_control: UpgradeTreeNode = _nodes_by_id[upgrade_id] as UpgradeTreeNode
+		if node_control == null:
+			continue
+		var node_size: Vector2 = _node_size_for(upgrade_id)
+		node_control.custom_minimum_size = node_size
+		node_control.size = node_size
+		node_control.position = _scaled_position(upgrade_id)
+
+	if _connection_layer != null and not _nodes_by_id.is_empty():
+		_rebuild_connections()
 func _node_center(upgrade_id: String) -> Vector2:
 	if not _nodes_by_id.has(upgrade_id):
 		return Vector2.ZERO
@@ -975,6 +994,12 @@ func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return
 	_game_manager.continue_from_upgrade()
+
+
+
+
+
+
 
 
 

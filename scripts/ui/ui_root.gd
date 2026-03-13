@@ -381,17 +381,17 @@ func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Textur
 	var min_width: float = 170.0
 	match row_name:
 		"Followers":
-			min_width = 248.0
+			min_width = 286.0
 		"Faith":
-			min_width = 160.0
+			min_width = 168.0
 		"FollowersPerSecond":
-			min_width = 188.0
+			min_width = 196.0
 		"CultPower":
-			min_width = 160.0
+			min_width = 184.0
 		"RunTimer":
-			min_width = 120.0
+			min_width = 138.0
 		_:
-			min_width = 160.0
+			min_width = 168.0
 
 	var row: PanelContainer = PanelContainer.new()
 	row.name = "StatRow_%s" % row_name
@@ -405,14 +405,14 @@ func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Textur
 	row_style.texture_margin_top = 8.0
 	row_style.texture_margin_right = 8.0
 	row_style.texture_margin_bottom = 8.0
-	row_style.content_margin_left = 7.0
-	row_style.content_margin_top = 3.0
-	row_style.content_margin_right = 7.0
-	row_style.content_margin_bottom = 3.0
+	row_style.content_margin_left = 5.0
+	row_style.content_margin_top = 2.0
+	row_style.content_margin_right = 5.0
+	row_style.content_margin_bottom = 2.0
 	row.add_theme_stylebox_override("panel", row_style)
 
 	var content: HBoxContainer = HBoxContainer.new()
-	content.add_theme_constant_override("separation", 6)
+	content.add_theme_constant_override("separation", 4)
 	content.anchor_right = 1.0
 	content.anchor_bottom = 1.0
 	content.offset_left = 5.0
@@ -441,11 +441,11 @@ func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Textur
 	top_bar.move_child(row, original_index)
 
 func _refresh_top_bar_row_sizes() -> void:
-	_resize_stat_row_for_label(_followers_label, 248.0)
-	_resize_stat_row_for_label(_faith_label, 150.0)
-	_resize_stat_row_for_label(_followers_per_second_label, 178.0)
-	_resize_stat_row_for_label(_cult_power_label, 160.0)
-	_resize_stat_row_for_label(_run_timer_label, 120.0)
+	_resize_stat_row_for_label(_followers_label, 286.0)
+	_resize_stat_row_for_label(_faith_label, 168.0)
+	_resize_stat_row_for_label(_followers_per_second_label, 196.0)
+	_resize_stat_row_for_label(_cult_power_label, 184.0)
+	_resize_stat_row_for_label(_run_timer_label, 138.0)
 
 func _resize_stat_row_for_label(label: Label, base_min_width: float) -> void:
 	if label == null:
@@ -463,7 +463,7 @@ func _resize_stat_row_for_label(label: Label, base_min_width: float) -> void:
 	if font != null:
 		text_width = font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x
 
-	var icon_and_padding: float = 52.0
+	var icon_and_padding: float = 44.0
 	var required_width: float = ceil(text_width + icon_and_padding)
 	row.custom_minimum_size = Vector2(max(base_min_width, required_width), row.custom_minimum_size.y)
 func _setup_debug_overlay() -> void:
@@ -571,6 +571,8 @@ func _format_int(value: int) -> String:
 		if count % 3 == 0 and i > 0:
 			out = "," + out
 	return out
+
+
 
 
 
