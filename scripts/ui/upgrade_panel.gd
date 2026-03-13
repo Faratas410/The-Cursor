@@ -7,10 +7,10 @@ const UPGRADE_TREE_NODE_SCENE: PackedScene = preload("res://scenes/ui/upgrade_tr
 
 static var UI_TEXTURES: Dictionary = {
 	"panel_main": preload("res://assets/ui/panels/panel_main.png"),
-	"panel_upgrade": preload("res://assets/ui/panels/panel_main.png"),
+	"panel_upgrade": preload("res://assets/ui/panels/panel_card.png"),
 	"panel_popup": preload("res://assets/ui/panels/panel_popup.png"),
-	"panel_main_9slice": preload("res://assets/ui/panels/panel_main.png"),
-	"panel_card_9slice": preload("res://assets/ui/panels/panel_main.png"),
+	"panel_main_9slice": preload("res://assets/ui/panels/panel_card_9slice.png"),
+	"panel_card_9slice": preload("res://assets/ui/panels/panel_card_9slice.png"),
 	"panel_tooltip_9slice": preload("res://assets/ui/panels/panel_tooltip_9slice.png"),
 	"overlay_dark": preload("res://assets/ui/overlays/ui_dark_overlay.png"),
 	"tooltip_panel": preload("res://assets/ui/tooltips/tooltip_panel.png"),
@@ -18,6 +18,9 @@ static var UI_TEXTURES: Dictionary = {
 	"continue_idle": preload("res://assets/ui/buttons/btn_continue_idle.png"),
 	"continue_hover": preload("res://assets/ui/buttons/btn_continue_hover.png"),
 	"continue_pressed": preload("res://assets/ui/buttons/btn_continue_pressed.png"),
+	"button_primary": preload("res://assets/ui/buttons/btn_upgrade_hover.png"),
+	"button_secondary": preload("res://assets/ui/buttons/btn_upgrade.png"),
+	"button_disabled": preload("res://assets/ui/buttons/btn_upgrade_disabled.png"),
 	"connector_line": preload("res://assets/ui/connectors/tree_connector_line.png"),
 	"connector_active": preload("res://assets/ui/connectors/tree_connector_active.png")
 }
@@ -315,6 +318,7 @@ func _build_ui() -> void:
 	_dark_overlay.anchor_bottom = 1.0
 	_dark_overlay.texture = UI_TEXTURES["overlay_dark"] as Texture2D
 	_dark_overlay.stretch_mode = TextureRect.STRETCH_SCALE
+	_dark_overlay.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_dark_overlay.modulate = Color(1.0, 1.0, 1.0, 0.46)
 	_dark_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_dark_overlay)
@@ -458,11 +462,13 @@ func _build_ui() -> void:
 
 	_sacrifice_button_50 = Button.new()
 	_sacrifice_button_50.text = "Sacrifice 50"
+	_apply_small_button_visual(_sacrifice_button_50, true)
 	_sacrifice_button_50.pressed.connect(_on_sacrifice_50_pressed)
 	sacrifice_row_a.add_child(_sacrifice_button_50)
 
 	_sacrifice_button_100 = Button.new()
 	_sacrifice_button_100.text = "Sacrifice 100"
+	_apply_small_button_visual(_sacrifice_button_100, false)
 	_sacrifice_button_100.pressed.connect(_on_sacrifice_100_pressed)
 	sacrifice_row_a.add_child(_sacrifice_button_100)
 
@@ -472,11 +478,13 @@ func _build_ui() -> void:
 
 	_sacrifice_button_25p = Button.new()
 	_sacrifice_button_25p.text = "Sacrifice 25%"
+	_apply_small_button_visual(_sacrifice_button_25p, false)
 	_sacrifice_button_25p.pressed.connect(_on_sacrifice_25p_pressed)
 	sacrifice_row_b.add_child(_sacrifice_button_25p)
 
 	_sacrifice_button_max = Button.new()
 	_sacrifice_button_max.text = "Sacrifice MAX"
+	_apply_small_button_visual(_sacrifice_button_max, true)
 	_sacrifice_button_max.pressed.connect(_on_sacrifice_max_pressed)
 	sacrifice_row_b.add_child(_sacrifice_button_max)
 
@@ -620,6 +628,33 @@ func _apply_continue_button_visual(button: Button) -> void:
 	button.add_theme_stylebox_override("pressed", pressed_style)
 	button.add_theme_stylebox_override("focus", hover_style)
 	button.add_theme_stylebox_override("disabled", normal_style)
+func _apply_small_button_visual(button: Button, emphasize: bool) -> void:
+	var primary: Texture2D = UI_TEXTURES["button_primary"] as Texture2D
+	var secondary: Texture2D = UI_TEXTURES["button_secondary"] as Texture2D
+	var disabled: Texture2D = UI_TEXTURES["button_disabled"] as Texture2D
+
+	var normal_style: StyleBoxTexture = StyleBoxTexture.new()
+	normal_style.texture = (primary if emphasize else secondary) as Texture2D
+	normal_style.set_texture_margin_all(8.0)
+
+	var hover_style: StyleBoxTexture = StyleBoxTexture.new()
+	hover_style.texture = primary
+	hover_style.set_texture_margin_all(8.0)
+
+	var pressed_style: StyleBoxTexture = StyleBoxTexture.new()
+	pressed_style.texture = secondary
+	pressed_style.set_texture_margin_all(8.0)
+
+	var disabled_style: StyleBoxTexture = StyleBoxTexture.new()
+	disabled_style.texture = disabled
+	disabled_style.set_texture_margin_all(8.0)
+
+	button.custom_minimum_size = Vector2(132.0, 34.0)
+	button.add_theme_stylebox_override("normal", normal_style)
+	button.add_theme_stylebox_override("hover", hover_style)
+	button.add_theme_stylebox_override("pressed", pressed_style)
+	button.add_theme_stylebox_override("focus", hover_style)
+	button.add_theme_stylebox_override("disabled", disabled_style)
 
 func _add_branch_label(text_value: String, local_position: Vector2) -> void:
 	var label: Label = Label.new()
@@ -926,6 +961,8 @@ func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return
 	_game_manager.continue_from_upgrade()
+
+
 
 
 

@@ -39,6 +39,7 @@ static var UI_TEXTURES: Dictionary = {
 	"panel_main": preload("res://assets/ui/panels/panel_main.png"),
 	"panel_upgrade": preload("res://assets/ui/panels/panel_main.png"),
 	"panel_popup": preload("res://assets/ui/panels/panel_popup.png"),
+	"panel_tooltip_9slice": preload("res://assets/ui/panels/panel_tooltip_9slice.png"),
 	"label_bg": preload("res://assets/ui/labels/label_bg.png"),
 	"followers_icon": preload("res://assets/ui/icons/followers_icon.png"),
 	"faith_icon": preload("res://assets/ui/icons/faith_icon.png"),
@@ -348,6 +349,7 @@ func _ensure_panel_background(node_name: String, target: Control, texture: Textu
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	background.texture = texture
 	background.stretch_mode = TextureRect.STRETCH_SCALE
+	background.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	background.anchor_left = target.anchor_left
 	background.anchor_top = target.anchor_top
@@ -444,14 +446,16 @@ func _setup_debug_overlay() -> void:
 	_debug_panel.offset_bottom = -12.0
 	_debug_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
-	var style: StyleBoxFlat = StyleBoxFlat.new()
-	style.bg_color = Color(0.05, 0.05, 0.08, 0.72)
-	style.border_color = Color(0.75, 0.67, 0.34, 0.8)
-	style.set_border_width_all(1)
-	style.corner_radius_top_left = 6
-	style.corner_radius_top_right = 6
-	style.corner_radius_bottom_left = 6
-	style.corner_radius_bottom_right = 6
+	var style: StyleBoxTexture = StyleBoxTexture.new()
+	style.texture = UI_TEXTURES["panel_tooltip_9slice"] as Texture2D
+	style.texture_margin_left = 16.0
+	style.texture_margin_top = 16.0
+	style.texture_margin_right = 16.0
+	style.texture_margin_bottom = 16.0
+	style.content_margin_left = 8.0
+	style.content_margin_top = 6.0
+	style.content_margin_right = 8.0
+	style.content_margin_bottom = 6.0
 	_debug_panel.add_theme_stylebox_override("panel", style)
 
 	var rows: VBoxContainer = VBoxContainer.new()
@@ -529,6 +533,9 @@ func _format_int(value: int) -> String:
 		if count % 3 == 0 and i > 0:
 			out = "," + out
 	return out
+
+
+
 
 
 
