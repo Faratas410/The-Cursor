@@ -370,15 +370,15 @@ func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Textur
 	var min_width: float = 170.0
 	match row_name:
 		"Followers":
-			min_width = 225.0
+			min_width = 258.0
 		"Faith":
-			min_width = 145.0
+			min_width = 168.0
 		"FollowersPerSecond":
-			min_width = 190.0
+			min_width = 220.0
 		"CultPower":
-			min_width = 145.0
+			min_width = 168.0
 		"RunTimer":
-			min_width = 105.0
+			min_width = 124.0
 		_:
 			min_width = 160.0
 

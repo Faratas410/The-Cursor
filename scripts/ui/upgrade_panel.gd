@@ -194,35 +194,34 @@ const UPGRADE_ICON_KEY_BY_ID: Dictionary = {
 
 const LAYOUT_SCALE_X: float = 1.0
 const LAYOUT_SCALE_Y: float = 1.0
-const BASE_NODE_SIZE: Vector2 = Vector2(120.0, 52.0)
-const ROOT_NODE_SIZE: Vector2 = Vector2(140.0, 60.0)
-const FINAL_NODE_SIZE: Vector2 = Vector2(150.0, 64.0)
+const BASE_NODE_SIZE: Vector2 = Vector2(160.0, 56.0)
+const ROOT_NODE_SIZE: Vector2 = Vector2(178.0, 64.0)
+const FINAL_NODE_SIZE: Vector2 = Vector2(178.0, 64.0)
 
 const NODE_POSITIONS: Dictionary = {
-    "awakening": Vector2(280.0, 12.0),
-    "magnetic_presence": Vector2(20.0, 82.0),
-    "faster_conversion": Vector2(20.0, 142.0),
-    "conversion_pulse": Vector2(20.0, 202.0),
-    "conversion_chain": Vector2(20.0, 262.0),
-    "mass_conversion": Vector2(20.0, 292.0),
-    "faith_amplifier": Vector2(210.0, 82.0),
-    "cult_donations": Vector2(210.0, 142.0),
-    "sacred_economy": Vector2(210.0, 202.0),
-    "divine_harvest": Vector2(210.0, 262.0),
-    "overflow_faith": Vector2(210.0, 292.0),
-    "curious_crowds": Vector2(400.0, 82.0),
-    "pilgrimage": Vector2(400.0, 142.0),
-    "wandering_faith": Vector2(400.0, 202.0),
-    "sacred_ground": Vector2(400.0, 262.0),
-    "cult_leaders": Vector2(550.0, 202.0),
-    "prophecy": Vector2(550.0, 262.0),
-    "skeptic_hunt": Vector2(400.0, 292.0),
-    "divine_aura": Vector2(550.0, 82.0),
-    "cult_expansion": Vector2(550.0, 142.0),
-    "worship_wave": Vector2(550.0, 292.0),
-    "they_can_see_you": Vector2(275.0, 292.0)
+    "awakening": Vector2(324.0, 26.0),
+    "magnetic_presence": Vector2(24.0, 98.0),
+    "faster_conversion": Vector2(24.0, 166.0),
+    "conversion_pulse": Vector2(24.0, 234.0),
+    "conversion_chain": Vector2(24.0, 302.0),
+    "mass_conversion": Vector2(24.0, 370.0),
+    "faith_amplifier": Vector2(224.0, 98.0),
+    "cult_donations": Vector2(224.0, 166.0),
+    "sacred_economy": Vector2(224.0, 234.0),
+    "divine_harvest": Vector2(224.0, 302.0),
+    "overflow_faith": Vector2(224.0, 370.0),
+    "curious_crowds": Vector2(424.0, 98.0),
+    "pilgrimage": Vector2(424.0, 166.0),
+    "wandering_faith": Vector2(424.0, 234.0),
+    "sacred_ground": Vector2(424.0, 302.0),
+    "skeptic_hunt": Vector2(424.0, 370.0),
+    "divine_aura": Vector2(624.0, 98.0),
+    "cult_expansion": Vector2(624.0, 166.0),
+    "cult_leaders": Vector2(624.0, 234.0),
+    "prophecy": Vector2(624.0, 302.0),
+    "worship_wave": Vector2(624.0, 370.0),
+    "they_can_see_you": Vector2(324.0, 370.0)
 }
-
 static var DEPENDENCY_EDGES: Array[PackedStringArray] = [
 	PackedStringArray(["awakening", "magnetic_presence"]),
 	PackedStringArray(["awakening", "faster_conversion"]),
@@ -347,13 +346,13 @@ func _build_ui() -> void:
 
 	var tree_title: Label = Label.new()
 	tree_title.text = "UPGRADE TREE"
-	tree_title.position = Vector2(316.0, 10.0)
+	tree_title.position = Vector2(390.0, 12.0)
 	tree_title.modulate = Color(0.96, 0.93, 0.84, 0.96)
 	_main_panel_frame.add_child(tree_title)
 
-	_add_branch_label("Conversion", Vector2(22.0, 58.0))
-	_add_branch_label("Faith Flow", Vector2(212.0, 58.0))
-	_add_branch_label("World Control", Vector2(398.0, 58.0))
+	_add_branch_label("Conversion", Vector2(26.0, 68.0))
+	_add_branch_label("Faith Flow", Vector2(226.0, 68.0))
+	_add_branch_label("World Control", Vector2(426.0, 68.0))
 
 	_run_summary_panel = Panel.new()
 	_run_summary_panel.name = "RunSummaryPanel"
@@ -438,36 +437,38 @@ func _apply_layout() -> void:
 		return
 
 	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
-	var panel_size: Vector2 = Vector2(700.0, 360.0)
+	var panel_size: Vector2 = Vector2(
+		clamp(viewport_size.x - 150.0, 760.0, 920.0),
+		clamp(viewport_size.y - 170.0, 430.0, 560.0)
+	)
 	var panel_pos: Vector2 = Vector2(
 		(viewport_size.x - panel_size.x) * 0.5,
-		max(92.0, (viewport_size.y - panel_size.y) * 0.36)
+		max(78.0, (viewport_size.y - panel_size.y) * 0.34)
 	)
 
 	_tree_root.position = panel_pos
 	_tree_root.size = panel_size
 
-	var summary_size: Vector2 = Vector2(230.0, 120.0)
-	var summary_pos: Vector2 = Vector2(max(24.0, panel_pos.x - summary_size.x - 24.0), panel_pos.y)
+	var summary_size: Vector2 = Vector2(248.0, 134.0)
+	var summary_pos: Vector2 = Vector2(max(24.0, panel_pos.x - summary_size.x - 18.0), panel_pos.y)
 	_run_summary_panel.position = summary_pos
 	_run_summary_panel.size = summary_size
 
 	var continue_size: Vector2 = Vector2(240.0, 58.0)
 	_continue_button.position = Vector2(
 		panel_pos.x + (panel_size.x - continue_size.x) * 0.5,
-		panel_pos.y + panel_size.y + 18.0
+		panel_pos.y + panel_size.y + 14.0
 	)
 	_continue_button.size = continue_size
 
-	var tooltip_size: Vector2 = Vector2(235.0, 165.0)
+	var tooltip_size: Vector2 = Vector2(265.0, 180.0)
 	_tooltip_panel.size = tooltip_size
-	_tooltip_default_position = Vector2(panel_pos.x + panel_size.x + 24.0, panel_pos.y)
+	_tooltip_default_position = Vector2(panel_pos.x + panel_size.x + 16.0, panel_pos.y)
 	if _tooltip_default_position.x + tooltip_size.x > viewport_size.x - 12.0:
 		_tooltip_default_position = Vector2(summary_pos.x, summary_pos.y + summary_size.y + 14.0)
 
 	if _continue_button.position.y + continue_size.y > viewport_size.y - 8.0:
 		_continue_button.position.y = viewport_size.y - continue_size.y - 8.0
-
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		_apply_layout()
@@ -563,9 +564,7 @@ func _build_tree_nodes() -> void:
 		_nodes_by_id[id] = node_control
 func _scaled_position(upgrade_id: String) -> Vector2:
 	var raw: Vector2 = NODE_POSITIONS.get(upgrade_id, Vector2.ZERO) as Vector2
-	return Vector2(raw.x * LAYOUT_SCALE_X, raw.y * LAYOUT_SCALE_Y)
-
-func _node_size_for(upgrade_id: String) -> Vector2:
+	return raw`r`n`r`nfunc _node_size_for(upgrade_id: String) -> Vector2:
 	if upgrade_id == "awakening":
 		return ROOT_NODE_SIZE
 	if upgrade_id == "they_can_see_you":

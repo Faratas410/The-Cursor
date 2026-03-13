@@ -1,4 +1,4 @@
-ï»¿# CURSOR â€” ASSET LIST (DRAFT)
+# CURSOR — ASSET LIST (DRAFT)
 
 This document defines the draft canonical asset inventory for THE CURSOR.
 
@@ -29,7 +29,7 @@ Variant policy:
 
 - Character variants: `_01`, `_02`, `_03`, ...
 - Small prop variants: `_a`, `_b`, `_c` or `_01`, `_02`, `_03`
-- Stage backgrounds (runtime): `bg_<stage>_topdown.png`
+- Stage backgrounds (runtime): `bg_<stage>.png`
 
 ---
 
@@ -160,12 +160,14 @@ Suggested folder: `assets/environment/`
 
 ### 4.7 Stage Backgrounds (Canonical Runtime Set)
 
-- `bg_village_topdown.png`
-- `bg_town_topdown.png`
-- `bg_city_topdown.png`
-- `bg_metropolis_topdown.png`
-- `bg_planet_topdown.png`
-- `bg_cult_world_topdown.png`
+- `bg_village.png`
+- `bg_town.png`
+- `bg_city.png`
+- `bg_metropolis.png`
+- `bg_planet.png`
+- `bg_cult_world.png`
+
+Current runtime references are resolved in scripts/systems/progression_system.gd.
 
 ---
 
@@ -240,7 +242,7 @@ Legacy/non-canonical (keep only if explicitly rewired):
 - `pressure_icon.png`
 - `influence_icon.png`
 
-### 6.2.1 UI Icons â€” Upgrade & Relic
+### 6.2.1 UI Icons — Upgrade & Relic
 
 - upgrade_conversion_speed.png
 - upgrade_corruption_power.png

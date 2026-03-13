@@ -46,6 +46,12 @@ func _ready() -> void:
 	_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_icon.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
 	_icon.pivot_offset = _icon.size * 0.5
+	_name_label.clip_text = true
+	_name_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_short_desc_label.visible = false
+	_short_desc_label.text = ""
+	_cost_label.clip_text = true
+	_cost_label.autowrap_mode = TextServer.AUTOWRAP_OFF
 	_pulse_overlay.stretch_mode = TextureRect.STRETCH_SCALE
 	_hit_button.pressed.connect(_on_pressed)
 	_hit_button.mouse_entered.connect(_on_mouse_entered)
@@ -64,7 +70,6 @@ func _ready() -> void:
 	_pulse_overlay.visible = false
 	_apply_visual_state()
 	_update_final_aura()
-
 func _ensure_node_refs() -> void:
 	if _background == null:
 		_background = get_node_or_null("Background") as TextureRect
@@ -101,7 +106,8 @@ func set_upgrade_data(data: Dictionary) -> void:
 		return
 
 	_name_label.text = String(data.get("name", _upgrade_id))
-	_short_desc_label.text = _short_desc
+	_short_desc_label.text = ""
+	_short_desc_label.visible = false
 	_cost_label.text = "Cost: %.0f Faith" % _cost
 	_icon.texture = data.get("icon_texture", null) as Texture2D
 	_update_final_aura()

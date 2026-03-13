@@ -1,4 +1,4 @@
-ï»¿# CURSOR â€” ART SYSTEM CANON
+# CURSOR — ART SYSTEM CANON
 
 ## Purpose
 
@@ -6,14 +6,14 @@ This document defines the visual grammar and asset generation rules for **THE CU
 
 Its goals are:
 
-â€¢ ensure consistent art direction  
-â€¢ allow automated asset generation by Codex  
-â€¢ preserve readability for incremental gameplay  
-â€¢ maintain stylistic coherence across the project  
+• ensure consistent art direction  
+• allow automated asset generation by Codex  
+• preserve readability for incremental gameplay  
+• maintain stylistic coherence across the project  
 
 This document is **canonical**.
 
-If any asset conflicts with this document â†’ the asset must be corrected.
+If any asset conflicts with this document ? the asset must be corrected.
 
 ---
 
@@ -73,9 +73,9 @@ Characters follow a **big-head small-body cartoon proportion**.
 
 Base proportions:
 
-head Ëœ 55%  
-body Ëœ 35%  
-legs Ëœ 10%
+head ˜ 55%  
+body ˜ 35%  
+legs ˜ 10%
 
 Silhouettes must remain readable at small scale.
 
@@ -345,9 +345,9 @@ conversion power
 
 Rules:
 
-â€¢ must remain simple  
-â€¢ must remain readable  
-â€¢ must resemble cult symbols  
+• must remain simple  
+• must remain readable  
+• must resemble cult symbols  
 
 Example motifs:
 
@@ -366,10 +366,10 @@ They must resemble occult sigils, not UI symbols.
 
 Upgrade icons should look like:
 
-â€¢ ritual circles  
-â€¢ sacred glyphs  
-â€¢ cult seals  
-â€¢ mystical diagrams  
+• ritual circles  
+• sacred glyphs  
+• cult seals  
+• mystical diagrams  
 
 They should not resemble modern interface icons.
 
@@ -402,9 +402,9 @@ relic coin
 
 Relic icons must appear as:
 
-â€¢ stylized physical objects  
-â€¢ cult artifacts  
-â€¢ altar relics  
+• stylized physical objects  
+• cult artifacts  
+• altar relics  
 
 Relics must never appear as abstract glyphs.
 
@@ -436,7 +436,7 @@ dashboard symbols
 infographic pictograms  
 modern minimalist logos  
 
-If an icon looks like a generic UI symbol â†’ regenerate.
+If an icon looks like a generic UI symbol ? regenerate.
 
 ---
 # 12. UI Component Hierarchy
@@ -470,6 +470,13 @@ color
 glow  
 symbol  
 
+
+Upgrade node readability rules (runtime):
+
+- Node cards should show only: icon, upgrade name, and cost.
+- Explanations/descriptions are tooltip-only on hover.
+- Do not render long description text inside node cards.
+- Layout must avoid overlap at 1080p baseline and remain readable on smaller windows.
 ---
 
 # 14. Asset Generation Rules for Codex
@@ -593,7 +600,7 @@ Sprites must occupy most of their canvas.
 
 Characters should fill approximately:
 
-70â€“80% of the sprite height.
+70–80% of the sprite height.
 
 Sprites that occupy too little space appear like icons and break readability.
 
@@ -610,7 +617,7 @@ civilian head shape
 skeptic crossed arms silhouette  
 prophet staff or aura  
 
-If a character loses readability at small size â†’ regenerate.
+If a character loses readability at small size ? regenerate.
 
 ---
 
@@ -620,9 +627,9 @@ Characters follow exaggerated cartoon proportions.
 
 Recommended ratio:
 
-head â‰ˆ 60%  
-body â‰ˆ 30%  
-legs â‰ˆ 10%
+head ˜ 60%  
+body ˜ 30%  
+legs ˜ 10%
 
 Large heads are required for readability.
 
@@ -704,7 +711,7 @@ contains a single flat color
 occupies less than half the canvas  
 lacks shading  
 
-â†’ regenerate.
+? regenerate.
 
 The game uses sprites, not icons.
 
