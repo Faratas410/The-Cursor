@@ -48,6 +48,7 @@ func update_drag(mouse_position: Vector2) -> void:
 		return
 	var mouse_delta: Vector2 = mouse_position - _last_mouse_position
 	_last_mouse_position = mouse_position
+	# "Pull map" interaction: invert drag direction relative to cursor motion.
 	_pan_position -= mouse_delta
 	_pan_position = _clamp_pan_position(_pan_position)
 	_emit_transform_changed()
@@ -86,3 +87,4 @@ func _clamp_pan_position(pan_position_value: Vector2) -> Vector2:
 
 func _emit_transform_changed() -> void:
 	transform_changed.emit(_pan_position, _zoom_factor)
+

@@ -100,6 +100,10 @@ func _ready() -> void:
 	_map_viewport.resized.connect(_on_map_viewport_resized)
 	_continue_button.pressed.connect(_on_continue_pressed)
 	_tooltip_panel.visible = false
+	_tooltip_panel.top_level = true
+	_tooltip_panel.z_as_relative = false
+	_tooltip_panel.z_index = 5000
+	_tooltip_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	call_deferred("_deferred_initialize")
 
@@ -313,9 +317,14 @@ func _on_tooltip_requested(upgrade_id: String, _screen_position: Vector2) -> voi
 	_tooltip_cost.text = "Cost: %.0f Faith" % float(data.get("cost", 0.0))
 	_tooltip_status.text = _build_status_text(upgrade_id, state)
 	_tooltip_panel.visible = true
+	_tooltip_panel.move_to_front()
 
 func _hide_tooltip() -> void:
 	_tooltip_panel.visible = false
+	_tooltip_panel.top_level = true
+	_tooltip_panel.z_as_relative = false
+	_tooltip_panel.z_index = 5000
+	_tooltip_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func _build_status_text(upgrade_id: String, state: String) -> String:
 	if state == "choice_locked":
@@ -345,3 +354,8 @@ func _clamp_tooltip_to_view(position_to_clamp: Vector2) -> Vector2:
 	var clamped_x: float = clampf(position_to_clamp.x, 8.0, viewport_size.x - panel_size.x - 8.0)
 	var clamped_y: float = clampf(position_to_clamp.y, 8.0, viewport_size.y - panel_size.y - 8.0)
 	return Vector2(clamped_x, clamped_y)
+
+
+
+
+
