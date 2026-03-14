@@ -548,10 +548,10 @@ func _apply_layout() -> void:
 
 	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
 	var top_safe: float = 112.0
-	var bottom_reserved: float = 264.0
+	var bottom_reserved: float = 292.0
 	var panel_size: Vector2 = Vector2(
 		clamp(viewport_size.x - 120.0, 900.0, 1140.0),
-		clamp(viewport_size.y - (top_safe + bottom_reserved), 260.0, 400.0)
+		clamp(viewport_size.y - (top_safe + bottom_reserved), 248.0, 332.0)
 	)
 	var panel_pos: Vector2 = Vector2(
 		(viewport_size.x - panel_size.x) * 0.5,
@@ -562,19 +562,19 @@ func _apply_layout() -> void:
 	_tree_root.size = panel_size
 	_update_tree_layout_scale(panel_size)
 
-	var continue_size: Vector2 = Vector2(188.0, 56.0)
+	var continue_size: Vector2 = Vector2(196.0, 58.0)
 	_continue_button.position = Vector2(
 		panel_pos.x + (panel_size.x - continue_size.x) * 0.5,
-		viewport_size.y - continue_size.y - 16.0
+		viewport_size.y - continue_size.y - 18.0
 	)
 	_continue_button.size = continue_size
 
-	var summary_size: Vector2 = Vector2(336.0, 140.0)
-	var sacrifice_size: Vector2 = Vector2(374.0, 182.0)
-	var lower_gap: float = 30.0
+	var summary_size: Vector2 = Vector2(320.0, 132.0)
+	var sacrifice_size: Vector2 = Vector2(348.0, 166.0)
+	var lower_gap: float = 36.0
 	var lower_row_y: float = panel_pos.y + panel_size.y + lower_gap
-	var summary_max_y: float = _continue_button.position.y - summary_size.y - 16.0
-	var sacrifice_max_y: float = _continue_button.position.y - sacrifice_size.y - 16.0
+	var summary_max_y: float = _continue_button.position.y - summary_size.y - 20.0
+	var sacrifice_max_y: float = _continue_button.position.y - sacrifice_size.y - 20.0
 	lower_row_y = min(lower_row_y, summary_max_y, sacrifice_max_y)
 	var summary_pos: Vector2 = Vector2(panel_pos.x, lower_row_y)
 	_run_summary_panel.position = summary_pos
@@ -681,9 +681,9 @@ func _setup_tree_columns() -> void:
 	margin.anchor_right = 1.0
 	margin.anchor_bottom = 1.0
 	margin.add_theme_constant_override("margin_left", 24)
-	margin.add_theme_constant_override("margin_top", 8)
+	margin.add_theme_constant_override("margin_top", 14)
 	margin.add_theme_constant_override("margin_right", 24)
-	margin.add_theme_constant_override("margin_bottom", 20)
+	margin.add_theme_constant_override("margin_bottom", 22)
 	_node_layer.add_child(margin)
 
 	var root_box: VBoxContainer = VBoxContainer.new()
@@ -691,7 +691,7 @@ func _setup_tree_columns() -> void:
 	root_box.anchor_bottom = 1.0
 	root_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	root_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	root_box.add_theme_constant_override("separation", 16)
+	root_box.add_theme_constant_override("separation", 12)
 	margin.add_child(root_box)
 
 	var top_balance: Control = Control.new()
@@ -700,24 +700,24 @@ func _setup_tree_columns() -> void:
 
 	var content_block: VBoxContainer = VBoxContainer.new()
 	content_block.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	content_block.add_theme_constant_override("separation", 14)
+	content_block.add_theme_constant_override("separation", 10)
 	root_box.add_child(content_block)
 
 	var title_label: Label = Label.new()
 	title_label.text = "UPGRADE TREE"
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_label.modulate = Color(0.96, 0.93, 0.84, 0.96)
-	title_label.custom_minimum_size = Vector2(0.0, 28.0)
+	title_label.custom_minimum_size = Vector2(0.0, 24.0)
 	content_block.add_child(title_label)
 
 	var title_gap: Control = Control.new()
-	title_gap.custom_minimum_size = Vector2(0.0, 14.0)
+	title_gap.custom_minimum_size = Vector2(0.0, 10.0)
 	content_block.add_child(title_gap)
 
 	var scroll: ScrollContainer = ScrollContainer.new()
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	scroll.custom_minimum_size = Vector2(0.0, 222.0)
+	scroll.custom_minimum_size = Vector2(0.0, 188.0)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	content_block.add_child(scroll)
@@ -725,14 +725,14 @@ func _setup_tree_columns() -> void:
 	var columns_row: HBoxContainer = HBoxContainer.new()
 	columns_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	columns_row.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	columns_row.add_theme_constant_override("separation", 24)
+	columns_row.add_theme_constant_override("separation", 22)
 	scroll.add_child(columns_row)
 
 	for column_key: String in COLUMN_ORDER:
 		var column_box: VBoxContainer = VBoxContainer.new()
 		column_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		column_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		column_box.add_theme_constant_override("separation", 14)
+		column_box.add_theme_constant_override("separation", 11)
 		columns_row.add_child(column_box)
 
 		var header_label: Label = Label.new()
@@ -743,7 +743,8 @@ func _setup_tree_columns() -> void:
 
 		var nodes_stack: VBoxContainer = VBoxContainer.new()
 		nodes_stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		nodes_stack.add_theme_constant_override("separation", 16)
+		nodes_stack.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+		nodes_stack.add_theme_constant_override("separation", 12)
 		column_box.add_child(nodes_stack)
 		_column_node_stacks[column_key] = nodes_stack
 
@@ -781,7 +782,7 @@ func _build_tree_nodes() -> void:
 			if node_control == null:
 				continue
 
-			node_control.custom_minimum_size = Vector2(100.0, 70.0)
+			node_control.custom_minimum_size = Vector2(96.0, 64.0)
 			node_control.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 			stack.add_child(node_control)
 			node_control.set_upgrade_data(_defs_by_id[id] as Dictionary)
@@ -1042,7 +1043,4 @@ func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return
 	_game_manager.continue_from_upgrade()
-
-
-
 
