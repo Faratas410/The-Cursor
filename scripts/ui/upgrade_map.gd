@@ -5,6 +5,10 @@ class_name UpgradeMap
 signal upgrade_purchased(upgrade: Dictionary)
 
 const UPGRADE_MAP_NODE_SCENE: PackedScene = preload("res://scenes/ui/upgrade_map_node.tscn")
+const PANEL_TOOLTIP_TEXTURE: Texture2D = preload("res://assets/ui/panels/panel_tooltip_9slice.png")
+const BUTTON_PRIMARY_TEXTURE: Texture2D = preload("res://assets/ui/buttons/button_primary.png")
+const BUTTON_SECONDARY_TEXTURE: Texture2D = preload("res://assets/ui/buttons/button_secondary.png")
+const BUTTON_SMALL_TEXTURE: Texture2D = preload("res://assets/ui/buttons/button_small.png")
 
 const COLUMN_X_BY_KEY: Dictionary = {
 	"conversion": -400.0,
@@ -104,8 +108,36 @@ func _ready() -> void:
 	_tooltip_panel.z_as_relative = false
 	_tooltip_panel.z_index = 5000
 	_tooltip_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_apply_panel_and_button_styles()
 
 	call_deferred("_deferred_initialize")
+
+func _apply_panel_and_button_styles() -> void:
+	var tooltip_style: StyleBoxTexture = StyleBoxTexture.new()
+	tooltip_style.texture = PANEL_TOOLTIP_TEXTURE
+	tooltip_style.texture_margin_left = 16.0
+	tooltip_style.texture_margin_top = 16.0
+	tooltip_style.texture_margin_right = 16.0
+	tooltip_style.texture_margin_bottom = 16.0
+	tooltip_style.content_margin_left = 8.0
+	tooltip_style.content_margin_top = 8.0
+	tooltip_style.content_margin_right = 8.0
+	tooltip_style.content_margin_bottom = 8.0
+	_tooltip_panel.add_theme_stylebox_override("panel", tooltip_style)
+
+	var cta_normal: StyleBoxTexture = StyleBoxTexture.new()
+	cta_normal.texture = BUTTON_PRIMARY_TEXTURE
+	cta_normal.set_texture_margin_all(10.0)
+	var cta_hover: StyleBoxTexture = StyleBoxTexture.new()
+	cta_hover.texture = BUTTON_SECONDARY_TEXTURE
+	cta_hover.set_texture_margin_all(10.0)
+	var cta_disabled: StyleBoxTexture = StyleBoxTexture.new()
+	cta_disabled.texture = BUTTON_SMALL_TEXTURE
+	cta_disabled.set_texture_margin_all(10.0)
+	_continue_button.add_theme_stylebox_override("normal", cta_normal)
+	_continue_button.add_theme_stylebox_override("hover", cta_hover)
+	_continue_button.add_theme_stylebox_override("pressed", cta_hover)
+	_continue_button.add_theme_stylebox_override("disabled", cta_disabled)
 
 func _deferred_initialize() -> void:
 	await get_tree().process_frame

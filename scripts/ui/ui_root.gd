@@ -38,8 +38,15 @@ const END_SCREEN_SCENE: PackedScene = preload("res://scenes/ui/end_screen.tscn")
 static var UI_TEXTURES: Dictionary = {
 	"panel_main": preload("res://assets/ui/panels/panel_main.png"),
 	"panel_upgrade": preload("res://assets/ui/panels/panel_main.png"),
+	"panel_card": preload("res://assets/ui/panels/panel_card.png"),
 	"panel_popup": preload("res://assets/ui/panels/panel_popup.png"),
+	"panel_tooltip": preload("res://assets/ui/panels/panel_tooltip.png"),
 	"panel_tooltip_9slice": preload("res://assets/ui/panels/panel_tooltip_9slice.png"),
+	"button_primary": preload("res://assets/ui/buttons/button_primary.png"),
+	"button_secondary": preload("res://assets/ui/buttons/button_secondary.png"),
+	"button_danger": preload("res://assets/ui/buttons/button_danger.png"),
+	"button_small": preload("res://assets/ui/buttons/button_small.png"),
+	"button_icon": preload("res://assets/ui/buttons/button_icon.png"),
 	"label_bg": preload("res://assets/ui/labels/label_bg.png"),
 	"followers_icon": preload("res://assets/ui/icons/followers_icon.png"),
 	"faith_icon": preload("res://assets/ui/icons/faith_icon.png"),
@@ -153,6 +160,19 @@ func _setup_upgrade_overlay() -> void:
 	_continue_button = Button.new()
 	_continue_button.text = "Continue"
 	_continue_button.custom_minimum_size = Vector2(0.0, 38.0)
+	var continue_normal: StyleBoxTexture = StyleBoxTexture.new()
+	continue_normal.texture = UI_TEXTURES["button_primary"] as Texture2D
+	continue_normal.set_texture_margin_all(10.0)
+	var continue_hover: StyleBoxTexture = StyleBoxTexture.new()
+	continue_hover.texture = UI_TEXTURES["button_secondary"] as Texture2D
+	continue_hover.set_texture_margin_all(10.0)
+	var continue_disabled: StyleBoxTexture = StyleBoxTexture.new()
+	continue_disabled.texture = UI_TEXTURES["button_small"] as Texture2D
+	continue_disabled.set_texture_margin_all(10.0)
+	_continue_button.add_theme_stylebox_override("normal", continue_normal)
+	_continue_button.add_theme_stylebox_override("hover", continue_hover)
+	_continue_button.add_theme_stylebox_override("pressed", continue_hover)
+	_continue_button.add_theme_stylebox_override("disabled", continue_disabled)
 	_continue_button.pressed.connect(_on_continue_pressed)
 	box.add_child(_continue_button)
 
