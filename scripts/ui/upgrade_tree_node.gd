@@ -64,6 +64,7 @@ func _ready() -> void:
 	_hit_button.focus_exited.connect(_on_mouse_exited)
 	_background.z_index = 0
 	_lock_overlay.z_index = 1
+	_lock_overlay.color = Color(0.0, 0.0, 0.0, 0.0)
 	_icon.z_index = 2
 	_name_label.z_index = 2
 	_short_desc_label.z_index = 2
@@ -210,7 +211,7 @@ func _apply_visual_state() -> void:
 			_cost_label.modulate = Color(0.72, 1.0, 0.78, 1.0)
 		"choice_locked":
 			_background.texture = locked_texture
-			_lock_overlay.visible = true
+			_lock_overlay.visible = false
 			_purchased_mark.visible = false
 			_hit_button.disabled = true
 			_name_label.modulate = Color(0.88, 0.64, 0.64, 1.0)
@@ -218,7 +219,7 @@ func _apply_visual_state() -> void:
 			_cost_label.modulate = Color(0.88, 0.64, 0.64, 1.0)
 		_:
 			_background.texture = locked_texture
-			_lock_overlay.visible = true
+			_lock_overlay.visible = false
 			_purchased_mark.visible = false
 			_hit_button.disabled = false
 			_name_label.modulate = Color(0.7, 0.7, 0.7, 1.0)
@@ -292,4 +293,6 @@ func _stop_final_aura() -> void:
 func _on_purchase_pulse_finished() -> void:
 	if _is_hovered:
 		_start_hover_animation()
+
+
 

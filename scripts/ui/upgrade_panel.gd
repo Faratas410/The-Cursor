@@ -263,7 +263,21 @@ static var DEPENDENCY_EDGES: Array[PackedStringArray] = [
     PackedStringArray(["cult_expansion", "worship_wave"]),
     PackedStringArray(["worship_wave", "they_can_see_you"])
 ]
-
+const COLUMN_ORDER: PackedStringArray = PackedStringArray(["conversion", "faith", "world_control", "cult_power", "ritual"])
+const COLUMN_HEADERS: Dictionary = {
+	"conversion": "Conversion",
+	"faith": "Faith Flow",
+	"world_control": "World Control",
+	"cult_power": "Cult Power",
+	"ritual": "Ritual"
+}
+const UPGRADE_IDS_BY_COLUMN: Dictionary = {
+	"conversion": PackedStringArray(["magnetic_presence", "faster_conversion", "conversion_pulse", "conversion_chain", "mass_conversion"]),
+	"faith": PackedStringArray(["faith_amplifier", "steady_worship", "violent_faith", "cult_donations", "sacred_economy", "divine_harvest"]),
+	"world_control": PackedStringArray(["awakening", "curious_crowds", "path_growth", "path_control", "pilgrimage", "sacred_ground"]),
+	"cult_power": PackedStringArray(["cult_leaders", "wide_influence", "focused_conversion", "divine_aura", "cult_expansion"]),
+	"ritual": PackedStringArray(["ritual_knife", "blood_ledger", "blood_tithe", "grand_offering", "worship_wave", "they_can_see_you"])
+}
 @export var game_manager_path: NodePath
 
 var _game_manager: GameManager
@@ -292,6 +306,7 @@ var _sacrifice_button_max: Button
 var _nodes_by_id: Dictionary = {}
 var _defs_by_id: Dictionary = {}
 var _tree_layout_scale: float = 1.0
+var _column_node_stacks: Dictionary = {}
 
 func _ready() -> void:
 	_game_manager = get_node_or_null(game_manager_path) as GameManager
@@ -372,18 +387,8 @@ func _build_ui() -> void:
 	_node_layer.mouse_filter = Control.MOUSE_FILTER_PASS
 	_main_panel_frame.add_child(_node_layer)
 
-	var tree_title: Label = Label.new()
-	tree_title.text = "UPGRADE TREE"
-	tree_title.position = Vector2(390.0, 12.0)
-	tree_title.modulate = Color(0.96, 0.93, 0.84, 0.96)
-	_main_panel_frame.add_child(tree_title)
-
-	_add_branch_label("Conversion", Vector2(26.0, 68.0))
-	_add_branch_label("Faith Flow", Vector2(226.0, 68.0))
-	_add_branch_label("World Control", Vector2(426.0, 68.0))
-
-	_add_branch_label("Cult Power", Vector2(606.0, 68.0))
-	_add_branch_label("Ritual", Vector2(806.0, 68.0))
+	_connection_layer.visible = false
+	_setup_tree_columns()
 	_run_summary_panel = Panel.new()
 	_run_summary_panel.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_run_summary_panel.name = "RunSummaryPanel"
@@ -666,12 +671,65 @@ func _apply_small_button_visual(button: Button, emphasize: bool) -> void:
 	button.add_theme_stylebox_override("focus", hover_style)
 	button.add_theme_stylebox_override("disabled", disabled_style)
 
-func _add_branch_label(text_value: String, local_position: Vector2) -> void:
-	var label: Label = Label.new()
-	label.text = text_value
-	label.position = local_position
-	label.modulate = Color(0.88, 0.88, 0.9, 0.85)
-	_main_panel_frame.add_child(label)
+func _setup_tree_columns() -> void:
+	_column_node_stacks.clear()
+	for child: Node in _node_layer.get_children():
+		child.queue_free()
+
+	var margin: MarginContainer = MarginContainer.new()
+	margin.anchor_right = 1.0
+	margin.anchor_bottom = 1.0
+	margin.add_theme_constant_override("margin_left", 24)
+	margin.add_theme_constant_override("margin_top", 18)
+	margin.add_theme_constant_override("margin_right", 24)
+	margin.add_theme_constant_override("margin_bottom", 18)
+	_node_layer.add_child(margin)
+
+	var root_box: VBoxContainer = VBoxContainer.new()
+	root_box.anchor_right = 1.0
+	root_box.anchor_bottom = 1.0
+	root_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	root_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root_box.add_theme_constant_override("separation", 14)
+	margin.add_child(root_box)
+
+	var title_label: Label = Label.new()
+	title_label.text = "UPGRADE TREE"
+	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title_label.modulate = Color(0.96, 0.93, 0.84, 0.96)
+	root_box.add_child(title_label)
+
+	var scroll: ScrollContainer = ScrollContainer.new()
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	root_box.add_child(scroll)
+
+	var columns_row: HBoxContainer = HBoxContainer.new()
+	columns_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	columns_row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	columns_row.add_theme_constant_override("separation", 40)
+	scroll.add_child(columns_row)
+
+	for column_key: String in COLUMN_ORDER:
+		var column_box: VBoxContainer = VBoxContainer.new()
+		column_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		column_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		column_box.add_theme_constant_override("separation", 14)
+		columns_row.add_child(column_box)
+
+		var header_label: Label = Label.new()
+		header_label.text = String(COLUMN_HEADERS.get(column_key, column_key))
+		header_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		header_label.modulate = Color(0.88, 0.88, 0.9, 0.85)
+		column_box.add_child(header_label)
+
+		var nodes_stack: VBoxContainer = VBoxContainer.new()
+		nodes_stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		nodes_stack.add_theme_constant_override("separation", 16)
+		column_box.add_child(nodes_stack)
+		_column_node_stacks[column_key] = nodes_stack
 
 func _build_tree_nodes() -> void:
 	_nodes_by_id.clear()
@@ -688,59 +746,48 @@ func _build_tree_nodes() -> void:
 			continue
 		_defs_by_id[id] = patched
 
-	for id: String in NODE_POSITIONS.keys():
-		if not _defs_by_id.has(id):
+	for column_key: String in COLUMN_ORDER:
+		var stack: VBoxContainer = _column_node_stacks.get(column_key, null) as VBoxContainer
+		if stack == null:
 			continue
+		for old_child: Node in stack.get_children():
+			old_child.queue_free()
 
-		var node_control: UpgradeTreeNode = UPGRADE_TREE_NODE_SCENE.instantiate() as UpgradeTreeNode
-		if node_control == null:
-			continue
+		var ids: PackedStringArray = UPGRADE_IDS_BY_COLUMN.get(column_key, PackedStringArray()) as PackedStringArray
+		for id: String in ids:
+			if not _defs_by_id.has(id):
+				continue
 
-		var node_size: Vector2 = _node_size_for(id)
-		node_control.custom_minimum_size = node_size
-		node_control.size = node_size
-		node_control.position = _scaled_position(id)
-		_node_layer.add_child(node_control)
-		node_control.set_upgrade_data(_defs_by_id[id] as Dictionary)
-		node_control.node_pressed.connect(_on_upgrade_node_pressed)
-		node_control.node_hover_started.connect(_on_node_hover_started)
-		node_control.node_hover_ended.connect(_on_node_hover_ended)
-		_nodes_by_id[id] = node_control
-func _scaled_position(upgrade_id: String) -> Vector2:
-	var raw: Vector2 = NODE_POSITIONS.get(upgrade_id, Vector2.ZERO) as Vector2
-	return raw * _tree_layout_scale
+			var node_control: UpgradeTreeNode = UPGRADE_TREE_NODE_SCENE.instantiate() as UpgradeTreeNode
+			if node_control == null:
+				continue
 
-func _node_size_for(upgrade_id: String) -> Vector2:
-	if upgrade_id == "awakening":
-		return ROOT_NODE_SIZE * _tree_layout_scale
-	if upgrade_id == "they_can_see_you":
-		return FINAL_NODE_SIZE * _tree_layout_scale
-	return BASE_NODE_SIZE * _tree_layout_scale
+			node_control.custom_minimum_size = Vector2(156.0, 54.0)
+			node_control.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			stack.add_child(node_control)
+			node_control.set_upgrade_data(_defs_by_id[id] as Dictionary)
+			node_control.node_pressed.connect(_on_upgrade_node_pressed)
+			node_control.node_hover_started.connect(_on_node_hover_started)
+			node_control.node_hover_ended.connect(_on_node_hover_ended)
+			_nodes_by_id[id] = node_control
 
-func _update_tree_layout_scale(panel_size: Vector2) -> void:
-	var horizontal_ratio: float = panel_size.x / TREE_LAYOUT_REF_SIZE.x
-	var vertical_ratio: float = panel_size.y / TREE_LAYOUT_REF_SIZE.y
-	_tree_layout_scale = clamp(min(horizontal_ratio, vertical_ratio), 0.68, 1.0)
+func _scaled_position(_upgrade_id: String) -> Vector2:
+	return Vector2.ZERO
 
-	for upgrade_id: String in _nodes_by_id.keys():
-		var node_control: UpgradeTreeNode = _nodes_by_id[upgrade_id] as UpgradeTreeNode
-		if node_control == null:
-			continue
-		var node_size: Vector2 = _node_size_for(upgrade_id)
-		node_control.custom_minimum_size = node_size
-		node_control.size = node_size
-		node_control.position = _scaled_position(upgrade_id)
+func _node_size_for(_upgrade_id: String) -> Vector2:
+	return Vector2(156.0, 54.0)
 
-	if _connection_layer != null and not _nodes_by_id.is_empty():
-		_rebuild_connections()
+func _update_tree_layout_scale(_panel_size: Vector2) -> void:
+	_tree_layout_scale = 1.0
+
 func _node_center(upgrade_id: String) -> Vector2:
 	if not _nodes_by_id.has(upgrade_id):
 		return Vector2.ZERO
 	var node_control: UpgradeTreeNode = _nodes_by_id[upgrade_id] as UpgradeTreeNode
 	if node_control == null:
 		return Vector2.ZERO
-	return node_control.position + (node_control.size * 0.5)
-
+	var center_global: Vector2 = node_control.global_position + (node_control.size * 0.5)
+	return _main_panel_frame.to_local(center_global)
 func _refresh_tree() -> void:
 	if _game_manager == null:
 		return
@@ -807,26 +854,8 @@ func _icon_texture_for_upgrade(upgrade_id: String) -> Texture2D:
 func _rebuild_connections() -> void:
 	for child: Node in _connection_layer.get_children():
 		child.queue_free()
-
-	for edge: PackedStringArray in DEPENDENCY_EDGES:
-		if edge.size() < 2:
-			continue
-
-		var from_id: String = edge[0]
-		var to_id: String = edge[1]
-		if not _nodes_by_id.has(from_id) or not _nodes_by_id.has(to_id):
-			continue
-
-		var is_active: bool = _is_edge_active(to_id)
-		var line: Line2D = Line2D.new()
-		line.width = 2.2
-		line.antialiased = true
-		line.texture_mode = Line2D.LINE_TEXTURE_TILE
-		line.texture = (UI_TEXTURES["connector_active"] if is_active else UI_TEXTURES["connector_line"]) as Texture2D
-		line.default_color = Color(1.0, 1.0, 1.0, 0.42 if is_active else 0.22)
-		line.add_point(_node_center(from_id))
-		line.add_point(_node_center(to_id))
-		_connection_layer.add_child(line)
+	# Container-based tree layout: keep connectors disabled until a clean routed overlay pass.
+	return
 
 func _is_edge_active(destination_id: String) -> bool:
 	if _game_manager == null:
@@ -994,6 +1023,16 @@ func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return
 	_game_manager.continue_from_upgrade()
+
+
+
+
+
+
+
+
+
+
 
 
 
