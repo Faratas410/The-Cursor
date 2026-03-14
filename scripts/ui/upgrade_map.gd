@@ -101,7 +101,12 @@ func _ready() -> void:
 	_tooltip_panel.visible = false
 	_rebuild_nodes()
 	_refresh_states()
+	_sync_camera_activity()
 	_on_camera_transform_changed(_camera.get_pan_position(), _camera.get_zoom_factor())
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_VISIBILITY_CHANGED:
+		_sync_camera_activity()
 
 func set_game_manager_path(path: NodePath) -> void:
 	game_manager_path = path
@@ -115,6 +120,12 @@ func _resolve_game_manager() -> GameManager:
 	if not game_manager_path.is_empty():
 		return get_node_or_null(game_manager_path) as GameManager
 	return get_tree().get_first_node_in_group("game_manager") as GameManager
+
+func _sync_camera_activity() -> void:
+	if _camera == null or _game_manager == null:
+		return
+	var active: bool = visible and _game_manager.is_upgrade_phase()
+	_camera.enabled = active
 
 func _rebuild_nodes() -> void:
 	for child: Node in _map_container.get_children():
@@ -250,6 +261,7 @@ func _focus_on_node(upgrade_id: String, duration: float) -> void:
 	_camera.focus_toward_node(node_position, duration)
 
 func _on_game_state_changed() -> void:
+	_sync_camera_activity()
 	_refresh_states()
 
 func _on_continue_pressed() -> void:
@@ -331,5 +343,3 @@ func _clamp_tooltip_to_view(position_to_clamp: Vector2) -> Vector2:
 	var clamped_x: float = clampf(position_to_clamp.x, 8.0, viewport_size.x - panel_size.x - 8.0)
 	var clamped_y: float = clampf(position_to_clamp.y, 8.0, viewport_size.y - panel_size.y - 8.0)
 	return Vector2(clamped_x, clamped_y)
-
-

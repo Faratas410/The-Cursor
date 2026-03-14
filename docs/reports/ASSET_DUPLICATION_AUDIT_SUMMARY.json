@@ -1,10 +1,10 @@
 ﻿{
     "report_path":  "docs/reports/ASSET_DUPLICATION_AUDIT.md",
-    "total_visual_assets":  212,
+    "total_visual_assets":  217,
     "exact_duplicate_groups":  0,
     "duplicate_files":  0,
     "same_name_multi_path":  17,
-    "suspicious_near_duplicates":  7,
+    "suspicious_near_duplicates":  6,
     "referenced_duplicate_groups":  0,
     "unreferenced_duplicate_files":  0,
     "top_candidate_count":  0

@@ -16,7 +16,7 @@ var _last_mouse_position: Vector2 = Vector2.ZERO
 var _focus_tween: Tween
 
 func _ready() -> void:
-	enabled = true
+	enabled = false
 	_apply_camera_transform()
 
 func get_pan_position() -> Vector2:
@@ -89,5 +89,3 @@ func _apply_camera_transform() -> void:
 func _emit_transform_changed() -> void:
 	_apply_camera_transform()
 	transform_changed.emit(_pan_position, _zoom_factor)
-
-

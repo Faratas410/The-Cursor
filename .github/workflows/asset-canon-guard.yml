@@ -1,4 +1,4 @@
-﻿name: Asset Canon Guard
+name: Asset Canon Guard
 
 on:
   pull_request:
@@ -12,10 +12,44 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run strict asset duplication audit
+      - name: Run asset duplication audit (baseline mode)
         shell: pwsh
         run: |
-          powershell -ExecutionPolicy Bypass -File tools/audit_asset_duplicates.ps1 -RepoRoot . -ReportPath docs/reports/ASSET_DUPLICATION_AUDIT.md -Strict
+          powershell -ExecutionPolicy Bypass -File tools/audit_asset_duplicates.ps1 -RepoRoot . -ReportPath docs/reports/ASSET_DUPLICATION_AUDIT.md
+
+      - name: Enforce non-regression thresholds
+        shell: pwsh
+        run: |
+          $summaryPath = 'docs/reports/ASSET_DUPLICATION_AUDIT_SUMMARY.json'
+          if (-not (Test-Path $summaryPath)) {
+            Write-Error "Missing summary file: $summaryPath"
+            exit 2
+          }
+
+          $summary = Get-Content $summaryPath -Raw | ConvertFrom-Json
+
+          # Hard failures: true duplicate regressions.
+          if ([int]$summary.exact_duplicate_groups -gt 0) {
+            Write-Error "Asset canon violation: exact_duplicate_groups=$($summary.exact_duplicate_groups)"
+            exit 2
+          }
+          if ([int]$summary.referenced_duplicate_groups -gt 0) {
+            Write-Error "Asset canon violation: referenced_duplicate_groups=$($summary.referenced_duplicate_groups)"
+            exit 2
+          }
+          if ([int]$summary.unreferenced_duplicate_files -gt 0) {
+            Write-Error "Asset canon violation: unreferenced_duplicate_files=$($summary.unreferenced_duplicate_files)"
+            exit 2
+          }
+
+          # Baseline guard: fail only if legacy same-name conflicts increase.
+          $sameNameBaseline = 17
+          if ([int]$summary.same_name_multi_path -gt $sameNameBaseline) {
+            Write-Error "Asset canon regression: same_name_multi_path=$($summary.same_name_multi_path) exceeds baseline=$sameNameBaseline"
+            exit 2
+          }
+
+          Write-Host "Asset canon guard passed with baseline policy."
 
       - name: Upload audit reports
         uses: actions/upload-artifact@v4

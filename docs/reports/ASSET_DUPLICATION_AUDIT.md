@@ -1,11 +1,11 @@
 # Asset Duplication Audit
 
 ## Summary
-- total visual asset files scanned: **212**
+- total visual asset files scanned: **217**
 - exact duplicate groups count: **0**
 - duplicate files count: **0**
 - same-name multi-path conflicts count: **17**
-- suspicious near-duplicate count: **7**
+- suspicious near-duplicate count: **6**
 - referenced duplicate groups count: **0**
 - unreferenced duplicate files count: **0**
 
@@ -85,10 +85,9 @@ No exact duplicate groups found.
 ## Suspicious near-duplicates
 - res://assets/sprites/cursor/cursor_aura_final.png - contains final marker (unreferenced)
 - res://assets/sprites/cursor/cursor_final.png - contains final marker (referenced)
-- res://assets/ui/icons/icon_final.png - contains final marker (referenced)
+- res://assets/ui/icons/icon_final.png - contains final marker (unreferenced)
 - res://assets/ui/icons/icon_final_var_cool.png - contains final marker (unreferenced)
 - res://assets/ui/icons/icon_final_var_warm.png - contains final marker (unreferenced)
-- res://assets/ui/nodes/upgrade_node_final.png - contains final marker (referenced)
 - res://assets/ui/panels/ui_panel_gold.png - contains old marker (unreferenced)
 
 ## Likely cleanup opportunities
