@@ -1,7 +1,0 @@
-﻿Regenerated topdown backgrounds: 6
-assets\backgrounds\bg_village_topdown.png
-assets\backgrounds\bg_town_topdown.png
-assets\backgrounds\bg_city_topdown.png
-assets\backgrounds\bg_metropolis_topdown.png
-assets\backgrounds\bg_planet_topdown.png
-assets\backgrounds\bg_cult_world_topdown.png

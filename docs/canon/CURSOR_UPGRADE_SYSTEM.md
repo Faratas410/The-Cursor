@@ -74,3 +74,51 @@ Display states include:
 - choice_locked
 
 UI must show clear reason for `choice_locked`.
+
+## Upgrade UI Presentation Canon
+
+Upgrade logic remains authoritative in `GameManager`.
+
+Canonical read/query methods:
+- `get_upgrade_definitions()`
+- `get_upgrade_display_state(id)`
+- `are_dependencies_met(id)`
+- `get_choice_lock_reason(id)`
+
+Canonical purchase/flow methods:
+- `purchase_upgrade(id)`
+- `continue_from_upgrade()`
+
+Canonical signal wiring:
+- `upgrade_purchased(upgrade: Dictionary)`
+
+The Upgrade UI is view-only and must not duplicate gameplay logic.
+
+## Upgrade Map UI Ownership
+
+Canonical ownership chain:
+
+- `UpgradePanel` owns lifecycle and signal bridge.
+- `UpgradeMap` owns rendering and interaction.
+- `UpgradeMapNode` owns per-node visual state.
+
+No parallel card/slot renderer is allowed.
+
+## Map Layout and Interaction Canon
+
+Canonical category order:
+
+- Conversion
+- Faith Flow
+- World Control
+- Cult Power
+- Ritual
+
+Canonical interaction set:
+
+- hover tooltip
+- click purchase
+- mouse-wheel zoom
+- click-drag pan with bounded offset
+
+Map interaction is presentation-only and must not change upgrade state rules.

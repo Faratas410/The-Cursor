@@ -1,4 +1,4 @@
-ï»¿# CURSOR â€” ASSET SPECIFICATION
+# CURSOR — ASSET SPECIFICATION
 
 This document defines the technical specifications for all art assets.
 
@@ -49,11 +49,11 @@ UI panels
 
 All assets MUST:
 
-â€¢ use full alpha transparency  
-â€¢ contain NO background color  
-â€¢ never contain white background pixels  
+• use full alpha transparency  
+• contain NO background color  
+• never contain white background pixels  
 
-If any white pixels exist outside the asset silhouette â†’ asset is invalid.
+If any white pixels exist outside the asset silhouette ? asset is invalid.
 
 ---
 
@@ -127,7 +127,25 @@ Borders must remain intact when sliced.
 
 ---
 
-# 7 Prop Naming Convention
+# 7 Upgrade Map Node Assets
+
+Upgrade progression is rendered as an icon-based map.
+
+Canonical runtime node assets:
+
+- upgrade icons under `res://assets/ui/icons/upgrades/`
+- optional lock/owned overlays in scene nodes
+- optional connection lines rendered at runtime
+
+No rectangular slot/card node sprites are required for the runtime map renderer.
+
+Deprecated for runtime use:
+
+- legacy card-slot node textures in `res://assets/ui/nodes/`
+
+---
+
+# 8 Prop Naming Convention
 
 environment/
 
@@ -141,7 +159,7 @@ ritual_stone.png
 
 ---
 
-# 8 Character Naming
+# 9 Character Naming
 
 characters/
 
@@ -158,7 +176,7 @@ prophet_01.png
 
 ---
 
-# 9 Color Compliance
+# 10 Color Compliance
 
 Palette must match CURSOR_ART_SYSTEM.
 
@@ -173,16 +191,16 @@ No high-saturation neon colors allowed.
 
 ---
 
-# 10 Validation
+# 11 Validation
 
 Assets must pass these checks:
 
-â€¢ correct resolution  
-â€¢ transparent background  
-â€¢ centered composition  
-â€¢ readable silhouette  
+• correct resolution  
+• transparent background  
+• centered composition  
+• readable silhouette  
 
-If an asset fails any rule â†’ regenerate.
+If an asset fails any rule ? regenerate.
 
 ---
 

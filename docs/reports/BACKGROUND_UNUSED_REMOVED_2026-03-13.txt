@@ -1,7 +1,0 @@
-﻿Removed non-topdown backgrounds: 6
-assets/backgrounds/bg_village.png
-assets/backgrounds/bg_town.png
-assets/backgrounds/bg_city.png
-assets/backgrounds/bg_metropolis.png
-assets/backgrounds/bg_planet.png
-assets/backgrounds/bg_cult_world.png
