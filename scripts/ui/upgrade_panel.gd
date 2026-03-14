@@ -263,7 +263,7 @@ static var DEPENDENCY_EDGES: Array[PackedStringArray] = [
     PackedStringArray(["cult_expansion", "worship_wave"]),
     PackedStringArray(["worship_wave", "they_can_see_you"])
 ]
-const COLUMN_ORDER: PackedStringArray = PackedStringArray(["conversion", "faith", "world_control", "cult_power", "ritual"])
+const COLUMN_ORDER: Array[String] = ["conversion", "faith", "world_control", "cult_power", "ritual"]
 const COLUMN_HEADERS: Dictionary = {
 	"conversion": "Conversion",
 	"faith": "Faith Flow",
@@ -272,11 +272,11 @@ const COLUMN_HEADERS: Dictionary = {
 	"ritual": "Ritual"
 }
 const UPGRADE_IDS_BY_COLUMN: Dictionary = {
-	"conversion": PackedStringArray(["magnetic_presence", "faster_conversion", "conversion_pulse", "conversion_chain", "mass_conversion"]),
-	"faith": PackedStringArray(["faith_amplifier", "steady_worship", "violent_faith", "cult_donations", "sacred_economy", "divine_harvest"]),
-	"world_control": PackedStringArray(["awakening", "curious_crowds", "path_growth", "path_control", "pilgrimage", "sacred_ground"]),
-	"cult_power": PackedStringArray(["cult_leaders", "wide_influence", "focused_conversion", "divine_aura", "cult_expansion"]),
-	"ritual": PackedStringArray(["ritual_knife", "blood_ledger", "blood_tithe", "grand_offering", "worship_wave", "they_can_see_you"])
+	"conversion": ["magnetic_presence", "faster_conversion", "conversion_pulse", "conversion_chain", "mass_conversion"],
+	"faith": ["faith_amplifier", "steady_worship", "violent_faith", "cult_donations", "sacred_economy", "divine_harvest"],
+	"world_control": ["awakening", "curious_crowds", "path_growth", "path_control", "pilgrimage", "sacred_ground"],
+	"cult_power": ["cult_leaders", "wide_influence", "focused_conversion", "divine_aura", "cult_expansion"],
+	"ritual": ["ritual_knife", "blood_ledger", "blood_tithe", "grand_offering", "worship_wave", "they_can_see_you"]
 }
 @export var game_manager_path: NodePath
 
@@ -753,7 +753,7 @@ func _build_tree_nodes() -> void:
 		for old_child: Node in stack.get_children():
 			old_child.queue_free()
 
-		var ids: PackedStringArray = UPGRADE_IDS_BY_COLUMN.get(column_key, PackedStringArray()) as PackedStringArray
+		var ids: Array = UPGRADE_IDS_BY_COLUMN.get(column_key, [])
 		for id: String in ids:
 			if not _defs_by_id.has(id):
 				continue
@@ -1023,6 +1023,7 @@ func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return
 	_game_manager.continue_from_upgrade()
+
 
 
 
