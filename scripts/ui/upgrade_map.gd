@@ -82,6 +82,8 @@ var _positions_by_id: Dictionary = {}
 var _definitions_by_id: Dictionary = {}
 
 func _ready() -> void:
+	_map_container.position = Vector2.ZERO
+	_map_container.scale = Vector2.ONE
 	_game_manager = _resolve_game_manager()
 	if _game_manager == null:
 		visible = false
@@ -99,7 +101,7 @@ func _ready() -> void:
 	_tooltip_panel.visible = false
 	_rebuild_nodes()
 	_refresh_states()
-	_on_camera_transform_changed(_camera.get_map_offset(), _camera.get_zoom_factor())
+	_on_camera_transform_changed(_camera.get_pan_position(), _camera.get_zoom_factor())
 
 func set_game_manager_path(path: NodePath) -> void:
 	game_manager_path = path
@@ -282,10 +284,10 @@ func _can_start_drag() -> bool:
 		return false
 	return hovered == _map_viewport
 
-func _on_camera_transform_changed(map_offset: Vector2, zoom_factor: float) -> void:
-	var center: Vector2 = _map_viewport.size * 0.5
-	_map_container.position = center + map_offset
-	_map_container.scale = Vector2.ONE * zoom_factor
+func _on_camera_transform_changed(_pan_position: Vector2, _zoom_factor: float) -> void:
+	# Camera2D owns pan/zoom/focus; keep map container free of transforms.
+	_map_container.position = Vector2.ZERO
+	_map_container.scale = Vector2.ONE
 
 func _on_tooltip_requested(upgrade_id: String, _screen_position: Vector2) -> void:
 	if not _definitions_by_id.has(upgrade_id):
@@ -329,3 +331,5 @@ func _clamp_tooltip_to_view(position_to_clamp: Vector2) -> Vector2:
 	var clamped_x: float = clampf(position_to_clamp.x, 8.0, viewport_size.x - panel_size.x - 8.0)
 	var clamped_y: float = clampf(position_to_clamp.y, 8.0, viewport_size.y - panel_size.y - 8.0)
 	return Vector2(clamped_x, clamped_y)
+
+
