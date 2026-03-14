@@ -16,8 +16,9 @@ var _last_mouse_position: Vector2 = Vector2.ZERO
 var _focus_tween: Tween
 
 func _ready() -> void:
+	# Keep this camera disabled so gameplay camera is never affected.
 	enabled = false
-	_apply_camera_transform()
+	_emit_transform_changed()
 
 func get_pan_position() -> Vector2:
 	return _pan_position
@@ -47,7 +48,7 @@ func update_drag(mouse_position: Vector2) -> void:
 		return
 	var mouse_delta: Vector2 = mouse_position - _last_mouse_position
 	_last_mouse_position = mouse_position
-	_pan_position -= mouse_delta * _zoom_factor
+	_pan_position -= mouse_delta
 	_pan_position = _clamp_pan_position(_pan_position)
 	_emit_transform_changed()
 
@@ -83,10 +84,5 @@ func _clamp_pan_position(pan_position_value: Vector2) -> Vector2:
 		clampf(pan_position_value.y, -pan_limit, pan_limit)
 	)
 
-func _apply_camera_transform() -> void:
-	position = _pan_position
-	zoom = Vector2(_zoom_factor, _zoom_factor)
-
 func _emit_transform_changed() -> void:
-	_apply_camera_transform()
 	transform_changed.emit(_pan_position, _zoom_factor)

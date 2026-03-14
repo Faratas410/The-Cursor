@@ -80,6 +80,7 @@ var _game_manager: GameManager
 var _nodes_by_id: Dictionary = {}
 var _positions_by_id: Dictionary = {}
 var _definitions_by_id: Dictionary = {}
+var _is_initialized: bool = false
 
 func _ready() -> void:
 	_map_container.position = Vector2.ZERO
@@ -96,17 +97,18 @@ func _ready() -> void:
 
 	_camera.transform_changed.connect(_on_camera_transform_changed)
 	_map_viewport.gui_input.connect(_on_map_viewport_gui_input)
+	_map_viewport.resized.connect(_on_map_viewport_resized)
 	_continue_button.pressed.connect(_on_continue_pressed)
-
 	_tooltip_panel.visible = false
+
+	call_deferred("_deferred_initialize")
+
+func _deferred_initialize() -> void:
+	await get_tree().process_frame
 	_rebuild_nodes()
 	_refresh_states()
-	_sync_camera_activity()
+	_is_initialized = true
 	_on_camera_transform_changed(_camera.get_pan_position(), _camera.get_zoom_factor())
-
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_VISIBILITY_CHANGED:
-		_sync_camera_activity()
 
 func set_game_manager_path(path: NodePath) -> void:
 	game_manager_path = path
@@ -121,11 +123,12 @@ func _resolve_game_manager() -> GameManager:
 		return get_node_or_null(game_manager_path) as GameManager
 	return get_tree().get_first_node_in_group("game_manager") as GameManager
 
-func _sync_camera_activity() -> void:
-	if _camera == null or _game_manager == null:
+func _on_map_viewport_resized() -> void:
+	if not _is_initialized:
 		return
-	var active: bool = visible and _game_manager.is_upgrade_phase()
-	_camera.enabled = active
+	_rebuild_nodes()
+	_refresh_states()
+	_on_camera_transform_changed(_camera.get_pan_position(), _camera.get_zoom_factor())
 
 func _rebuild_nodes() -> void:
 	for child: Node in _map_container.get_children():
@@ -160,11 +163,9 @@ func _rebuild_nodes() -> void:
 	_redraw_connections()
 
 func _compute_node_position(definition: Dictionary) -> Vector2:
-	# Keep map container at ZERO/ONE and place nodes in visible viewport space.
-	var origin: Vector2 = _map_viewport.size * 0.5
 	var id: String = String(definition.get("id", ""))
 	if id == "awakening":
-		return origin + Vector2(0.0, -190.0)
+		return Vector2(0.0, -190.0)
 
 	var column_key: String = _resolve_column_key(definition)
 	var x: float = float(COLUMN_X_BY_KEY.get(column_key, 0.0))
@@ -172,7 +173,8 @@ func _compute_node_position(definition: Dictionary) -> Vector2:
 	var y: float = float((max(1, tier) - 1) * 160)
 	if id == "they_can_see_you":
 		y += 40.0
-	return origin + Vector2(x, y)
+	return Vector2(x, y)
+
 func _resolve_column_key(definition: Dictionary) -> String:
 	var id: String = String(definition.get("id", ""))
 	if COLUMN_OVERRIDE_BY_ID.has(id):
@@ -262,7 +264,6 @@ func _focus_on_node(upgrade_id: String, duration: float) -> void:
 	_camera.focus_toward_node(node_position, duration)
 
 func _on_game_state_changed() -> void:
-	_sync_camera_activity()
 	_refresh_states()
 
 func _on_continue_pressed() -> void:
@@ -297,10 +298,10 @@ func _can_start_drag() -> bool:
 		return false
 	return hovered == _map_viewport
 
-func _on_camera_transform_changed(_pan_position: Vector2, _zoom_factor: float) -> void:
-	# Camera2D owns pan/zoom/focus; keep map container free of transforms.
-	_map_container.position = Vector2.ZERO
-	_map_container.scale = Vector2.ONE
+func _on_camera_transform_changed(pan_position: Vector2, zoom_factor: float) -> void:
+	# Super overlay map above gameplay: move/scale map content within the UI viewport only.
+	_map_container.position = (_map_viewport.size * 0.5) + pan_position
+	_map_container.scale = Vector2.ONE * zoom_factor
 
 func _on_tooltip_requested(upgrade_id: String, _screen_position: Vector2) -> void:
 	if not _definitions_by_id.has(upgrade_id):
@@ -344,5 +345,3 @@ func _clamp_tooltip_to_view(position_to_clamp: Vector2) -> Vector2:
 	var clamped_x: float = clampf(position_to_clamp.x, 8.0, viewport_size.x - panel_size.x - 8.0)
 	var clamped_y: float = clampf(position_to_clamp.y, 8.0, viewport_size.y - panel_size.y - 8.0)
 	return Vector2(clamped_x, clamped_y)
-
-
