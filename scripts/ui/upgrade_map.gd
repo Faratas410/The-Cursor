@@ -160,9 +160,11 @@ func _rebuild_nodes() -> void:
 	_redraw_connections()
 
 func _compute_node_position(definition: Dictionary) -> Vector2:
+	# Keep map container at ZERO/ONE and place nodes in visible viewport space.
+	var origin: Vector2 = _map_viewport.size * 0.5
 	var id: String = String(definition.get("id", ""))
 	if id == "awakening":
-		return Vector2(0.0, -190.0)
+		return origin + Vector2(0.0, -190.0)
 
 	var column_key: String = _resolve_column_key(definition)
 	var x: float = float(COLUMN_X_BY_KEY.get(column_key, 0.0))
@@ -170,8 +172,7 @@ func _compute_node_position(definition: Dictionary) -> Vector2:
 	var y: float = float((max(1, tier) - 1) * 160)
 	if id == "they_can_see_you":
 		y += 40.0
-	return Vector2(x, y)
-
+	return origin + Vector2(x, y)
 func _resolve_column_key(definition: Dictionary) -> String:
 	var id: String = String(definition.get("id", ""))
 	if COLUMN_OVERRIDE_BY_ID.has(id):
@@ -343,3 +344,5 @@ func _clamp_tooltip_to_view(position_to_clamp: Vector2) -> Vector2:
 	var clamped_x: float = clampf(position_to_clamp.x, 8.0, viewport_size.x - panel_size.x - 8.0)
 	var clamped_y: float = clampf(position_to_clamp.y, 8.0, viewport_size.y - panel_size.y - 8.0)
 	return Vector2(clamped_x, clamped_y)
+
+

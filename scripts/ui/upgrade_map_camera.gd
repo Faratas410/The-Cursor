@@ -29,10 +29,11 @@ func is_dragging() -> bool:
 	return _drag_active
 
 func handle_wheel(button_index: int) -> void:
+	# Inverted as requested: wheel up zooms out, wheel down zooms in.
 	if button_index == MOUSE_BUTTON_WHEEL_UP:
-		_zoom_factor = clampf(_zoom_factor * zoom_in_factor, zoom_min, zoom_max)
-	elif button_index == MOUSE_BUTTON_WHEEL_DOWN:
 		_zoom_factor = clampf(_zoom_factor * zoom_out_factor, zoom_min, zoom_max)
+	elif button_index == MOUSE_BUTTON_WHEEL_DOWN:
+		_zoom_factor = clampf(_zoom_factor * zoom_in_factor, zoom_min, zoom_max)
 	_emit_transform_changed()
 
 func begin_drag(mouse_position: Vector2) -> void:
