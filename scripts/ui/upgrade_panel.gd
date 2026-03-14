@@ -547,11 +547,11 @@ func _apply_layout() -> void:
 		return
 
 	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
-	var top_safe: float = 114.0
-	var bottom_reserved: float = 222.0
+	var top_safe: float = 112.0
+	var bottom_reserved: float = 264.0
 	var panel_size: Vector2 = Vector2(
 		clamp(viewport_size.x - 120.0, 900.0, 1140.0),
-		clamp(viewport_size.y - (top_safe + bottom_reserved), 320.0, 500.0)
+		clamp(viewport_size.y - (top_safe + bottom_reserved), 260.0, 400.0)
 	)
 	var panel_pos: Vector2 = Vector2(
 		(viewport_size.x - panel_size.x) * 0.5,
@@ -562,26 +562,27 @@ func _apply_layout() -> void:
 	_tree_root.size = panel_size
 	_update_tree_layout_scale(panel_size)
 
-	var continue_size: Vector2 = Vector2(156.0, 50.0)
+	var continue_size: Vector2 = Vector2(188.0, 56.0)
 	_continue_button.position = Vector2(
 		panel_pos.x + (panel_size.x - continue_size.x) * 0.5,
-		viewport_size.y - continue_size.y - 14.0
+		viewport_size.y - continue_size.y - 16.0
 	)
 	_continue_button.size = continue_size
 
 	var summary_size: Vector2 = Vector2(336.0, 140.0)
-	var summary_pos: Vector2 = Vector2(panel_pos.x, panel_pos.y + panel_size.y + 32.0)
-	var summary_max_y: float = _continue_button.position.y - summary_size.y - 10.0
-	summary_pos.y = min(summary_pos.y, summary_max_y)
+	var sacrifice_size: Vector2 = Vector2(374.0, 182.0)
+	var lower_gap: float = 30.0
+	var lower_row_y: float = panel_pos.y + panel_size.y + lower_gap
+	var summary_max_y: float = _continue_button.position.y - summary_size.y - 16.0
+	var sacrifice_max_y: float = _continue_button.position.y - sacrifice_size.y - 16.0
+	lower_row_y = min(lower_row_y, summary_max_y, sacrifice_max_y)
+	var summary_pos: Vector2 = Vector2(panel_pos.x, lower_row_y)
 	_run_summary_panel.position = summary_pos
 	_run_summary_panel.size = summary_size
 
 	if _sacrifice_panel != null:
-		var sacrifice_size: Vector2 = Vector2(374.0, 182.0)
 		var sacrifice_x: float = panel_pos.x + panel_size.x - sacrifice_size.x
-		var sacrifice_y: float = panel_pos.y + panel_size.y + 32.0
-		var sacrifice_max_y: float = _continue_button.position.y - sacrifice_size.y - 10.0
-		sacrifice_y = min(sacrifice_y, sacrifice_max_y)
+		var sacrifice_y: float = lower_row_y
 		_sacrifice_panel.position = Vector2(sacrifice_x, sacrifice_y)
 		_sacrifice_panel.size = sacrifice_size
 
@@ -693,23 +694,33 @@ func _setup_tree_columns() -> void:
 	root_box.add_theme_constant_override("separation", 16)
 	margin.add_child(root_box)
 
+	var top_balance: Control = Control.new()
+	top_balance.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root_box.add_child(top_balance)
+
+	var content_block: VBoxContainer = VBoxContainer.new()
+	content_block.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	content_block.add_theme_constant_override("separation", 14)
+	root_box.add_child(content_block)
+
 	var title_label: Label = Label.new()
 	title_label.text = "UPGRADE TREE"
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_label.modulate = Color(0.96, 0.93, 0.84, 0.96)
 	title_label.custom_minimum_size = Vector2(0.0, 28.0)
-	root_box.add_child(title_label)
+	content_block.add_child(title_label)
 
 	var title_gap: Control = Control.new()
 	title_gap.custom_minimum_size = Vector2(0.0, 14.0)
-	root_box.add_child(title_gap)
+	content_block.add_child(title_gap)
 
 	var scroll: ScrollContainer = ScrollContainer.new()
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	scroll.custom_minimum_size = Vector2(0.0, 222.0)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	root_box.add_child(scroll)
+	content_block.add_child(scroll)
 
 	var columns_row: HBoxContainer = HBoxContainer.new()
 	columns_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -736,6 +747,9 @@ func _setup_tree_columns() -> void:
 		column_box.add_child(nodes_stack)
 		_column_node_stacks[column_key] = nodes_stack
 
+	var bottom_balance: Control = Control.new()
+	bottom_balance.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root_box.add_child(bottom_balance)
 func _build_tree_nodes() -> void:
 	_nodes_by_id.clear()
 	_defs_by_id.clear()
@@ -767,7 +781,7 @@ func _build_tree_nodes() -> void:
 			if node_control == null:
 				continue
 
-			node_control.custom_minimum_size = Vector2(96.0, 68.0)
+			node_control.custom_minimum_size = Vector2(100.0, 70.0)
 			node_control.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 			stack.add_child(node_control)
 			node_control.set_upgrade_data(_defs_by_id[id] as Dictionary)
@@ -1028,8 +1042,6 @@ func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return
 	_game_manager.continue_from_upgrade()
-
-
 
 
 
