@@ -49,7 +49,7 @@ func _ready() -> void:
 	_icon.pivot_offset = _icon.size * 0.5
 	_name_label.clip_text = true
 	_name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_name_label.max_lines_visible = 2
+	_name_label.max_lines_visible = 1
 	_name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_short_desc_label.visible = false
 	_short_desc_label.text = ""
@@ -70,6 +70,15 @@ func _ready() -> void:
 	_short_desc_label.z_index = 2
 	_cost_label.z_index = 2
 	_purchased_mark.z_index = 2
+	_purchased_mark.anchor_left = 1.0
+	_purchased_mark.anchor_right = 1.0
+	_purchased_mark.offset_left = -56.0
+	_purchased_mark.offset_right = -6.0
+	_purchased_mark.offset_top = 6.0
+	_purchased_mark.offset_bottom = 22.0
+	_purchased_mark.clip_text = true
+	_purchased_mark.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_purchased_mark.add_theme_font_size_override("font_size", 10)
 	_pulse_overlay.z_index = 3
 	_pulse_overlay.texture = UPGRADE_PULSE_TEXTURE
 	_pulse_overlay.visible = false
@@ -293,6 +302,8 @@ func _stop_final_aura() -> void:
 func _on_purchase_pulse_finished() -> void:
 	if _is_hovered:
 		_start_hover_animation()
+
+
 
 
 

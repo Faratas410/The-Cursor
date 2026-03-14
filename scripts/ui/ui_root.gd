@@ -81,8 +81,8 @@ func _setup_ui_visuals() -> void:
 	if top_bar != null:
 		top_bar.anchor_left = 0.0
 		top_bar.anchor_right = 1.0
-		top_bar.offset_left = 16.0
-		top_bar.offset_right = -16.0
+		top_bar.offset_left = 18.0
+		top_bar.offset_right = -18.0
 		top_bar.clip_contents = true
 		top_bar.add_theme_constant_override("separation", 4)
 		# Remove stretched top-bar background texture to avoid bright lower fringe.
@@ -571,6 +571,7 @@ func _format_int(value: int) -> String:
 		if count % 3 == 0 and i > 0:
 			out = "," + out
 	return out
+
 
 
 

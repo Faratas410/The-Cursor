@@ -203,65 +203,65 @@ const FINAL_NODE_SIZE: Vector2 = Vector2(160.0, 52.0)
 const TREE_LAYOUT_REF_SIZE: Vector2 = Vector2(960.0, 520.0)
 
 const NODE_POSITIONS: Dictionary = {
-    "awakening": Vector2(404.0, 24.0),
-    "magnetic_presence": Vector2(24.0, 96.0),
-    "faster_conversion": Vector2(24.0, 156.0),
-    "conversion_pulse": Vector2(24.0, 216.0),
-    "conversion_chain": Vector2(24.0, 276.0),
-    "mass_conversion": Vector2(24.0, 336.0),
-    "faith_amplifier": Vector2(214.0, 96.0),
-    "steady_worship": Vector2(214.0, 156.0),
-    "violent_faith": Vector2(214.0, 216.0),
-    "cult_donations": Vector2(214.0, 276.0),
-    "sacred_economy": Vector2(214.0, 336.0),
-    "divine_harvest": Vector2(214.0, 396.0),
-    "curious_crowds": Vector2(404.0, 96.0),
-    "path_growth": Vector2(404.0, 156.0),
-    "path_control": Vector2(404.0, 216.0),
-    "pilgrimage": Vector2(404.0, 276.0),
-    "sacred_ground": Vector2(404.0, 336.0),
-    "ritual_knife": Vector2(784.0, 96.0),
-    "blood_ledger": Vector2(784.0, 156.0),
-    "blood_tithe": Vector2(784.0, 216.0),
-    "grand_offering": Vector2(784.0, 276.0),
-    "cult_leaders": Vector2(594.0, 96.0),
-    "wide_influence": Vector2(594.0, 156.0),
-    "focused_conversion": Vector2(594.0, 216.0),
-    "divine_aura": Vector2(594.0, 336.0),
-    "cult_expansion": Vector2(594.0, 396.0),
-    "worship_wave": Vector2(784.0, 336.0),
-    "they_can_see_you": Vector2(784.0, 456.0)
+	"awakening": Vector2(404.0, 24.0),
+	"magnetic_presence": Vector2(24.0, 96.0),
+	"faster_conversion": Vector2(24.0, 156.0),
+	"conversion_pulse": Vector2(24.0, 216.0),
+	"conversion_chain": Vector2(24.0, 276.0),
+	"mass_conversion": Vector2(24.0, 336.0),
+	"faith_amplifier": Vector2(214.0, 96.0),
+	"steady_worship": Vector2(214.0, 156.0),
+	"violent_faith": Vector2(214.0, 216.0),
+	"cult_donations": Vector2(214.0, 276.0),
+	"sacred_economy": Vector2(214.0, 336.0),
+	"divine_harvest": Vector2(214.0, 396.0),
+	"curious_crowds": Vector2(404.0, 96.0),
+	"path_growth": Vector2(404.0, 156.0),
+	"path_control": Vector2(404.0, 216.0),
+	"pilgrimage": Vector2(404.0, 276.0),
+	"sacred_ground": Vector2(404.0, 336.0),
+	"ritual_knife": Vector2(784.0, 96.0),
+	"blood_ledger": Vector2(784.0, 156.0),
+	"blood_tithe": Vector2(784.0, 216.0),
+	"grand_offering": Vector2(784.0, 276.0),
+	"cult_leaders": Vector2(594.0, 96.0),
+	"wide_influence": Vector2(594.0, 156.0),
+	"focused_conversion": Vector2(594.0, 216.0),
+	"divine_aura": Vector2(594.0, 336.0),
+	"cult_expansion": Vector2(594.0, 396.0),
+	"worship_wave": Vector2(784.0, 336.0),
+	"they_can_see_you": Vector2(784.0, 456.0)
 }
 static var DEPENDENCY_EDGES: Array[PackedStringArray] = [
-    PackedStringArray(["awakening", "magnetic_presence"]),
-    PackedStringArray(["awakening", "faster_conversion"]),
-    PackedStringArray(["magnetic_presence", "conversion_pulse"]),
-    PackedStringArray(["faster_conversion", "conversion_chain"]),
-    PackedStringArray(["conversion_chain", "mass_conversion"]),
-    PackedStringArray(["awakening", "faith_amplifier"]),
-    PackedStringArray(["faith_amplifier", "steady_worship"]),
-    PackedStringArray(["faith_amplifier", "violent_faith"]),
-    PackedStringArray(["steady_worship", "cult_donations"]),
-    PackedStringArray(["cult_donations", "sacred_economy"]),
-    PackedStringArray(["violent_faith", "divine_harvest"]),
-    PackedStringArray(["awakening", "curious_crowds"]),
-    PackedStringArray(["curious_crowds", "path_growth"]),
-    PackedStringArray(["curious_crowds", "path_control"]),
-    PackedStringArray(["path_control", "pilgrimage"]),
-    PackedStringArray(["curious_crowds", "sacred_ground"]),
-    PackedStringArray(["awakening", "ritual_knife"]),
-    PackedStringArray(["ritual_knife", "blood_ledger"]),
-    PackedStringArray(["blood_ledger", "blood_tithe"]),
-    PackedStringArray(["blood_tithe", "grand_offering"]),
-    PackedStringArray(["mass_conversion", "cult_leaders"]),
-    PackedStringArray(["ritual_knife", "cult_leaders"]),
-    PackedStringArray(["cult_leaders", "wide_influence"]),
-    PackedStringArray(["cult_leaders", "focused_conversion"]),
-    PackedStringArray(["cult_leaders", "divine_aura"]),
-    PackedStringArray(["sacred_ground", "cult_expansion"]),
-    PackedStringArray(["divine_aura", "cult_expansion"]),
-    PackedStringArray(["cult_expansion", "worship_wave"]),
-    PackedStringArray(["worship_wave", "they_can_see_you"])
+	PackedStringArray(["awakening", "magnetic_presence"]),
+	PackedStringArray(["awakening", "faster_conversion"]),
+	PackedStringArray(["magnetic_presence", "conversion_pulse"]),
+	PackedStringArray(["faster_conversion", "conversion_chain"]),
+	PackedStringArray(["conversion_chain", "mass_conversion"]),
+	PackedStringArray(["awakening", "faith_amplifier"]),
+	PackedStringArray(["faith_amplifier", "steady_worship"]),
+	PackedStringArray(["faith_amplifier", "violent_faith"]),
+	PackedStringArray(["steady_worship", "cult_donations"]),
+	PackedStringArray(["cult_donations", "sacred_economy"]),
+	PackedStringArray(["violent_faith", "divine_harvest"]),
+	PackedStringArray(["awakening", "curious_crowds"]),
+	PackedStringArray(["curious_crowds", "path_growth"]),
+	PackedStringArray(["curious_crowds", "path_control"]),
+	PackedStringArray(["path_control", "pilgrimage"]),
+	PackedStringArray(["curious_crowds", "sacred_ground"]),
+	PackedStringArray(["awakening", "ritual_knife"]),
+	PackedStringArray(["ritual_knife", "blood_ledger"]),
+	PackedStringArray(["blood_ledger", "blood_tithe"]),
+	PackedStringArray(["blood_tithe", "grand_offering"]),
+	PackedStringArray(["mass_conversion", "cult_leaders"]),
+	PackedStringArray(["ritual_knife", "cult_leaders"]),
+	PackedStringArray(["cult_leaders", "wide_influence"]),
+	PackedStringArray(["cult_leaders", "focused_conversion"]),
+	PackedStringArray(["cult_leaders", "divine_aura"]),
+	PackedStringArray(["sacred_ground", "cult_expansion"]),
+	PackedStringArray(["divine_aura", "cult_expansion"]),
+	PackedStringArray(["cult_expansion", "worship_wave"]),
+	PackedStringArray(["worship_wave", "they_can_see_you"])
 ]
 const COLUMN_ORDER: Array[String] = ["conversion", "faith", "world_control", "cult_power", "ritual"]
 const COLUMN_HEADERS: Dictionary = {
@@ -547,11 +547,11 @@ func _apply_layout() -> void:
 		return
 
 	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
-	var top_safe: float = 94.0
-	var bottom_reserved: float = 250.0
+	var top_safe: float = 114.0
+	var bottom_reserved: float = 222.0
 	var panel_size: Vector2 = Vector2(
-		clamp(viewport_size.x - 90.0, 860.0, 1180.0),
-		clamp(viewport_size.y - (top_safe + bottom_reserved), 250.0, 460.0)
+		clamp(viewport_size.x - 120.0, 900.0, 1140.0),
+		clamp(viewport_size.y - (top_safe + bottom_reserved), 320.0, 500.0)
 	)
 	var panel_pos: Vector2 = Vector2(
 		(viewport_size.x - panel_size.x) * 0.5,
@@ -562,25 +562,25 @@ func _apply_layout() -> void:
 	_tree_root.size = panel_size
 	_update_tree_layout_scale(panel_size)
 
-	var continue_size: Vector2 = Vector2(240.0, 56.0)
+	var continue_size: Vector2 = Vector2(156.0, 50.0)
 	_continue_button.position = Vector2(
 		panel_pos.x + (panel_size.x - continue_size.x) * 0.5,
-		viewport_size.y - continue_size.y - 10.0
+		viewport_size.y - continue_size.y - 14.0
 	)
 	_continue_button.size = continue_size
 
-	var summary_size: Vector2 = Vector2(320.0, 132.0)
-	var summary_pos: Vector2 = Vector2(panel_pos.x, panel_pos.y + panel_size.y + 8.0)
-	var summary_max_y: float = _continue_button.position.y - summary_size.y - 8.0
+	var summary_size: Vector2 = Vector2(336.0, 140.0)
+	var summary_pos: Vector2 = Vector2(panel_pos.x, panel_pos.y + panel_size.y + 32.0)
+	var summary_max_y: float = _continue_button.position.y - summary_size.y - 10.0
 	summary_pos.y = min(summary_pos.y, summary_max_y)
 	_run_summary_panel.position = summary_pos
 	_run_summary_panel.size = summary_size
 
 	if _sacrifice_panel != null:
-		var sacrifice_size: Vector2 = Vector2(360.0, 176.0)
+		var sacrifice_size: Vector2 = Vector2(374.0, 182.0)
 		var sacrifice_x: float = panel_pos.x + panel_size.x - sacrifice_size.x
-		var sacrifice_y: float = panel_pos.y + panel_size.y + 8.0
-		var sacrifice_max_y: float = _continue_button.position.y - sacrifice_size.y - 8.0
+		var sacrifice_y: float = panel_pos.y + panel_size.y + 32.0
+		var sacrifice_max_y: float = _continue_button.position.y - sacrifice_size.y - 10.0
 		sacrifice_y = min(sacrifice_y, sacrifice_max_y)
 		_sacrifice_panel.position = Vector2(sacrifice_x, sacrifice_y)
 		_sacrifice_panel.size = sacrifice_size
@@ -664,7 +664,7 @@ func _apply_small_button_visual(button: Button, emphasize: bool) -> void:
 	disabled_style.texture = disabled
 	disabled_style.set_texture_margin_all(8.0)
 
-	button.custom_minimum_size = Vector2(132.0, 34.0)
+	button.custom_minimum_size = Vector2(144.0, 38.0)
 	button.add_theme_stylebox_override("normal", normal_style)
 	button.add_theme_stylebox_override("hover", hover_style)
 	button.add_theme_stylebox_override("pressed", pressed_style)
@@ -680,9 +680,9 @@ func _setup_tree_columns() -> void:
 	margin.anchor_right = 1.0
 	margin.anchor_bottom = 1.0
 	margin.add_theme_constant_override("margin_left", 24)
-	margin.add_theme_constant_override("margin_top", 18)
+	margin.add_theme_constant_override("margin_top", 8)
 	margin.add_theme_constant_override("margin_right", 24)
-	margin.add_theme_constant_override("margin_bottom", 18)
+	margin.add_theme_constant_override("margin_bottom", 20)
 	_node_layer.add_child(margin)
 
 	var root_box: VBoxContainer = VBoxContainer.new()
@@ -690,26 +690,31 @@ func _setup_tree_columns() -> void:
 	root_box.anchor_bottom = 1.0
 	root_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	root_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	root_box.add_theme_constant_override("separation", 14)
+	root_box.add_theme_constant_override("separation", 16)
 	margin.add_child(root_box)
 
 	var title_label: Label = Label.new()
 	title_label.text = "UPGRADE TREE"
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_label.modulate = Color(0.96, 0.93, 0.84, 0.96)
+	title_label.custom_minimum_size = Vector2(0.0, 28.0)
 	root_box.add_child(title_label)
+
+	var title_gap: Control = Control.new()
+	title_gap.custom_minimum_size = Vector2(0.0, 14.0)
+	root_box.add_child(title_gap)
 
 	var scroll: ScrollContainer = ScrollContainer.new()
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	root_box.add_child(scroll)
 
 	var columns_row: HBoxContainer = HBoxContainer.new()
 	columns_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	columns_row.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	columns_row.add_theme_constant_override("separation", 40)
+	columns_row.add_theme_constant_override("separation", 24)
 	scroll.add_child(columns_row)
 
 	for column_key: String in COLUMN_ORDER:
@@ -762,8 +767,8 @@ func _build_tree_nodes() -> void:
 			if node_control == null:
 				continue
 
-			node_control.custom_minimum_size = Vector2(156.0, 54.0)
-			node_control.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			node_control.custom_minimum_size = Vector2(96.0, 68.0)
+			node_control.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 			stack.add_child(node_control)
 			node_control.set_upgrade_data(_defs_by_id[id] as Dictionary)
 			node_control.node_pressed.connect(_on_upgrade_node_pressed)
@@ -1023,53 +1028,6 @@ func _on_continue_pressed() -> void:
 	if _game_manager == null:
 		return
 	_game_manager.continue_from_upgrade()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
