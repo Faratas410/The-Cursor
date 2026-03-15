@@ -43,7 +43,9 @@ Followers generate Faith.
 
 Faith buys upgrades.
 
-Upgrades scale the game.
+Upgrades scale conversion, economy, sacrifice, world control, and late-game pressure.
+
+Cult Power reflects world dominance and supports progression pressure.
 
 Target progression: 1,000,000 followers.
 
@@ -105,6 +107,12 @@ node paths
 
 before using them.
 
+For canon, asset-path, UI, or production-alignment work, inspect these documents before editing:
+
+`docs/canon/CURSOR_MASTER_CONTEXT.md`
+
+`repo_map.md`
+
 Reuse patterns already present in the repository whenever possible.
 
 If a change can be implemented without introducing new files, prefer editing existing files.
@@ -138,8 +146,18 @@ Communication happens through signals.
 
 This prevents tight coupling between gameplay elements.
 
+Current canonical ownership:
+
+`GameManager` owns global state and upgrade authority.
+
+`UpgradePanel` owns the upgrade-phase lifecycle bridge.
+
+`UpgradeMap` owns upgrade-map rendering and interactions.
+
+`UpgradeMapNode` owns per-node presentation state only.
+
 7. CORE ARCHITECTURE RULES
-Rule 1 — Systems own gameplay logic
+Rule 1 - Systems own gameplay logic
 
 Examples:
 
@@ -153,32 +171,34 @@ progression_system
 
 Entities must remain lightweight.
 
-Rule 2 — Entities never modify global state
+Rule 2 - Entities never modify global state
 
 Entities must never modify GameManager directly.
 
 Entities should emit signals and let systems react.
 
-Rule 3 — GameManager owns global state
+Rule 3 - GameManager owns global state
 
-GameManager is the only place where global variables exist.
+GameManager is the only place where authoritative global variables exist.
 
 Examples:
 
 followers
 faith
+cult_power
 conversion_value
-spawn_rate
+run phase
+upgrade tree state
 
 Do not duplicate global state elsewhere.
 
-Rule 4 — Signals for communication
+Rule 4 - Signals for communication
 
 Systems communicate through signals when possible.
 
 Avoid tight coupling between scripts.
 
-Rule 5 — Scene isolation
+Rule 5 - Scene isolation
 
 Scenes must remain self-contained units.
 
@@ -193,19 +213,32 @@ This structure must remain stable.
 res://
 
 assets/
-    sprites/
     backgrounds/
+    environment/
+    sprites/
     ui/
+    vfx/
+    ambient_overlays/
+    ambient_overlays_animated/
+
+docs/
+    canon/
+    reports/
 
 scenes/
     main_scene.tscn
     npc.tscn
     cursor.tscn
-    upgrade_button.tscn
+    skeptic.tscn
+    prophet.tscn
+    ui/
+    effects/
+    ambient_overlays/
 
 scripts/
     main/
         game_manager.gd
+        main_scene_controller.gd
 
     systems/
         spawn_system.gd
@@ -216,44 +249,65 @@ scripts/
     entities/
         npc.gd
         cursor.gd
+        skeptic.gd
+        prophet.gd
 
     ui/
         ui_root.gd
         upgrade_panel.gd
+        upgrade_map.gd
+        upgrade_map_node.gd
+        upgrade_map_camera.gd
+        icon_registry.gd
 
 Do not reorganize folders without explicit instruction.
 
 9. SCENE STRUCTURE
 
-Expected main scene structure:
+Current main scene shape:
 
 Main (Node2D)
- ├ World
- │   ├ Background
- │   └ NPCContainer
- │
- ├ Cursor
- │
- ├ UI
- │   ├ TopBar
- │   │   ├ FollowersLabel
- │   │   └ FaithLabel
- │   │
- │   └ UpgradePanel
- │
- └ Systems
-     └ GameManager
+ |- World
+ |  |- Background
+ |  |- GroundNoiseOverlay
+ |  |- EdgeDetailsOverlay
+ |  |- AmbientOverlayLayer
+ |  |- DecorPropsLayer
+ |  `- NPCContainer
+ |- Cursor
+ |- MainCamera
+ |- UI
+ |  |- TopBar
+ |  `- UpgradePanel
+ `- Systems
+    |- SpawnSystem
+    |- ConversionSystem
+    |- EconomySystem
+    |- ProgressionSystem
+    `- GameManager
+
+Some world overlay nodes are created or ensured at runtime by `progression_system.gd`.
 
 Avoid unnecessary deep nesting.
 
 10. SIGNAL CONTRACTS
 
-Preferred signals:
+Preferred gameplay signals:
 
 npc_detected(npc)
 npc_converted()
 upgrade_purchased(upgrade)
 dimension_changed(level)
+
+Additional runtime-authoritative signals already in use:
+
+state_changed()
+run_started()
+run_ended()
+upgrade_phase_opened()
+upgrade_phase_closed()
+sacrifice_performed(amount, faith_gained, source)
+auto_sacrifice_triggered(amount, faith_gained)
 
 Reuse existing signals whenever possible.
 
@@ -269,6 +323,10 @@ NPC
 
 Cursor
 
+Skeptic
+
+Prophet
+
 Entities may contain:
 
 movement logic
@@ -276,6 +334,8 @@ movement logic
 collision logic
 
 signal emission
+
+local visual state
 
 Entities must not contain:
 
@@ -307,6 +367,8 @@ update GameManager values
 
 connect to entity signals
 
+instantiate runtime support nodes when canonical scene ownership expects them
+
 13. UI RULES
 
 UI must remain passive.
@@ -317,15 +379,31 @@ display state
 
 emit input events
 
+forward upgrade selections to GameManager
+
 UI must not directly modify gameplay state.
 
 UI events should be routed through systems or controlled manager logic.
 
+Canonical UI ownership:
+
+`UIRoot` owns HUD presentation, debug overlay, world messages, upgrade-phase visibility, and ending presentation.
+
+`UpgradePanel` owns the upgrade overlay lifecycle bridge.
+
+`UpgradeMap` owns map rendering, pan/zoom, tooltip, and purchase forwarding.
+
+`UpgradeMapNode` owns node visuals and local animation only.
+
 14. PERFORMANCE CONSTRAINTS
 
-Hard limit:
+Baseline target:
 
 max_npc = 200
+
+Current runtime note:
+
+`spawn_system.gd` may temporarily raise effective population above 200 during late global-devotion behavior.
 
 Agents must avoid:
 
@@ -334,6 +412,8 @@ expensive per-frame loops
 unnecessary physics checks
 
 repeated scene tree scans in _process()
+
+raising population caps without explicit request
 
 Prefer cached references when safe.
 
@@ -482,6 +562,10 @@ Faith generation
 
 Upgrade purchasing
 
+Run phase to upgrade phase transition
+
+Sacrifice flow if touched
+
 When editing scripts, verify parse safety.
 
 20. PARSE SAFETY RULES
@@ -550,6 +634,8 @@ Upgrade purchasing
 
 Background progression
 
+Run or upgrade loop continuity
+
 Agents should prioritize this state over secondary systems.
 
 23. FEATURES NOT YET IMPLEMENTED
@@ -582,7 +668,41 @@ perform parse safety review
 
 produce completion report
 
-25. FINAL GOAL
+25. CURRENT PROJECT STATUS
+
+The current repo is beyond the initial prototype baseline.
+
+Implemented and active in runtime:
+
+NPC spawn scaling and clustered spawn behavior
+
+Cursor conversion loop
+
+Faith generation with live per-second HUD
+
+Upgrade-phase loop with upgrade-map UI
+
+Choice-locked upgrade branches
+
+Manual and auto sacrifice
+
+World background progression and ambient overlay support
+
+Cult Power, divinity progression, and final sequence scaffolding
+
+Documentation rule:
+
+Treat `docs/canon/CURSOR_MASTER_CONTEXT.md` as canonical intent and the current runtime files as implementation truth.
+
+When they differ, update documentation carefully to distinguish:
+
+implemented runtime behavior
+
+canonical target behavior
+
+deferred or asset-pipeline-only canon
+
+26. FINAL GOAL
 
 The goal is a clean incremental prototype that is easy to expand.
 
