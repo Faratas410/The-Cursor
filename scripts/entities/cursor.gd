@@ -49,6 +49,8 @@ var _aura_pulse_tween: Tween
 var _aura_pulse_base_scale: float = 1.0
 var _trail_accumulator: float = 0.0
 var _trail_interval: float = 0.06
+var _ritual_particle_timer: float = 0.0
+var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var cult_momentum: float = 0.0
 var _momentum_decay_timer: float = 0.0
 var cult_pressure: float = 0.0
@@ -59,6 +61,7 @@ var _base_outer_awareness_radius: float = 200.0
 var _base_attraction_radius: float = 60.0
 
 func _ready() -> void:
+	_rng.randomize()
 	_game_manager = get_node_or_null(game_manager_path) as GameManager
 	_last_position = global_position
 	_area.body_entered.connect(_on_body_entered)
@@ -104,6 +107,8 @@ func _process(delta: float) -> void:
 	_base_attraction_radius = _game_manager.get_effective_attraction_radius()
 	_update_dynamic_influence_fields()
 	_update_aura_visual()
+	_update_ritual_circle_animation(delta)
+	_emit_ritual_particles(delta)
 
 func set_cursor_visual(state: String) -> void:
 	if _sprite == null:
@@ -185,8 +190,8 @@ func _restart_idle_aura_pulse() -> void:
 	_aura_pulse.scale = base_scale
 	_aura_pulse_tween = create_tween()
 	_aura_pulse_tween.set_loops()
-	_aura_pulse_tween.tween_property(_aura_pulse, "scale", base_scale * 1.08, 0.6)
-	_aura_pulse_tween.tween_property(_aura_pulse, "scale", base_scale, 0.6)
+	_aura_pulse_tween.tween_property(_aura_pulse, "scale", base_scale * 1.12, 0.55)
+	_aura_pulse_tween.tween_property(_aura_pulse, "scale", base_scale, 0.55)
 
 func _ensure_world_vfx_layer() -> void:
 	var parent_node: Node = get_parent()
@@ -252,6 +257,40 @@ func _spawn_conversion_ripple(world_position: Vector2, intensity: float = 1.0) -
 	tween.tween_property(ripple, "scale", Vector2(2.5, 2.5) * intensity, 0.4)
 	tween.parallel().tween_property(ripple, "modulate:a", 0.0, 0.4)
 	tween.finished.connect(_queue_free_if_valid.bind(ripple))
+
+func _update_ritual_circle_animation(delta: float) -> void:
+	if _aura != null:
+		_aura.rotation += delta * 0.1
+	if _aura_pulse != null:
+		_aura_pulse.rotation -= delta * 0.14
+
+func _emit_ritual_particles(delta: float) -> void:
+	if _game_manager == null or not _game_manager.is_gameplay_phase():
+		return
+	if _world_vfx_layer == null:
+		_ensure_world_vfx_layer()
+	if _world_vfx_layer == null:
+		return
+
+	_ritual_particle_timer -= delta
+	if _ritual_particle_timer > 0.0:
+		return
+	_ritual_particle_timer = 0.12
+
+	var particle: Sprite2D = Sprite2D.new()
+	particle.texture = CURSOR_RIPPLE_TEXTURE
+	particle.global_position = global_position + Vector2.RIGHT.rotated(_rng.randf_range(0.0, TAU)) * _rng.randf_range(6.0, 16.0)
+	particle.scale = Vector2.ONE * _rng.randf_range(0.08, 0.14)
+	particle.modulate = Color(0.84, 0.66, 1.0, 0.55)
+	particle.z_index = -1
+	_world_vfx_layer.add_child(particle)
+
+	var drift: Vector2 = Vector2.RIGHT.rotated(_rng.randf_range(0.0, TAU)) * _rng.randf_range(8.0, 14.0)
+	var tween: Tween = particle.create_tween()
+	tween.tween_property(particle, "global_position", particle.global_position + drift, 0.9)
+	tween.parallel().tween_property(particle, "modulate:a", 0.0, 0.9)
+	tween.parallel().tween_property(particle, "scale", particle.scale * 0.45, 0.9)
+	tween.finished.connect(_queue_free_if_valid.bind(particle))
 
 func spawn_conversion_ripple(world_position: Vector2) -> void:
 	_spawn_conversion_ripple(world_position, _get_momentum_fx_intensity())

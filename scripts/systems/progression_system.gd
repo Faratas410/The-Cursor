@@ -20,6 +20,12 @@ const AMBIENT_OVERLAY_SCENES: Dictionary = {
 	"metropolis_rune_pulse_animated": preload("res://scenes/ambient_overlays/metropolis_rune_pulse_animated_01.tscn"),
 	"planet_spores_animated": preload("res://scenes/ambient_overlays/planet_spores_animated_01.tscn")
 }
+const TREE_A_TEXTURE: Texture2D = preload("res://assets/environment/tree_a.png")
+const TREE_B_TEXTURE: Texture2D = preload("res://assets/environment/tree_b.png")
+const WOOD_FENCE_TEXTURE: Texture2D = preload("res://assets/environment/wood_fence.png")
+const CULT_BANNER_TEXTURE: Texture2D = preload("res://assets/environment/cult_banner.png")
+const BONFIRE_GLOW_TEXTURE: Texture2D = preload("res://assets/ambient_overlays/cult_candle_glow_01.png")
+const BONFIRE_EMBERS_TEXTURE: Texture2D = preload("res://assets/ambient_overlays/cult_embers_01.png")
 
 @export var game_manager_path: NodePath
 @export var background_path: NodePath
@@ -34,6 +40,16 @@ var _ambient_overlay_b: Node2D
 var _ambient_overlay_c: Node2D
 var _overlay_view_size: Vector2 = Vector2.ZERO
 var _current_dimension_for_overlays: int = 0
+var _decor_props_layer: Node2D
+var _wind_tree_props: Array[Sprite2D] = []
+var _wind_tree_base_positions: Array[Vector2] = []
+var _wind_tree_phases: Array[float] = []
+var _stall_prop: Sprite2D
+var _bonfire_glow_prop: Sprite2D
+var _bonfire_embers_prop: Sprite2D
+var _banner_prop: Sprite2D
+var _ritual_pressure_overlay: Sprite2D
+var _cursor: CursorEntity
 
 var _dimension_thresholds: PackedInt32Array = PackedInt32Array([100, 1000, 10000, 100000, 1000000])
 var _world_notice_thresholds: PackedInt32Array = PackedInt32Array([5000, 10000, 50000])
@@ -49,8 +65,10 @@ func _ready() -> void:
 		return
 
 	_ensure_world_overlays()
+	_ensure_decor_props()
 	apply_dimension_background(_game_manager.current_dimension)
 	_refresh_world_overlays()
+	_update_decor_motion(0.0)
 
 func _ensure_background_sprite() -> Sprite2D:
 	var systems_root: Node = get_parent()
@@ -77,11 +95,12 @@ func _ensure_background_sprite() -> Sprite2D:
 	world.move_child(created, 0)
 	return created
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if _game_manager == null:
 		return
 
 	_update_world_overlay_if_needed()
+	_update_decor_motion(delta)
 	_update_dimension_progression()
 	_update_divinity_progression()
 	_update_cult_power_effects()
@@ -190,6 +209,7 @@ func _refresh_world_overlays() -> void:
 	_ground_noise_overlay.texture = _build_ground_noise_texture(image_size)
 	_edge_details_overlay.texture = _build_edge_details_texture(image_size)
 	_apply_ambient_overlays()
+	_layout_decor_props(view_size)
 
 func _configure_ambient_overlay_slot(slot: Node2D, z_index_value: int) -> void:
 	slot.z_index = z_index_value
@@ -397,6 +417,120 @@ func _draw_rect_alpha(image: Image, rect: Rect2i, color: Color) -> void:
 			var existing: Color = image.get_pixel(x, y)
 			if color.a > existing.a:
 				image.set_pixel(x, y, color)
+
+func _ensure_decor_props() -> void:
+	if _background == null:
+		return
+	var world: Node = _background.get_parent()
+	if world == null:
+		return
+
+	_decor_props_layer = world.get_node_or_null("DecorPropsLayer") as Node2D
+	if _decor_props_layer == null:
+		_decor_props_layer = Node2D.new()
+		_decor_props_layer.name = "DecorPropsLayer"
+		world.add_child(_decor_props_layer)
+
+	var tree_left: Sprite2D = _ensure_decor_sprite("PropTreeLeft", TREE_A_TEXTURE, -2, Color(1.0, 1.0, 1.0, 0.98), Vector2(0.94, 0.94))
+	var tree_right: Sprite2D = _ensure_decor_sprite("PropTreeRight", TREE_B_TEXTURE, -2, Color(1.0, 1.0, 1.0, 0.98), Vector2(0.88, 0.88))
+	_stall_prop = _ensure_decor_sprite("PropStall", WOOD_FENCE_TEXTURE, -1, Color(0.98, 0.95, 0.9, 0.95), Vector2(1.12, 1.12))
+	_bonfire_glow_prop = _ensure_decor_sprite("PropBonfireGlow", BONFIRE_GLOW_TEXTURE, -1, Color(1.0, 0.88, 0.58, 0.82), Vector2(0.66, 0.66))
+	_bonfire_embers_prop = _ensure_decor_sprite("PropBonfireEmbers", BONFIRE_EMBERS_TEXTURE, 0, Color(1.0, 0.8, 0.5, 0.68), Vector2(0.62, 0.62))
+	_banner_prop = _ensure_decor_sprite("PropCultBanner", CULT_BANNER_TEXTURE, -1, Color(1.0, 1.0, 1.0, 0.96), Vector2(0.92, 0.92))
+
+	if tree_left != null and tree_right != null:
+		_wind_tree_props = [tree_left, tree_right]
+		_wind_tree_base_positions = [tree_left.position, tree_right.position]
+		_wind_tree_phases = [0.0, 1.6]
+
+	if _ritual_pressure_overlay == null:
+		_ritual_pressure_overlay = Sprite2D.new()
+		_ritual_pressure_overlay.name = "RitualPressureOverlay"
+		_ritual_pressure_overlay.texture = _build_ritual_pressure_texture(260)
+		_ritual_pressure_overlay.z_index = -2
+		_ritual_pressure_overlay.modulate = Color(0.12, 0.08, 0.06, 0.0)
+		_decor_props_layer.add_child(_ritual_pressure_overlay)
+
+func _ensure_decor_sprite(name: String, texture: Texture2D, z_index_value: int, modulate: Color, scale_value: Vector2) -> Sprite2D:
+	if _decor_props_layer == null or texture == null:
+		return null
+	var sprite: Sprite2D = _decor_props_layer.get_node_or_null(name) as Sprite2D
+	if sprite == null:
+		sprite = Sprite2D.new()
+		sprite.name = name
+		_decor_props_layer.add_child(sprite)
+	sprite.texture = texture
+	sprite.z_index = z_index_value
+	sprite.modulate = modulate
+	sprite.scale = scale_value
+	return sprite
+
+func _layout_decor_props(view_size: Vector2) -> void:
+	if _decor_props_layer == null:
+		return
+	if _wind_tree_props.size() >= 2:
+		_wind_tree_props[0].position = Vector2(view_size.x * 0.14, view_size.y * 0.30)
+		_wind_tree_props[1].position = Vector2(view_size.x * 0.86, view_size.y * 0.76)
+		if _wind_tree_base_positions.size() >= 2:
+			_wind_tree_base_positions[0] = _wind_tree_props[0].position
+			_wind_tree_base_positions[1] = _wind_tree_props[1].position
+	if _stall_prop != null:
+		_stall_prop.position = Vector2(view_size.x * 0.74, view_size.y * 0.39)
+	if _bonfire_glow_prop != null:
+		_bonfire_glow_prop.position = Vector2(view_size.x * 0.20, view_size.y * 0.73)
+	if _bonfire_embers_prop != null:
+		_bonfire_embers_prop.position = Vector2(view_size.x * 0.20, view_size.y * 0.72)
+	if _banner_prop != null:
+		_banner_prop.position = Vector2(view_size.x * 0.70, view_size.y * 0.78)
+	if _ritual_pressure_overlay != null:
+		_ritual_pressure_overlay.position = view_size * 0.5
+
+func _update_decor_motion(delta: float) -> void:
+	if _game_manager == null:
+		return
+	if _cursor == null:
+		_cursor = get_tree().get_first_node_in_group("cursor") as CursorEntity
+
+	var time_sec: float = float(Time.get_ticks_msec()) * 0.001
+	for i: int in range(_wind_tree_props.size()):
+		if i >= _wind_tree_base_positions.size() or i >= _wind_tree_phases.size():
+			continue
+		var tree: Sprite2D = _wind_tree_props[i]
+		if tree == null:
+			continue
+		var sway: float = sin((time_sec * 0.9) + _wind_tree_phases[i]) * 2.0
+		tree.position = Vector2(_wind_tree_base_positions[i].x + sway, _wind_tree_base_positions[i].y)
+		tree.rotation = deg_to_rad(sway * 0.55)
+
+	if _banner_prop != null:
+		_banner_prop.rotation = deg_to_rad(sin((time_sec * 1.2) + 0.8) * 2.0)
+	if _bonfire_glow_prop != null:
+		var glow_alpha: float = 0.72 + (sin(time_sec * 2.5) * 0.1)
+		_bonfire_glow_prop.modulate.a = glow_alpha
+	if _bonfire_embers_prop != null:
+		var ember_pulse: float = 0.62 + (sin((time_sec * 2.9) + 0.4) * 0.08)
+		_bonfire_embers_prop.modulate.a = ember_pulse
+
+	if _ritual_pressure_overlay != null:
+		var pressure_ratio: float = 0.0
+		if _cursor != null:
+			_ritual_pressure_overlay.position = _cursor.global_position
+			pressure_ratio = _cursor.get_pressure_ratio()
+		_ritual_pressure_overlay.modulate.a = clamp(pressure_ratio * 0.42, 0.0, 0.42)
+		var scale_value: float = 0.86 + (pressure_ratio * 0.36)
+		_ritual_pressure_overlay.scale = Vector2.ONE * scale_value
+
+func _build_ritual_pressure_texture(size: int) -> Texture2D:
+	var image: Image = Image.create(size, size, false, Image.FORMAT_RGBA8)
+	var center: Vector2 = Vector2(float(size) * 0.5, float(size) * 0.5)
+	var max_dist: float = float(size) * 0.5
+	for y: int in range(size):
+		for x: int in range(size):
+			var dist: float = center.distance_to(Vector2(float(x), float(y)))
+			var ratio: float = clamp(dist / max_dist, 0.0, 1.0)
+			var alpha: float = pow(1.0 - ratio, 2.2)
+			image.set_pixel(x, y, Color(1.0, 1.0, 1.0, alpha))
+	return ImageTexture.create_from_image(image)
 
 func _update_final_phase_flags() -> void:
 	if _game_manager.followers > 500000:

@@ -2,9 +2,9 @@ extends Control
 class_name EndScreen
 
 const PANEL_TEXTURE: Texture2D = preload("res://assets/ui/panels/panel_popup.png")
-const BUTTON_PRIMARY_TEXTURE: Texture2D = preload("res://assets/ui/buttons/button_primary.png")
-const BUTTON_SECONDARY_TEXTURE: Texture2D = preload("res://assets/ui/buttons/button_secondary.png")
-const BUTTON_SMALL_TEXTURE: Texture2D = preload("res://assets/ui/buttons/button_small.png")
+const BUTTON_IDLE_TEXTURE: Texture2D = preload("res://assets/ui/buttons/btn_continue_idle.png")
+const BUTTON_HOVER_TEXTURE: Texture2D = preload("res://assets/ui/buttons/btn_continue_hover.png")
+const BUTTON_PRESSED_TEXTURE: Texture2D = preload("res://assets/ui/buttons/btn_continue_pressed.png")
 
 @onready var _followers_value: Label = $Panel/VBoxContainer/FollowersValue
 @onready var _playtime_value: Label = $Panel/VBoxContainer/PlaytimeValue
@@ -26,18 +26,18 @@ func _apply_visual_styles() -> void:
 	_panel.add_theme_stylebox_override("panel", panel_style)
 
 	var normal: StyleBoxTexture = StyleBoxTexture.new()
-	normal.texture = BUTTON_PRIMARY_TEXTURE
+	normal.texture = BUTTON_IDLE_TEXTURE
 	normal.set_texture_margin_all(10.0)
 	var hover: StyleBoxTexture = StyleBoxTexture.new()
-	hover.texture = BUTTON_SECONDARY_TEXTURE
+	hover.texture = BUTTON_HOVER_TEXTURE
 	hover.set_texture_margin_all(10.0)
-	var disabled: StyleBoxTexture = StyleBoxTexture.new()
-	disabled.texture = BUTTON_SMALL_TEXTURE
-	disabled.set_texture_margin_all(10.0)
+	var pressed: StyleBoxTexture = StyleBoxTexture.new()
+	pressed.texture = BUTTON_PRESSED_TEXTURE
+	pressed.set_texture_margin_all(10.0)
 	_return_button.add_theme_stylebox_override("normal", normal)
 	_return_button.add_theme_stylebox_override("hover", hover)
-	_return_button.add_theme_stylebox_override("pressed", hover)
-	_return_button.add_theme_stylebox_override("disabled", disabled)
+	_return_button.add_theme_stylebox_override("pressed", pressed)
+	_return_button.add_theme_stylebox_override("disabled", normal)
 
 func set_results(follower_count: int, playtime_seconds: int) -> void:
 	_followers_value.text = "Followers converted: %s" % _format_int(follower_count)

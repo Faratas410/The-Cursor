@@ -31,6 +31,8 @@ var _run_followers_label: Label
 var _run_faith_label: Label
 var _run_cult_power_label: Label
 var _continue_button: Button
+var _last_faith_per_second: float = -1.0
+var _faith_per_second_pulse_tween: Tween
 
 const DIVINE_PULSE_SCENE: PackedScene = preload("res://scenes/effects/divine_pulse.tscn")
 const END_SCREEN_SCENE: PackedScene = preload("res://scenes/ui/end_screen.tscn")
@@ -47,6 +49,12 @@ static var UI_TEXTURES: Dictionary = {
 	"button_danger": preload("res://assets/ui/buttons/button_danger.png"),
 	"button_small": preload("res://assets/ui/buttons/button_small.png"),
 	"button_icon": preload("res://assets/ui/buttons/button_icon.png"),
+	"btn_continue_idle": preload("res://assets/ui/buttons/btn_continue_idle.png"),
+	"btn_continue_hover": preload("res://assets/ui/buttons/btn_continue_hover.png"),
+	"btn_continue_pressed": preload("res://assets/ui/buttons/btn_continue_pressed.png"),
+	"btn_upgrade_idle": preload("res://assets/ui/buttons/btn_upgrade.png"),
+	"btn_upgrade_hover": preload("res://assets/ui/buttons/btn_upgrade_hover.png"),
+	"btn_upgrade_disabled": preload("res://assets/ui/buttons/btn_upgrade_disabled.png"),
 	"label_bg": preload("res://assets/ui/labels/label_bg.png"),
 	"followers_icon": preload("res://assets/ui/icons/followers_icon.png"),
 	"faith_icon": preload("res://assets/ui/icons/faith_icon.png"),
@@ -88,10 +96,11 @@ func _setup_ui_visuals() -> void:
 	if top_bar != null:
 		top_bar.anchor_left = 0.0
 		top_bar.anchor_right = 1.0
-		top_bar.offset_left = 18.0
-		top_bar.offset_right = -18.0
+		top_bar.offset_left = 14.0
+		top_bar.offset_right = -14.0
 		top_bar.clip_contents = true
-		top_bar.add_theme_constant_override("separation", 4)
+		top_bar.scale = Vector2(0.9, 0.9)
+		top_bar.add_theme_constant_override("separation", 3)
 		# Remove stretched top-bar background texture to avoid bright lower fringe.
 		_remove_panel_background("TopBarBackground")
 		_wrap_stat_label(top_bar, _followers_label, UI_TEXTURES["followers_icon"] as Texture2D, "Followers")
@@ -161,17 +170,20 @@ func _setup_upgrade_overlay() -> void:
 	_continue_button.text = "Continue"
 	_continue_button.custom_minimum_size = Vector2(0.0, 38.0)
 	var continue_normal: StyleBoxTexture = StyleBoxTexture.new()
-	continue_normal.texture = UI_TEXTURES["button_primary"] as Texture2D
+	continue_normal.texture = UI_TEXTURES["btn_continue_idle"] as Texture2D
 	continue_normal.set_texture_margin_all(10.0)
 	var continue_hover: StyleBoxTexture = StyleBoxTexture.new()
-	continue_hover.texture = UI_TEXTURES["button_secondary"] as Texture2D
+	continue_hover.texture = UI_TEXTURES["btn_continue_hover"] as Texture2D
 	continue_hover.set_texture_margin_all(10.0)
+	var continue_pressed: StyleBoxTexture = StyleBoxTexture.new()
+	continue_pressed.texture = UI_TEXTURES["btn_continue_pressed"] as Texture2D
+	continue_pressed.set_texture_margin_all(10.0)
 	var continue_disabled: StyleBoxTexture = StyleBoxTexture.new()
-	continue_disabled.texture = UI_TEXTURES["button_small"] as Texture2D
+	continue_disabled.texture = UI_TEXTURES["btn_continue_idle"] as Texture2D
 	continue_disabled.set_texture_margin_all(10.0)
 	_continue_button.add_theme_stylebox_override("normal", continue_normal)
 	_continue_button.add_theme_stylebox_override("hover", continue_hover)
-	_continue_button.add_theme_stylebox_override("pressed", continue_hover)
+	_continue_button.add_theme_stylebox_override("pressed", continue_pressed)
 	_continue_button.add_theme_stylebox_override("disabled", continue_disabled)
 	_continue_button.pressed.connect(_on_continue_pressed)
 	box.add_child(_continue_button)
@@ -192,6 +204,9 @@ func _refresh_labels() -> void:
 		var faith_base_per_second: float = (follower_count * _game_manager.faith_per_follower) / (1.0 + (follower_count / 200.0))
 		var faith_per_second: float = (faith_base_per_second * _game_manager.get_faith_gain_multiplier()) + _game_manager.get_passive_faith_per_second()
 		_followers_per_second_label.text = "Faith/sec: %.2f" % faith_per_second
+		if _last_faith_per_second >= 0.0 and faith_per_second > (_last_faith_per_second + 0.005):
+			_pulse_faith_per_second_label()
+		_last_faith_per_second = faith_per_second
 	if _cult_power_label != null:
 		_cult_power_label.text = "Cult Power: %s" % _format_int(_game_manager.cult_power)
 	if _run_timer_label != null:
@@ -401,21 +416,21 @@ func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Textur
 	var min_width: float = 170.0
 	match row_name:
 		"Followers":
-			min_width = 286.0
+			min_width = 258.0
 		"Faith":
-			min_width = 168.0
+			min_width = 152.0
 		"FollowersPerSecond":
-			min_width = 196.0
+			min_width = 176.0
 		"CultPower":
-			min_width = 184.0
+			min_width = 166.0
 		"RunTimer":
-			min_width = 138.0
+			min_width = 124.0
 		_:
-			min_width = 168.0
+			min_width = 152.0
 
 	var row: PanelContainer = PanelContainer.new()
 	row.name = "StatRow_%s" % row_name
-	row.custom_minimum_size = Vector2(min_width, 38.0)
+	row.custom_minimum_size = Vector2(min_width, 34.0)
 	row.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	row.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 
@@ -425,26 +440,26 @@ func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Textur
 	row_style.texture_margin_top = 8.0
 	row_style.texture_margin_right = 8.0
 	row_style.texture_margin_bottom = 8.0
-	row_style.content_margin_left = 5.0
-	row_style.content_margin_top = 2.0
-	row_style.content_margin_right = 5.0
-	row_style.content_margin_bottom = 2.0
+	row_style.content_margin_left = 4.0
+	row_style.content_margin_top = 1.0
+	row_style.content_margin_right = 4.0
+	row_style.content_margin_bottom = 1.0
 	row.add_theme_stylebox_override("panel", row_style)
 
 	var content: HBoxContainer = HBoxContainer.new()
-	content.add_theme_constant_override("separation", 4)
+	content.add_theme_constant_override("separation", 3)
 	content.anchor_right = 1.0
 	content.anchor_bottom = 1.0
-	content.offset_left = 5.0
-	content.offset_top = 3.0
-	content.offset_right = -5.0
-	content.offset_bottom = -3.0
+	content.offset_left = 4.0
+	content.offset_top = 2.0
+	content.offset_right = -4.0
+	content.offset_bottom = -2.0
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(content)
 
 	var icon: TextureRect = TextureRect.new()
 	icon.texture = icon_texture
-	icon.custom_minimum_size = Vector2(16.0, 16.0)
+	icon.custom_minimum_size = Vector2(14.0, 14.0)
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
 	content.add_child(icon)
@@ -461,11 +476,11 @@ func _wrap_stat_label(top_bar: HBoxContainer, label: Label, icon_texture: Textur
 	top_bar.move_child(row, original_index)
 
 func _refresh_top_bar_row_sizes() -> void:
-	_resize_stat_row_for_label(_followers_label, 286.0)
-	_resize_stat_row_for_label(_faith_label, 168.0)
-	_resize_stat_row_for_label(_followers_per_second_label, 196.0)
-	_resize_stat_row_for_label(_cult_power_label, 184.0)
-	_resize_stat_row_for_label(_run_timer_label, 138.0)
+	_resize_stat_row_for_label(_followers_label, 258.0)
+	_resize_stat_row_for_label(_faith_label, 152.0)
+	_resize_stat_row_for_label(_followers_per_second_label, 176.0)
+	_resize_stat_row_for_label(_cult_power_label, 166.0)
+	_resize_stat_row_for_label(_run_timer_label, 124.0)
 
 func _resize_stat_row_for_label(label: Label, base_min_width: float) -> void:
 	if label == null:
@@ -486,6 +501,16 @@ func _resize_stat_row_for_label(label: Label, base_min_width: float) -> void:
 	var icon_and_padding: float = 44.0
 	var required_width: float = ceil(text_width + icon_and_padding)
 	row.custom_minimum_size = Vector2(max(base_min_width, required_width), row.custom_minimum_size.y)
+
+func _pulse_faith_per_second_label() -> void:
+	if _followers_per_second_label == null:
+		return
+	if _faith_per_second_pulse_tween != null and _faith_per_second_pulse_tween.is_running():
+		_faith_per_second_pulse_tween.kill()
+	_followers_per_second_label.modulate = Color(1.0, 1.0, 1.0, 1.0)
+	_faith_per_second_pulse_tween = create_tween()
+	_faith_per_second_pulse_tween.tween_property(_followers_per_second_label, "modulate", Color(1.0, 0.95, 0.6, 1.0), 0.08)
+	_faith_per_second_pulse_tween.tween_property(_followers_per_second_label, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.14)
 func _setup_debug_overlay() -> void:
 	if not enable_runtime_debug_overlay:
 		return

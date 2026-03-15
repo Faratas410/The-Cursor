@@ -6,9 +6,9 @@ signal upgrade_purchased(upgrade: Dictionary)
 
 const UPGRADE_MAP_NODE_SCENE: PackedScene = preload("res://scenes/ui/upgrade_map_node.tscn")
 const PANEL_TOOLTIP_TEXTURE: Texture2D = preload("res://assets/ui/panels/panel_tooltip_9slice.png")
-const BUTTON_PRIMARY_TEXTURE: Texture2D = preload("res://assets/ui/buttons/button_primary.png")
-const BUTTON_SECONDARY_TEXTURE: Texture2D = preload("res://assets/ui/buttons/button_secondary.png")
-const BUTTON_SMALL_TEXTURE: Texture2D = preload("res://assets/ui/buttons/button_small.png")
+const BUTTON_CONTINUE_IDLE_TEXTURE: Texture2D = preload("res://assets/ui/buttons/btn_continue_idle.png")
+const BUTTON_CONTINUE_HOVER_TEXTURE: Texture2D = preload("res://assets/ui/buttons/btn_continue_hover.png")
+const BUTTON_CONTINUE_PRESSED_TEXTURE: Texture2D = preload("res://assets/ui/buttons/btn_continue_pressed.png")
 
 const COLUMN_X_BY_KEY: Dictionary = {
 	"conversion": -400.0,
@@ -85,6 +85,8 @@ var _nodes_by_id: Dictionary = {}
 var _positions_by_id: Dictionary = {}
 var _definitions_by_id: Dictionary = {}
 var _is_initialized: bool = false
+var _tooltip_tween: Tween
+var _continue_button_tween: Tween
 
 func _ready() -> void:
 	_map_container.position = Vector2.ZERO
@@ -103,11 +105,17 @@ func _ready() -> void:
 	_map_viewport.gui_input.connect(_on_map_viewport_gui_input)
 	_map_viewport.resized.connect(_on_map_viewport_resized)
 	_continue_button.pressed.connect(_on_continue_pressed)
+	_continue_button.mouse_entered.connect(_on_continue_button_mouse_entered)
+	_continue_button.mouse_exited.connect(_on_continue_button_mouse_exited)
+	_continue_button.button_down.connect(_on_continue_button_down)
+	_continue_button.button_up.connect(_on_continue_button_up)
 	_tooltip_panel.visible = false
 	_tooltip_panel.top_level = true
 	_tooltip_panel.z_as_relative = false
-	_tooltip_panel.z_index = 5000
+	_tooltip_panel.z_index = 4095
 	_tooltip_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_tooltip_panel.modulate = Color(0.96, 0.94, 1.0, 0.0)
+	_continue_button.pivot_offset = _continue_button.custom_minimum_size * 0.5
 	_apply_panel_and_button_styles()
 
 	call_deferred("_deferred_initialize")
@@ -119,25 +127,37 @@ func _apply_panel_and_button_styles() -> void:
 	tooltip_style.texture_margin_top = 16.0
 	tooltip_style.texture_margin_right = 16.0
 	tooltip_style.texture_margin_bottom = 16.0
-	tooltip_style.content_margin_left = 8.0
-	tooltip_style.content_margin_top = 8.0
-	tooltip_style.content_margin_right = 8.0
-	tooltip_style.content_margin_bottom = 8.0
+	tooltip_style.content_margin_left = 12.0
+	tooltip_style.content_margin_top = 10.0
+	tooltip_style.content_margin_right = 12.0
+	tooltip_style.content_margin_bottom = 10.0
 	_tooltip_panel.add_theme_stylebox_override("panel", tooltip_style)
+	_tooltip_title.add_theme_color_override("font_color", Color(1.00, 0.93, 0.72, 1.0))
+	_tooltip_description.add_theme_color_override("font_color", Color(0.95, 0.93, 0.98, 1.0))
+	_tooltip_cost.add_theme_color_override("font_color", Color(1.00, 0.88, 0.58, 1.0))
+	_tooltip_status.add_theme_color_override("font_color", Color(0.88, 0.86, 0.96, 1.0))
 
 	var cta_normal: StyleBoxTexture = StyleBoxTexture.new()
-	cta_normal.texture = BUTTON_PRIMARY_TEXTURE
+	cta_normal.texture = BUTTON_CONTINUE_IDLE_TEXTURE
 	cta_normal.set_texture_margin_all(10.0)
 	var cta_hover: StyleBoxTexture = StyleBoxTexture.new()
-	cta_hover.texture = BUTTON_SECONDARY_TEXTURE
+	cta_hover.texture = BUTTON_CONTINUE_HOVER_TEXTURE
 	cta_hover.set_texture_margin_all(10.0)
 	var cta_disabled: StyleBoxTexture = StyleBoxTexture.new()
-	cta_disabled.texture = BUTTON_SMALL_TEXTURE
+	cta_disabled.texture = BUTTON_CONTINUE_IDLE_TEXTURE
 	cta_disabled.set_texture_margin_all(10.0)
+	var cta_pressed: StyleBoxTexture = StyleBoxTexture.new()
+	cta_pressed.texture = BUTTON_CONTINUE_PRESSED_TEXTURE
+	cta_pressed.set_texture_margin_all(10.0)
 	_continue_button.add_theme_stylebox_override("normal", cta_normal)
 	_continue_button.add_theme_stylebox_override("hover", cta_hover)
-	_continue_button.add_theme_stylebox_override("pressed", cta_hover)
+	_continue_button.add_theme_stylebox_override("pressed", cta_pressed)
 	_continue_button.add_theme_stylebox_override("disabled", cta_disabled)
+	_continue_button.add_theme_color_override("font_color", Color(1.00, 0.95, 0.80, 1.0))
+	_continue_button.add_theme_color_override("font_focus_color", Color(1.00, 0.98, 0.88, 1.0))
+	_continue_button.add_theme_color_override("font_hover_color", Color(1.00, 0.98, 0.88, 1.0))
+	_continue_button.add_theme_color_override("font_pressed_color", Color(1.00, 0.90, 0.72, 1.0))
+	_continue_button.add_theme_font_size_override("font_size", 26)
 
 func _deferred_initialize() -> void:
 	await get_tree().process_frame
@@ -350,13 +370,50 @@ func _on_tooltip_requested(upgrade_id: String, _screen_position: Vector2) -> voi
 	_tooltip_status.text = _build_status_text(upgrade_id, state)
 	_tooltip_panel.visible = true
 	_tooltip_panel.move_to_front()
+	_play_tooltip_fade(true)
 
 func _hide_tooltip() -> void:
-	_tooltip_panel.visible = false
+	_play_tooltip_fade(false)
 	_tooltip_panel.top_level = true
 	_tooltip_panel.z_as_relative = false
-	_tooltip_panel.z_index = 5000
+	_tooltip_panel.z_index = 4095
 	_tooltip_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+func _play_tooltip_fade(show: bool) -> void:
+	if _tooltip_tween != null and _tooltip_tween.is_running():
+		_tooltip_tween.kill()
+	_tooltip_tween = create_tween()
+	_tooltip_tween.set_trans(Tween.TRANS_SINE)
+	_tooltip_tween.set_ease(Tween.EASE_OUT)
+	if show:
+		_tooltip_tween.tween_property(_tooltip_panel, "modulate", Color(1.0, 0.98, 1.0, 1.0), 0.12)
+		return
+	_tooltip_tween.tween_property(_tooltip_panel, "modulate", Color(0.96, 0.94, 1.0, 0.0), 0.08)
+	_tooltip_tween.finished.connect(_hide_tooltip_panel_if_faded)
+
+func _hide_tooltip_panel_if_faded() -> void:
+	if _tooltip_panel.modulate.a <= 0.01:
+		_tooltip_panel.visible = false
+
+func _on_continue_button_mouse_entered() -> void:
+	_tween_continue_button_scale(Vector2(1.04, 1.04), 0.10)
+
+func _on_continue_button_mouse_exited() -> void:
+	_tween_continue_button_scale(Vector2.ONE, 0.10)
+
+func _on_continue_button_down() -> void:
+	_tween_continue_button_scale(Vector2(0.98, 0.98), 0.06)
+
+func _on_continue_button_up() -> void:
+	_tween_continue_button_scale(Vector2(1.04, 1.04), 0.08)
+
+func _tween_continue_button_scale(target: Vector2, duration: float) -> void:
+	if _continue_button_tween != null and _continue_button_tween.is_running():
+		_continue_button_tween.kill()
+	_continue_button_tween = create_tween()
+	_continue_button_tween.set_trans(Tween.TRANS_SINE)
+	_continue_button_tween.set_ease(Tween.EASE_OUT)
+	_continue_button_tween.tween_property(_continue_button, "scale", target, duration)
 
 func _build_status_text(upgrade_id: String, state: String) -> String:
 	if state == "choice_locked":

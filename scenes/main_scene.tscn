@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/npc.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/cursor.tscn" id="2"]
@@ -11,7 +11,9 @@
 [ext_resource type="Script" path="res://scripts/ui/upgrade_panel.gd" id="10"]
 [ext_resource type="PackedScene" path="res://scenes/prophet.tscn" id="11"]
 [ext_resource type="PackedScene" path="res://scenes/skeptic.tscn" id="12"]
+[ext_resource type="Script" path="res://scripts/main/main_scene_controller.gd" id="13"]
 [node name="Main" type="Node2D"]
+script = ExtResource("13")
 
 [node name="World" type="Node2D" parent="."]
 
@@ -25,6 +27,12 @@
 
 [node name="Cursor" parent="." instance=ExtResource("2")]
 game_manager_path = NodePath("../Systems/GameManager")
+
+[node name="MainCamera" type="Camera2D" parent="."]
+position = Vector2(640, 360)
+zoom = Vector2(0.82, 0.82)
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0
 
 [node name="UI" type="CanvasLayer" parent="."]
 script = ExtResource("9")

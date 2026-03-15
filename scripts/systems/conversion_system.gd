@@ -44,6 +44,8 @@ func _on_npc_detected(npc: Node) -> void:
 			converted_count += 1
 
 	if converted_count > 0:
+		if converted_count > 1:
+			_spawn_feedback(npc_entity.global_position + Vector2(0.0, -14.0), converted_count, "CHAIN x%d" % converted_count)
 		_register_mass_prayer_progress(converted_count)
 		play_convert_sound()
 
@@ -104,6 +106,7 @@ func _convert_npc(npc_entity: NPC, apply_resistance: bool) -> bool:
 	var faith_per_conversion: float = _game_manager.get_faith_per_conversion()
 	if faith_per_conversion > 0.0:
 		_game_manager.add_faith(faith_per_conversion)
+		_spawn_feedback(npc_entity.global_position + Vector2(0.0, -24.0), 0, "+%.2f FAITH" % faith_per_conversion)
 	npc_converted.emit()
 	_game_manager.npc_converted.emit()
 	_spawn_feedback(npc_entity.global_position, gained_followers, "")
@@ -157,7 +160,7 @@ func _spawn_feedback(world_position: Vector2, amount: int, override_text: String
 
 	var text: String = override_text
 	if text.is_empty():
-		text = "+%d Follower" % amount
+		text = "+%d Followers" % amount
 	floating_text.show_text(world_position, text)
 
 func _register_mass_prayer_progress(converted_count: int) -> void:

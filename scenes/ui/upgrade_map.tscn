@@ -20,7 +20,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.08, 0.08, 0.10, 0.92)
+color = Color(0.06, 0.05, 0.08, 0.90)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 script = ExtResource("2")
@@ -43,37 +43,40 @@ grow_vertical = 2
 
 [node name="TooltipPanel" type="Panel" parent="MapViewport"]
 visible = false
-custom_minimum_size = Vector2(300, 120)
+custom_minimum_size = Vector2(360, 156)
 
 [node name="VBox" type="VBoxContainer" parent="MapViewport/TooltipPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = 8.0
-offset_right = -10.0
-offset_bottom = -8.0
+offset_left = 14.0
+offset_top = 12.0
+offset_right = -14.0
+offset_bottom = -12.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 6
 
 [node name="Title" type="Label" parent="MapViewport/TooltipPanel/VBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 text = "Upgrade"
 
 [node name="Description" type="Label" parent="MapViewport/TooltipPanel/VBox"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 17
 autowrap_mode = 2
 text = "Description"
 
 [node name="Cost" type="Label" parent="MapViewport/TooltipPanel/VBox"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "Cost"
 
 [node name="Status" type="Label" parent="MapViewport/TooltipPanel/VBox"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "Status"
 
 [node name="ContinueCultButton" type="Button" parent="."]
@@ -83,11 +86,11 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -100.0
-offset_top = -72.0
-offset_right = 100.0
-offset_bottom = -12.0
+offset_left = -118.0
+offset_top = -78.0
+offset_right = 118.0
+offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 0
-custom_minimum_size = Vector2(200, 60)
+custom_minimum_size = Vector2(236, 68)
 text = "CONTINUE CULT"

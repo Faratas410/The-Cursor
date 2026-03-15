@@ -32,6 +32,7 @@ const CONVERSION_SMOKE_TEXTURE: Texture2D = preload("res://assets/vfx/cursor/cur
 @export var crowd_reaction_radius: float = 120.0
 @export var crowd_reaction_cooldown_min: float = 1.5
 @export var crowd_reaction_cooldown_max: float = 3.0
+@export var character_visual_scale: float = 0.85
 var converted: bool = false
 var state: int = STATE_WANDER
 
@@ -41,6 +42,7 @@ var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var _cursor: CursorEntity
 var _game_manager: GameManager
 var _sprite: Sprite2D
+var _shadow: Polygon2D
 
 var _follow_angle: float = 0.0
 var _follow_distance: float = 48.0
@@ -64,6 +66,9 @@ var _idle_base_scale: Vector2 = Vector2.ONE
 var _crowd_reaction_timer: float = 0.0
 var _crowd_reaction_tween: Tween
 var _crowd_orbit_angle: float = 0.0
+var _wander_behavior_timer: float = 0.0
+var _is_idle_pause: bool = false
+var _follower_bob_time: float = 0.0
 
 func _ready() -> void:
 	_rng.randomize()
@@ -71,9 +76,12 @@ func _ready() -> void:
 	_cursor = get_tree().get_first_node_in_group("cursor") as CursorEntity
 	_game_manager = get_tree().get_first_node_in_group("game_manager") as GameManager
 	_sprite = $Sprite2D as Sprite2D
+	_shadow = $Shadow as Polygon2D
+	_apply_character_scale()
 	if _sprite != null:
 		_idle_base_scale = _sprite.scale
 	_reset_idle_timers()
+	_reset_wander_behavior_timer(false)
 	if not converted:
 		_apply_random_civilian_texture()
 	_reset_worship_timer()
@@ -137,6 +145,7 @@ func _physics_process(delta: float) -> void:
 	_bounce_at_edges()
 	_update_gaze(delta)
 	_update_idle_life(delta)
+	_update_follower_bob(delta)
 	_update_crowd_reaction(delta)
 
 func become_follower(angle: float, distance: float) -> void:
@@ -221,10 +230,25 @@ func _update_state_from_cursor() -> void:
 		state = STATE_WANDER
 
 func _wander(delta: float) -> void:
+	if _is_idle_pause:
+		velocity = Vector2.ZERO
+		_wander_behavior_timer -= delta
+		if _wander_behavior_timer <= 0.0:
+			_is_idle_pause = false
+			_pick_new_direction()
+			_reset_wander_behavior_timer(false)
+		return
+
 	_direction_timer -= delta
 	if _direction_timer <= 0.0:
 		_pick_new_direction()
 	velocity = _direction * speed
+
+	_wander_behavior_timer -= delta
+	if _wander_behavior_timer <= 0.0:
+		_is_idle_pause = true
+		velocity = Vector2.ZERO
+		_reset_wander_behavior_timer(true)
 
 func _move_toward_cursor() -> void:
 	if _cursor == null:
@@ -237,7 +261,7 @@ func _move_toward_cursor() -> void:
 	_direction = desired
 	velocity = _direction * speed * 1.25
 
-func _follow_cursor(_delta: float) -> void:
+func _follow_cursor(delta: float) -> void:
 	if _cursor == null:
 		velocity = Vector2.ZERO
 		return
@@ -246,6 +270,7 @@ func _follow_cursor(_delta: float) -> void:
 	if _is_procession_active():
 		target_position = _get_procession_target()
 	else:
+		_follow_angle = wrapf(_follow_angle + (delta * 0.12), 0.0, TAU)
 		target_position = _cursor.global_position + Vector2.RIGHT.rotated(_follow_angle) * _follow_distance
 
 	var to_target: Vector2 = target_position - global_position
@@ -536,6 +561,31 @@ func _update_crowd_reaction(delta: float) -> void:
 		_crowd_reaction_tween.kill()
 	_crowd_reaction_tween = create_tween()
 	_crowd_reaction_tween.tween_property(self, "global_position", target_position, move_duration)
+
+func _update_follower_bob(delta: float) -> void:
+	if _sprite == null:
+		return
+	if state != STATE_FOLLOW or _is_worshipping or _is_kneeling:
+		return
+
+	_follower_bob_time += delta * 3.2
+	var bob_y: float = sin(_follower_bob_time) * 1.5
+	var pulse: float = 1.0 + (sin(_follower_bob_time * 0.7) * 0.03)
+	_sprite.position = Vector2(0.0, bob_y)
+	_sprite.scale = _idle_base_scale * pulse
+
+func _apply_character_scale() -> void:
+	var target_scale: Vector2 = Vector2.ONE * character_visual_scale
+	if _sprite != null:
+		_sprite.scale = target_scale
+	if _shadow != null:
+		_shadow.scale = target_scale
+
+func _reset_wander_behavior_timer(idle_phase: bool) -> void:
+	if idle_phase:
+		_wander_behavior_timer = _rng.randf_range(1.2, 2.2)
+		return
+	_wander_behavior_timer = _rng.randf_range(2.0, 4.2)
 
 func _can_run_crowd_reaction() -> bool:
 	if _game_manager == null or _cursor == null:

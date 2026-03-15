@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3]
 
-[ext_resource type="Texture2D" path="res://assets/ui/buttons/button_primary.png" id="1"]
-[ext_resource type="Texture2D" path="res://assets/ui/buttons/button_secondary.png" id="2"]
-[ext_resource type="Texture2D" path="res://assets/ui/buttons/button_small.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/ui/buttons/btn_upgrade.png" id="1"]
+[ext_resource type="Texture2D" path="res://assets/ui/buttons/btn_upgrade_hover.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/ui/buttons/btn_upgrade_disabled.png" id="3"]
 
 [sub_resource type="StyleBoxTexture" id="1"]
 texture = ExtResource("1")
