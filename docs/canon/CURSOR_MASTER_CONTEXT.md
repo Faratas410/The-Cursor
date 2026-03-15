@@ -1683,3 +1683,41 @@ When in doubt:
 - restate scale for world assets
 - restate readability for all assets
 - prefer cleaner, simpler, quieter outputs over richer but noisier ones
+
+---
+
+## 30. Asset Acceptance Criteria
+
+An asset is accepted only if all relevant criteria below are true.
+
+Universal acceptance criteria:
+- silhouette is readable at gameplay zoom
+- asset is readable at intended runtime size
+- style is consistent with the canonical cult-cartoon aesthetic
+- no perspective distortion is present unless a task explicitly allows it
+- no photorealistic texture noise is present
+- transparency is valid and there is no white fringe
+- asset matches canonical scale expectations for its family
+- asset matches its intended runtime role
+- asset naming is compatible with canonical naming or explicit runtime integration rules
+
+World asset acceptance criteria:
+- center gameplay area remains unobstructed when the asset affects map composition
+- the asset does not overpower cursor, NPC, or follower readability
+- decorative density remains lower in the gameplay center than at the edges
+- stage identity is clear without relying on clutter
+
+UI asset acceptance criteria:
+- text-safe center area remains usable
+- panel or button borders remain scale-safe where required
+- icon readability holds at canonical UI target sizes
+- the asset does not read as generic modern UI
+
+Icon asset acceptance criteria:
+- HUD icons read as resource symbols
+- upgrade icons read as occult sigils or ritual doctrine symbols
+- relic icons read as physical cult artifacts
+- icon silhouette remains clear at small size
+
+Rejection rule:
+- if any relevant criterion fails, the asset is rejected and must be regenerated, corrected, or explicitly re-scoped before integration.
