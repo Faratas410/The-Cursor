@@ -1244,3 +1244,442 @@ Use this section as the fastest possible extraction layer for AI-assisted genera
 | Composition | center remains quieter than edges |
 | Runtime naming | matches canonical filenames |
 | Runtime usability | readable in actual scene, not only in isolation |
+
+---
+
+## 29. Prompting Contract
+
+This section defines how AI must be prompted, not only what it must produce. The goal is deterministic prompting across models, agents, and contributors.
+
+Prompting objective:
+- standardize prompt form
+- standardize vocabulary
+- reduce style drift
+- reduce composition drift
+- link prompting directly to canonical validation
+
+### 29.1 Prompting Principles
+
+Every production prompt must:
+- name the project: `THE CURSOR`
+- state the asset family explicitly
+- state the canonical style explicitly: `minimalist cult-cartoon`
+- state the readability priority explicitly
+- include scale information when the asset exists in world space
+- include camera information when the asset exists in world space
+- include exclusions explicitly
+- end with an invalidation rule tied to readability, scale, style, and runtime role
+
+Every production prompt must use this block order:
+1. asset identity
+2. purpose
+3. style
+4. composition or form
+5. scale and camera
+6. technical constraints
+7. exclusions
+8. output intent
+9. invalidation rule
+
+If a prompt changes this order, it is non-canonical.
+
+### 29.2 Allowed Vocabulary
+
+Prefer these terms:
+- minimalist cult-cartoon
+- gameplay-first
+- readable at gameplay scale
+- top-down or near-top-down orthographic read
+- quiet center
+- denser edges
+- rounded silhouettes
+- dark outline
+- two-tone shading
+- ritual iconography
+- dark ritual UI
+- transparent background
+- modular asset
+- runtime-safe
+- 9-slice safe
+- stage identity
+- coherent with project palette
+
+### 29.3 Forbidden Vocabulary
+
+Do not use these terms in canonical prompts unless a task explicitly requires them:
+- photorealistic
+- cinematic
+- ultra detailed
+- concept art
+- realistic medieval
+- dramatic lighting
+- volumetric lighting
+- isometric
+- extreme perspective
+- splash art
+- matte painting
+- dashboard UI
+- mobile app icon
+- infographic
+- glossy modern UI
+- neon fantasy
+
+If a model behaves better with weighted negatives, map these forbidden terms into the negative prompt.
+
+### 29.4 Universal Prompt Skeleton
+
+Use this exact skeleton as the canonical base form:
+
+```text
+Project: THE CURSOR
+Asset type: [ASSET_TYPE]
+Purpose: [RUNTIME_ROLE]
+
+Style:
+- minimalist cult-cartoon
+- readability first
+- coherent with canonical palette and ritual iconography
+
+Composition / Form:
+- [PRIMARY FORM RULES]
+
+Scale / Camera:
+- [WORLD_SCALE_OR_UI_SCALE]
+- [CAMERA_RULE_IF_APPLICABLE]
+
+Technical constraints:
+- [TRANSPARENCY / RESOLUTION / 9-SLICE / MODULARITY / CANVAS RULES]
+
+Exclude:
+- [EXCLUSION LIST]
+
+Output intent:
+- [SOURCE_LAYER / MODULAR_PROP / RUNTIME_SAFE_FLATTENED_BG / HUD_ICON / UI_PANEL / ETC]
+
+Invalid if:
+- breaks readability
+- breaks canonical scale
+- breaks canonical style
+- breaks camera or composition rules
+- fails the runtime role
+```
+
+### 29.5 Family Templates
+
+Use the universal skeleton above, then fill it using the following family rules.
+
+#### 29.5.1 Background Template
+
+```text
+Project: THE CURSOR
+Asset type: Stage background
+Purpose: [GROUND_LAYER / OVERLAY_LAYER / RUNTIME_SAFE_FLATTENED_STAGE_BACKGROUND]
+
+Style:
+- minimalist cult-cartoon
+- gameplay-first
+- quiet center, denser edges
+- readable with many moving NPCs and a visually dominant cursor
+
+Composition / Form:
+- center gameplay area remains open and calm
+- decorative density increases toward outer edge and corners
+- no large baked props dominating the center
+- stage identity must be visible through terrain, border treatment, and environmental motifs
+
+Scale / Camera:
+- broad playfield composition
+- top-down / near-top-down orthographic read
+- baseline readable gameplay radius about 600px from active center
+
+Technical constraints:
+- compatible with layered stage production
+- if flattened, must remain runtime-safe for current `bg_<stage>.png` usage
+
+Exclude:
+- characters
+- UI
+- text
+- photorealism
+- strong perspective
+- storybook clutter
+- dramatic shadows
+
+Output intent:
+- [STAGE_SOURCE_LAYER or RUNTIME_SAFE_STAGE_BACKGROUND]
+
+Invalid if:
+- center is too busy
+- stage identity is too weak
+- background overpowers gameplay readability
+```
+
+#### 29.5.2 Props Template
+
+```text
+Project: THE CURSOR
+Asset type: Modular environment prop
+Purpose: [EDGE_FRAMING / STAGE_DRESSING / LANDMARK_SUPPORT / SMALL_DRESSING]
+
+Style:
+- minimalist cult-cartoon
+- readable at gameplay scale
+- rounded silhouettes
+- dark outline
+- two-tone shading
+
+Composition / Form:
+- single modular prop or tightly related prop cluster
+- clear grounded silhouette
+- no merged scene composition
+
+Scale / Camera:
+- size band: [32-64 / 64-128 / 128-256]
+- top-down / near-top-down orthographic read
+- consistent with NPC height around 48px
+
+Technical constraints:
+- transparent background
+- tight crop
+- modular placement ready
+
+Exclude:
+- characters
+- text
+- UI
+- perspective camera angle
+- realistic texture rendering
+- cinematic shadows
+
+Output intent:
+- modular runtime prop
+
+Invalid if:
+- prop dominates NPC readability
+- prop scale breaks world-scale canon
+- silhouette is weak at gameplay size
+```
+
+#### 29.5.3 UI Panel Template
+
+```text
+Project: THE CURSOR
+Asset type: UI panel
+Purpose: [MAIN / CARD / POPUP / TOOLTIP / INVENTORY]
+
+Style:
+- dark ritual UI
+- readable before decorative
+- elegant and restrained
+
+Composition / Form:
+- dark purple base
+- gold frame
+- rounded corners
+- border ornament only near edges
+- clean center zone for text and icons
+
+Scale / Camera:
+- target UI baseline 1920x1080
+- readable with body text around 14-18px
+
+Technical constraints:
+- transparent background
+- 9-slice safe if scalable
+- preserve border integrity
+- no center clutter
+
+Exclude:
+- text labels
+- icons
+- characters
+- glossy modern UI
+- sci-fi UI
+- realistic materials
+
+Output intent:
+- runtime UI panel
+
+Invalid if:
+- center content area is compromised
+- border cannot scale safely
+- panel reads as generic modern UI instead of dark ritual UI
+```
+
+#### 29.5.4 HUD Icon Template
+
+```text
+Project: THE CURSOR
+Asset type: HUD icon
+Purpose: [RESOURCE_OR_STAT_MEANING]
+
+Style:
+- simple cult-symbol language
+- occult and readable
+- dark outline
+- two-tone shading
+
+Composition / Form:
+- symbolic mark with strong silhouette
+- fills at least 60 percent of the canvas
+
+Scale / Camera:
+- readable at 32-48px
+- no world camera requirements
+
+Technical constraints:
+- transparent background
+- clean silhouette
+
+Exclude:
+- text
+- interface chrome
+- dashboard pictograms
+- app-icon styling
+- weak silhouette
+
+Output intent:
+- runtime HUD icon
+
+Invalid if:
+- icon reads as generic app UI
+- icon is unclear at 32px
+```
+
+#### 29.5.5 Upgrade Icon Template
+
+```text
+Project: THE CURSOR
+Asset type: Upgrade icon
+Purpose: [UPGRADE_EFFECT]
+
+Style:
+- occult sigil language
+- dark ritual
+- symbolic and readable
+- dark outline
+- two-tone shading
+
+Composition / Form:
+- ritual seal, sigil, or mystical doctrine symbol
+- fills at least 60 percent of the canvas
+- strong internal shape hierarchy
+
+Scale / Camera:
+- readable at small upgrade-map size
+- no world camera requirements
+
+Technical constraints:
+- transparent background
+- coherent with upgrade tree visuals
+
+Exclude:
+- generic arrows
+- dashboard symbols
+- modern productivity icon language
+- flat logo treatment
+
+Output intent:
+- runtime upgrade-tree icon
+
+Invalid if:
+- icon reads as generic UI instead of ritual power
+- detail collapses at gameplay size
+```
+
+#### 29.5.6 Relic Icon Template
+
+```text
+Project: THE CURSOR
+Asset type: Relic icon
+Purpose: [RELIC_OBJECT_TYPE]
+
+Style:
+- physical cult artifact
+- stylized
+- cult-cartoon
+- dark outline
+- two-tone shading
+
+Composition / Form:
+- must read as an object, not a glyph
+- fills at least 60 percent of the canvas
+- object silhouette remains clear
+
+Scale / Camera:
+- readable at gameplay UI size
+- no world camera requirements
+
+Technical constraints:
+- transparent background
+- clear artifact silhouette
+
+Exclude:
+- abstract symbol treatment
+- photoreal rendering
+- generic inventory icon language from unrelated genres
+
+Output intent:
+- runtime relic icon
+
+Invalid if:
+- artifact becomes too abstract
+- object is unclear at runtime size
+```
+
+### 29.6 Negative Prompt Baseline
+
+Use this as the canonical negative block when the model supports negatives:
+
+```text
+Do not generate photorealism, cinematic perspective, realistic medieval concept art, dense storybook clutter, modern flat-product UI, dashboard pictograms, mobile-app icon language, neon colors, over-rendered textures, extreme shadows, dramatic lighting, isometric views, or elements that reduce gameplay readability.
+```
+
+### 29.7 Model Adapters
+
+The semantic contract must stay fixed across models. Only syntax may change.
+
+ChatGPT / general image-capable LLM:
+- use the universal skeleton or a family template in full sentences
+- keep exclusions explicit
+- prefer plain language over token weighting
+
+Flux / Stable Diffusion style models:
+- keep the same semantic order
+- compress repeated clauses if needed
+- move forbidden vocabulary into the negative prompt
+- preserve explicit mentions of scale, transparency, and orthographic read
+
+Midjourney-style prompting:
+- keep the same semantic order in shorter phrase blocks
+- keep camera, style, and exclusions near the front
+- do not use Midjourney brevity as a reason to omit scale or readability rules
+
+Codex agent / prompt generation automation:
+- always assemble prompts from this contract rather than inventing ad hoc prose
+- select the family template first
+- inject variables second
+- append the invalidation rule last
+
+### 29.8 Validation Hook
+
+Every final production prompt must conceptually terminate in this rule:
+
+```text
+The output is invalid if it breaks readability, canonical scale, canonical style, camera rules, composition rules, transparency rules, or the intended runtime role in THE CURSOR.
+```
+
+Prompting-validation rule:
+- prompt design and asset validation must use the same vocabulary
+- if a validation criterion is important, it must be named in the prompt
+
+### 29.9 Prompting Rule of Use
+
+When in doubt:
+- choose the correct family template first
+- keep the universal block order unchanged
+- use allowed vocabulary
+- use forbidden vocabulary only as negatives
+- restate scale for world assets
+- restate readability for all assets
+- prefer cleaner, simpler, quieter outputs over richer but noisier ones
