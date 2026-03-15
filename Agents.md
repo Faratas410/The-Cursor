@@ -113,6 +113,14 @@ For canon, asset-path, UI, or production-alignment work, inspect these documents
 
 `repo_map.md`
 
+For prop or sprite integration work, also verify before editing:
+
+the target asset has real alpha transparency
+
+the target runtime read size matches project scale expectations
+
+the asset root matches current runtime paths
+
 Reuse patterns already present in the repository whenever possible.
 
 If a change can be implemented without introducing new files, prefer editing existing files.
@@ -395,6 +403,20 @@ Canonical UI ownership:
 
 `UpgradeMapNode` owns node visuals and local animation only.
 
+Asset integration rule:
+
+do not integrate world props or sprites that still contain white background, fake checkerboard background, oversized illustration scale, or large non-functional margins
+
+runtime-ready asset expectations:
+
+RGBA PNG
+
+real transparency
+
+tight crop
+
+scale aligned to the current NPC reference and world-scale canon
+
 14. PERFORMANCE CONSTRAINTS
 
 Baseline target:
@@ -572,6 +594,14 @@ Run phase to upgrade phase transition
 
 Sacrifice flow if touched
 
+When editing asset references or visual integration, verify where relevant:
+
+transparent import is correct in-scene
+
+prop scale is coherent against NPC read size
+
+props do not dominate the gameplay center
+
 When editing scripts, verify parse safety.
 
 20. PARSE SAFETY RULES
@@ -696,6 +726,10 @@ Manual and auto sacrifice
 World background progression and ambient overlay support
 
 Cult Power, divinity progression, and final sequence scaffolding
+
+Current production constraint:
+
+environment props must be treated as runtime-ready modular sprites, not illustration assets pasted into the scene
 
 Documentation rule:
 

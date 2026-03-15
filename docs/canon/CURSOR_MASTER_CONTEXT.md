@@ -694,6 +694,25 @@ Prop rules:
 - moderate detail only
 - no realistic architectural clutter
 
+Runtime prop production rule:
+- props must be generated as runtime-ready sprites, not illustration-sized cutouts
+- transparent background is mandatory
+- white matte, fake checkerboard, or flattened white background is invalid
+- crop must be tight around the silhouette
+- do not leave large empty margins around the prop
+- pivot/read center must remain visually centered for stable placement in-game
+
+Runtime prop scale targets for the current game:
+- NPC read reference: about `48px` tall
+- house runtime read height: about `96-120px`
+- tree runtime read height: about `120-140px`
+- small prop runtime read size: about `32-64px`
+
+Workflow rule:
+- do not treat raw AI illustration output as runtime-safe by default
+- the required workflow is: generate runtime-ready transparent prop -> validate scale/style/transparency -> integrate
+- a crop-only pass is not sufficient if the source asset was authored at illustration scale or with non-transparent background
+
 Canonical environment scale buckets:
 - environment props: `128x128 PNG`
 - large props: `256x256 PNG`
@@ -744,6 +763,11 @@ Placement rule:
 - props belong near edges, corners, entrances, or stage framing zones
 - props must not block main play area
 
+Runtime rejection examples:
+- a house that reads `~500px` tall against `~48px` NPCs is invalid
+- a tree that visually occupies a large section of the playfield center is invalid
+- a prop that looks like a sticker pasted over the background due to mismatched palette, outline weight, or shading treatment is invalid
+
 Wave 1 Village accepted set:
 - `tree_a.png`
 - `tree_b.png`
@@ -763,6 +787,7 @@ Wave 1 Village accepted set:
 Wave 1 Village integration note:
 - `bg_village.png` remains the current runtime background target
 - `stage_village_ground.png` and `stage_village_overlay.png` are approved source-support assets for future layered composition workflows
+- runtime placement of the Wave 1 modular village props is owned by `scripts/systems/progression_system.gd` via `World/DecorPropsLayer`, with village-stage visibility gating
 
 ---
 
@@ -1184,6 +1209,11 @@ Use this section as the fastest possible extraction layer for AI-assisted genera
 | Environment prop | 64-128px | normal scene framing | dominates center gameplay space |
 | Large prop | 128-256px | anchor prop / edge framing | feels like a full-screen landmark in baseline framing |
 
+Runtime sanity notes:
+- common runtime house target: about `96-120px` readable height
+- common runtime tree target: about `120-140px` readable height
+- if a prop reads 8-10x larger than an NPC, it is invalid for current gameplay scale
+
 ### 28.2 Camera Table
 
 | Field | Canonical Value |
@@ -1236,6 +1266,12 @@ Use this section as the fastest possible extraction layer for AI-assisted genera
 | Environment prop | 128x128 PNG |
 | Large prop | 256x256 PNG |
 | UI panel | 256x256 or 512x512 PNG |
+
+Runtime export requirements:
+- world props must be exported as RGBA PNG
+- transparency must be real alpha, not baked white background
+- crop must be tight
+- no white fringe or matte border
 
 ### 28.7 Icon Family Table
 
@@ -1728,6 +1764,10 @@ World asset acceptance criteria:
 - the asset does not overpower cursor, NPC, or follower readability
 - decorative density remains lower in the gameplay center than at the edges
 - stage identity is clear without relying on clutter
+- prop transparency is real RGBA transparency, not white background or fake checkerboard
+- crop is tight and does not waste large canvas area
+- houses, trees, and small props read within the current runtime scale targets
+- prop style does not read as a pasted sticker over the background
 
 UI asset acceptance criteria:
 - text-safe center area remains usable
@@ -1743,3 +1783,4 @@ Icon asset acceptance criteria:
 
 Rejection rule:
 - if any relevant criterion fails, the asset is rejected and must be regenerated, corrected, or explicitly re-scoped before integration.
+- specifically reject assets with white background, oversized illustration scale, excessive empty margins, or style mismatch severe enough to break scene cohesion.

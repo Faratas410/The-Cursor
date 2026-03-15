@@ -93,6 +93,12 @@ Rules:
 - do not create new runtime references into `res://assets/icons/`
 - do not add new same-name duplicates across `assets/icons/` and `assets/ui/icons/`
 - do not treat old panel files as default panel assets
+- do not create a new runtime `assets/props/` root unless the same task explicitly migrates code and documentation
+
+Environment prop integration rule:
+- current runtime modular props belong under `res://assets/environment/`
+- new props added for runtime use must be transparent RGBA PNGs with tight crop and gameplay-safe scale
+- do not import illustration-sized house or tree cutouts directly into runtime scenes
 
 ## 7. Current Audit Status
 

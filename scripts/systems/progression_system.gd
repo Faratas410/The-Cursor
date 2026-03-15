@@ -21,7 +21,16 @@ const AMBIENT_OVERLAY_SCENES: Dictionary = {
 	"planet_spores_animated": preload("res://scenes/ambient_overlays/planet_spores_animated_01.tscn")
 }
 const TREE_A_TEXTURE: Texture2D = preload("res://assets/environment/tree_a.png")
-const HOUSE_TEXTURE: Texture2D = preload("res://assets/environment/village_house_small.png")
+const TREE_B_TEXTURE: Texture2D = preload("res://assets/environment/tree_b.png")
+const TREE_C_TEXTURE: Texture2D = preload("res://assets/environment/tree_c.png")
+const HOUSE_SMALL_TEXTURE: Texture2D = preload("res://assets/environment/village_house_small.png")
+const HOUSE_MEDIUM_TEXTURE: Texture2D = preload("res://assets/environment/village_house_medium.png")
+const WOOD_FENCE_TEXTURE: Texture2D = preload("res://assets/environment/wood_fence.png")
+const WOOD_FENCE_SHORT_TEXTURE: Texture2D = preload("res://assets/environment/wood_fence_short.png")
+const WELL_TEXTURE: Texture2D = preload("res://assets/environment/well_01.png")
+const CART_TEXTURE: Texture2D = preload("res://assets/environment/cart_01.png")
+const BARREL_TEXTURE: Texture2D = preload("res://assets/environment/barrel_01.png")
+const CRATE_TEXTURE: Texture2D = preload("res://assets/environment/crate_small.png")
 const CULT_BANNER_TEXTURE: Texture2D = preload("res://assets/environment/cult_banner.png")
 
 @export var game_manager_path: NodePath
@@ -39,7 +48,16 @@ var _overlay_view_size: Vector2 = Vector2.ZERO
 var _current_dimension_for_overlays: int = 0
 var _decor_props_layer: Node2D
 var _tree_prop: Sprite2D
+var _tree_prop_b: Sprite2D
+var _tree_prop_c: Sprite2D
 var _house_prop: Sprite2D
+var _house_medium_prop: Sprite2D
+var _fence_prop: Sprite2D
+var _fence_short_prop: Sprite2D
+var _well_prop: Sprite2D
+var _cart_prop: Sprite2D
+var _barrel_prop: Sprite2D
+var _crate_prop: Sprite2D
 var _banner_prop: Sprite2D
 var _tree_base_position: Vector2 = Vector2.ZERO
 var _ritual_pressure_overlay: Sprite2D
@@ -115,6 +133,7 @@ func apply_dimension_background(dimension: int) -> void:
 	_current_dimension_for_overlays = clamped_dimension
 	_fit_background_to_viewport()
 	_apply_ambient_overlays()
+	_update_decor_visibility()
 
 func _fit_background_to_viewport() -> void:
 	if _background == null or _background.texture == null:
@@ -425,9 +444,20 @@ func _ensure_decor_props() -> void:
 		_decor_props_layer.name = "DecorPropsLayer"
 		world.add_child(_decor_props_layer)
 
-	_tree_prop = _ensure_decor_sprite("PropTree", TREE_A_TEXTURE, -2, Color(1.0, 1.0, 1.0, 0.96), Vector2(0.92, 0.92))
-	_house_prop = _ensure_decor_sprite("PropHouse", HOUSE_TEXTURE, -1, Color(1.0, 1.0, 1.0, 0.96), Vector2(0.96, 0.96))
+	_tree_prop = _ensure_decor_sprite("PropTreeA", TREE_A_TEXTURE, -2, Color(1.0, 1.0, 1.0, 0.96), Vector2.ONE)
+	_tree_prop_b = _ensure_decor_sprite("PropTreeB", TREE_B_TEXTURE, -2, Color(1.0, 1.0, 1.0, 0.96), Vector2.ONE)
+	_tree_prop_c = _ensure_decor_sprite("PropTreeC", TREE_C_TEXTURE, -2, Color(1.0, 1.0, 1.0, 0.96), Vector2.ONE)
+	_house_prop = _ensure_decor_sprite("PropHouseSmall", HOUSE_SMALL_TEXTURE, -1, Color(1.0, 1.0, 1.0, 0.96), Vector2.ONE)
+	_house_medium_prop = _ensure_decor_sprite("PropHouseMedium", HOUSE_MEDIUM_TEXTURE, -1, Color(1.0, 1.0, 1.0, 0.96), Vector2.ONE)
+	_fence_prop = _ensure_decor_sprite("PropWoodFence", WOOD_FENCE_TEXTURE, -1, Color(1.0, 1.0, 1.0, 0.95), Vector2.ONE)
+	_fence_short_prop = _ensure_decor_sprite("PropWoodFenceShort", WOOD_FENCE_SHORT_TEXTURE, -1, Color(1.0, 1.0, 1.0, 0.95), Vector2.ONE)
+	_well_prop = _ensure_decor_sprite("PropWell01", WELL_TEXTURE, -1, Color(1.0, 1.0, 1.0, 0.96), Vector2.ONE)
+	_cart_prop = _ensure_decor_sprite("PropCart01", CART_TEXTURE, -1, Color(1.0, 1.0, 1.0, 0.96), Vector2.ONE)
+	_barrel_prop = _ensure_decor_sprite("PropBarrel01", BARREL_TEXTURE, -1, Color(1.0, 1.0, 1.0, 0.96), Vector2.ONE)
+	_crate_prop = _ensure_decor_sprite("PropCrateSmall", CRATE_TEXTURE, -1, Color(1.0, 1.0, 1.0, 0.96), Vector2.ONE)
 	_banner_prop = _ensure_decor_sprite("PropBanner", CULT_BANNER_TEXTURE, -1, Color(1.0, 1.0, 1.0, 0.95), Vector2(0.88, 0.88))
+	_remove_legacy_prop("PropTree")
+	_remove_legacy_prop("PropHouse")
 	_remove_legacy_prop("PropTreeLeft")
 	_remove_legacy_prop("PropTreeRight")
 	_remove_legacy_prop("PropStall")
@@ -442,6 +472,7 @@ func _ensure_decor_props() -> void:
 		_ritual_pressure_overlay.z_index = -2
 		_ritual_pressure_overlay.modulate = Color(0.12, 0.08, 0.06, 0.0)
 		_decor_props_layer.add_child(_ritual_pressure_overlay)
+	_update_decor_visibility()
 
 func _remove_legacy_prop(name: String) -> void:
 	if _decor_props_layer == null:
@@ -468,14 +499,59 @@ func _layout_decor_props(view_size: Vector2) -> void:
 	if _decor_props_layer == null:
 		return
 	if _tree_prop != null:
-		_tree_base_position = Vector2(view_size.x * 0.20, view_size.y * 0.28)
+		_tree_base_position = Vector2(view_size.x * 0.18, view_size.y * 0.22)
 		_tree_prop.position = _tree_base_position
+	if _tree_prop_b != null:
+		_tree_prop_b.position = Vector2(view_size.x * 0.88, view_size.y * 0.24)
+	if _tree_prop_c != null:
+		_tree_prop_c.position = Vector2(view_size.x * 0.12, view_size.y * 0.82)
 	if _house_prop != null:
-		_house_prop.position = Vector2(view_size.x * 0.79, view_size.y * 0.77)
+		_house_prop.position = Vector2(view_size.x * 0.82, view_size.y * 0.76)
+	if _house_medium_prop != null:
+		_house_medium_prop.position = Vector2(view_size.x * 0.91, view_size.y * 0.62)
+	if _fence_prop != null:
+		_fence_prop.position = Vector2(view_size.x * 0.28, view_size.y * 0.90)
+	if _fence_short_prop != null:
+		_fence_short_prop.position = Vector2(view_size.x * 0.10, view_size.y * 0.60)
+	if _well_prop != null:
+		_well_prop.position = Vector2(view_size.x * 0.73, view_size.y * 0.18)
+	if _cart_prop != null:
+		_cart_prop.position = Vector2(view_size.x * 0.12, view_size.y * 0.16)
+	if _barrel_prop != null:
+		_barrel_prop.position = Vector2(view_size.x * 0.92, view_size.y * 0.88)
+	if _crate_prop != null:
+		_crate_prop.position = Vector2(view_size.x * 0.84, view_size.y * 0.16)
 	if _banner_prop != null:
 		_banner_prop.position = Vector2(view_size.x * 0.72, view_size.y * 0.30)
 	if _ritual_pressure_overlay != null:
 		_ritual_pressure_overlay.position = view_size * 0.5
+
+func _update_decor_visibility() -> void:
+	var village_stage: bool = _current_dimension_for_overlays == 0
+	if _tree_prop != null:
+		_tree_prop.visible = village_stage
+	if _tree_prop_b != null:
+		_tree_prop_b.visible = village_stage
+	if _tree_prop_c != null:
+		_tree_prop_c.visible = village_stage
+	if _house_prop != null:
+		_house_prop.visible = village_stage
+	if _house_medium_prop != null:
+		_house_medium_prop.visible = village_stage
+	if _fence_prop != null:
+		_fence_prop.visible = village_stage
+	if _fence_short_prop != null:
+		_fence_short_prop.visible = village_stage
+	if _well_prop != null:
+		_well_prop.visible = village_stage
+	if _cart_prop != null:
+		_cart_prop.visible = village_stage
+	if _barrel_prop != null:
+		_barrel_prop.visible = village_stage
+	if _crate_prop != null:
+		_crate_prop.visible = village_stage
+	if _banner_prop != null:
+		_banner_prop.visible = not village_stage
 
 func _update_decor_motion(_delta: float) -> void:
 	if _game_manager == null:
@@ -488,6 +564,8 @@ func _update_decor_motion(_delta: float) -> void:
 		var sway: float = sin(time_sec * 0.9) * 2.0
 		_tree_prop.position = Vector2(_tree_base_position.x + sway, _tree_base_position.y)
 		_tree_prop.rotation = deg_to_rad(sway * 0.55)
+	if _tree_prop_b != null:
+		_tree_prop_b.rotation = deg_to_rad(sin((time_sec * 0.8) + 0.4) * -0.9)
 
 	if _banner_prop != null:
 		_banner_prop.rotation = deg_to_rad(sin((time_sec * 1.2) + 0.8) * 2.0)
