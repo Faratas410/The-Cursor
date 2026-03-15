@@ -364,7 +364,46 @@ Late-game world messages:
 
 ---
 
-## 9. Global Art Direction
+## 9. World Scale and Camera Canon
+
+World-scale purpose:
+- keep relative size relationships stable across characters, props, backgrounds, and UI previews
+- prevent generation drift such as trees larger than houses or NPCs too small to read
+
+World-scale reference:
+- NPC visual height: about `48px`
+- small props: `32-64px`
+- environment props: `64-128px`
+- large props: `128-256px`
+
+Relative scale rules:
+- a standard village house must read larger than a single tree trunk mass but not so large that it feels like a screen-filling landmark
+- trees must frame space, not replace buildings as the dominant large-form prop in village stages
+- small props must support environmental dressing only and must never compete with NPC silhouettes
+- props must remain subordinate to the cursor and to moving character groups during gameplay
+
+Scale sanity rule:
+- if an NPC looks icon-sized next to common environmental props, the asset set is invalid
+- if a tree canopy or banner dominates the gameplay center at default camera framing, the asset set is invalid
+
+Camera canon:
+- orthographic gameplay feel
+- top-down angle target: `85-90` degrees visual read
+- no cinematic perspective
+- no horizon
+
+Gameplay framing target:
+- primary gameplay area should read as roughly a `600px` radius around the active center at baseline framing
+- the center zone must remain the cleanest and most readable zone in the composition
+- edges may carry decorative massing, but they must not visually collapse inward
+
+Composition implication for AI:
+- generate for a camera that sees a broad playfield with many moving NPCs
+- prioritize broad readable masses over micro-detail
+
+---
+
+## 10. Global Art Direction
 
 Visual identity:
 - minimalist cult-themed cartoon aesthetic
@@ -408,7 +447,7 @@ Anti-style rules:
 
 ---
 
-## 10. Canonical Palette
+## 11. Canonical Palette
 
 Primary purples:
 - dark purple `#2A1A38`
@@ -441,7 +480,7 @@ Palette rule:
 
 ---
 
-## 11. Line, Shape, and Shading Rules
+## 12. Line, Shape, and Shading Rules
 
 Outline:
 - required on characters and props
@@ -464,7 +503,7 @@ Anti-icon rule:
 
 ---
 
-## 12. Character Art Canon
+## 13. Character Art Canon
 
 Character base proportion:
 - head `~60%`
@@ -509,7 +548,7 @@ Variation policy:
 
 ---
 
-## 13. Cursor Canon
+## 14. Cursor Canon
 
 The cursor is the primary gameplay entity and must remain visually dominant.
 
@@ -547,7 +586,7 @@ Alignment:
 
 ---
 
-## 14. Environment and Map Composition Canon
+## 15. Environment and Map Composition Canon
 
 Environment purpose:
 - support gameplay
@@ -568,6 +607,39 @@ Canonical map structure:
 4. separate modular props placed above the background when needed
 
 Do not bake large props irreversibly into the central playfield.
+
+Stage-layering production rule:
+- stage environments should be authored as layered sets whenever possible, not as single flattened illustrations
+
+Preferred production naming:
+- `stage_<stage>_ground`
+- `stage_<stage>_overlay`
+- `stage_<stage>_props`
+
+Examples:
+- `stage_village_ground`
+- `stage_village_overlay`
+- `stage_village_props`
+- `stage_town_ground`
+- `stage_town_overlay`
+- `stage_town_props`
+
+Runtime compatibility rule:
+- current runtime still expects flattened stage background textures:
+  - `bg_village.png`
+  - `bg_town.png`
+  - `bg_city.png`
+  - `bg_metropolis.png`
+  - `bg_planet.png`
+  - `bg_cult_world.png`
+- until runtime is explicitly rewritten, layered production assets must either:
+  - be composited into those canonical `bg_<stage>.png` outputs
+  - or be added through a deliberate runtime layering integration pass
+
+Canonical recommendation:
+- author layered source assets first
+- export flattened runtime-safe stage backgrounds second
+- keep source layering available for future procedural or semi-procedural world composition
 
 Stage identities:
 
@@ -611,7 +683,7 @@ Composition constraints:
 
 ---
 
-## 15. Props Canon
+## 16. Props Canon
 
 Props are modular environmental assets used to support stage identity.
 
@@ -672,7 +744,7 @@ Placement rule:
 
 ---
 
-## 16. UI Visual Canon
+## 17. UI Visual Canon
 
 UI identity:
 - dark ritual aesthetic
@@ -692,6 +764,18 @@ UI hierarchy:
 - upgrade panel
 - popup panel
 - tooltip panel
+
+UI scale targets:
+- target reference resolution: `1920x1080`
+- minimum readable icon size: `32px`
+- preferred standard HUD icon readability band: `32-48px`
+- minimum readable text size: `14px`
+- body text target for standard panels: `14-18px`
+- key numeric stats and CTA labels may scale above baseline but must preserve clean spacing
+
+UI readability rule:
+- any generated panel, button, icon, or label container that only reads correctly above the baseline sizes is invalid
+- decorative framing must never reduce the readable central content area below practical runtime use
 
 Token rules:
 - large panel radius: `26`
@@ -717,7 +801,7 @@ Legacy/non-canonical unless explicitly rewired:
 
 ---
 
-## 17. UI Components and States
+## 18. UI Components and States
 
 Buttons:
 - `button_primary`
@@ -771,7 +855,7 @@ UI FX:
 
 ---
 
-## 18. UI Icons Canon
+## 19. UI Icons Canon
 
 There are three icon families and they must not be mixed stylistically.
 
@@ -842,7 +926,7 @@ Canonical relic icon set:
 
 ---
 
-## 19. Asset Technical Specification
+## 20. Asset Technical Specification
 
 Standard resolutions:
 - characters: `64x64 PNG`
@@ -874,7 +958,7 @@ Export rules:
 
 ---
 
-## 20. Naming Convention
+## 21. Naming Convention
 
 Use deterministic snake_case names.
 
@@ -891,7 +975,7 @@ Do not invent inconsistent names if a canonical family already exists.
 
 ---
 
-## 21. Current Runtime Expectations
+## 22. Current Runtime Expectations
 
 Current runtime directly references:
 - stage backgrounds from `assets/backgrounds`
@@ -917,7 +1001,7 @@ Current ambient overlay families:
 
 ---
 
-## 22. AI Generation Rules
+## 23. AI Generation Rules
 
 When generating anything for this project, AI must obey all of the following:
 
@@ -955,7 +1039,7 @@ Do not introduce:
 
 ---
 
-## 23. Acceptance and Validation Checklist
+## 24. Acceptance and Validation Checklist
 
 Every generated asset must pass all relevant checks below.
 
@@ -988,7 +1072,45 @@ If an asset fails any required check:
 
 ---
 
-## 24. Final Non-Interpretation Rules
+## 25. Asset Production Pipeline
+
+Canonical asset production pipeline:
+
+Step 1 - generate raw assets:
+- AI generates raw source assets using this document as context
+- generation must target the correct asset family, scale bucket, and stage identity
+
+Step 2 - validate raw output:
+- check against the acceptance checklist in this document
+- reject assets that break readability, scaling, transparency, or style rules
+
+Step 3 - normalize naming:
+- rename approved assets to canonical runtime or source names
+- do not invent ad hoc filenames when a canonical family already exists
+
+Step 4 - prepare runtime outputs:
+- if the asset is a layered map source, export runtime-safe flattened outputs when current code requires flattened backgrounds
+- if the asset is modular, preserve transparent source PNGs and ensure crop/alignment compliance
+
+Step 5 - import into Godot:
+- place files in the canonical repository folders
+- preserve runtime filenames expected by current scripts unless code is being updated in the same task
+
+Step 6 - replace placeholders or provisional assets:
+- replace temporary, derived, or non-canonical assets only with validated canonical outputs
+- do not mix placeholder and final variants under the same semantic role unless the runtime explicitly expects state variants
+
+Step 7 - run in-scene readability review:
+- inspect the asset in the real gameplay scene or equivalent runtime context
+- verify cursor, follower groups, HUD, and upgrade map readability are still preserved
+
+Pipeline rule:
+- an asset is not final just because it looks good in isolation
+- final acceptance requires runtime readability and canonical naming compliance
+
+---
+
+## 26. Final Non-Interpretation Rules
 
 If uncertain:
 - choose the simpler silhouette
@@ -1013,7 +1135,7 @@ The correct result for this project is:
 
 ---
 
-## 25. Canonical Reference Summary
+## 27. Canonical Reference Summary
 
 This project is:
 - a Godot 4.6 incremental game
@@ -1024,3 +1146,101 @@ This project is:
 - operationally dependent on stable filenames, transparent PNGs, and modular-friendly environment production
 
 This document is the definitive context to give an AI.
+
+---
+
+## 28. Machine Reference Tables
+
+Use this section as the fastest possible extraction layer for AI-assisted generation and validation.
+
+### 28.1 World Scale Table
+
+| Category | Canonical Read Size | Purpose | Invalid If |
+|---|---:|---|---|
+| NPC | ~48px tall | primary moving actor readability | reads like a tiny icon beside common props |
+| Small prop | 32-64px | low-priority dressing | competes with NPC silhouette |
+| Environment prop | 64-128px | normal scene framing | dominates center gameplay space |
+| Large prop | 128-256px | anchor prop / edge framing | feels like a full-screen landmark in baseline framing |
+
+### 28.2 Camera Table
+
+| Field | Canonical Value |
+|---|---|
+| Camera feel | Orthographic |
+| Viewing angle read | Top-down 85-90 degrees |
+| Perspective distortion | Not allowed |
+| Baseline gameplay framing | Broad playfield |
+| Primary readable gameplay radius | About 600px from active center |
+| Composition priority | Quiet center, denser edges |
+
+### 28.3 Stage Runtime Table
+
+| Stage | Runtime Background | Core Visual Identity | Suggested Layered Source Set |
+|---|---|---|---|
+| Village | `bg_village.png` | grass, small houses, trees, fences | `stage_village_ground`, `stage_village_overlay`, `stage_village_props` |
+| Town | `bg_town.png` | more houses, stone paths, market elements | `stage_town_ground`, `stage_town_overlay`, `stage_town_props` |
+| City | `bg_city.png` | stone plazas, walls, larger buildings | `stage_city_ground`, `stage_city_overlay`, `stage_city_props` |
+| Metropolis | `bg_metropolis.png` | dense buildings, towers, stone roads | `stage_metropolis_ground`, `stage_metropolis_overlay`, `stage_metropolis_props` |
+| Planet | `bg_planet.png` | alien ground, crystals, controlled unusual palette | `stage_planet_ground`, `stage_planet_overlay`, `stage_planet_props` |
+| Cult World | `bg_cult_world.png` | ritual symbols, altars, candles, banners | `stage_cult_world_ground`, `stage_cult_world_overlay`, `stage_cult_world_props` |
+
+### 28.4 Map Composition Table
+
+| Zone | Priority | Allowed Density | Allowed Content |
+|---|---|---|---|
+| Center gameplay zone | Highest gameplay priority | Low | ground, subtle pathing, minimal low-contrast detail |
+| Mid ring | Medium | Medium-low | path definition, restrained terrain variation |
+| Outer edge | Visual framing | Medium-high | trees, fences, houses, banners, stage props |
+| Corners | Highest decoration density | High | anchor props, dense border shaping, thematic set dressing |
+
+### 28.5 UI Target Table
+
+| Field | Canonical Target |
+|---|---|
+| Target reference resolution | 1920x1080 |
+| Minimum readable icon size | 32px |
+| Preferred HUD icon band | 32-48px |
+| Minimum readable text | 14px |
+| Standard panel body text | 14-18px |
+| UI panel style | Dark ritual |
+| 9-slice requirement | Mandatory for scalable panels |
+
+### 28.6 Asset Resolution Table
+
+| Asset Family | Canonical Resolution |
+|---|---|
+| Character sprite | 64x64 PNG |
+| Cursor sprite | 128x128 PNG |
+| Environment prop | 128x128 PNG |
+| Large prop | 256x256 PNG |
+| UI panel | 256x256 or 512x512 PNG |
+
+### 28.7 Icon Family Table
+
+| Family | Visual Language | Must Resemble | Must Not Resemble |
+|---|---|---|---|
+| HUD icons | simple cult symbolism | resource marks, ritual symbols | dashboard pictograms, app icons |
+| Upgrade icons | occult sigils | ritual circles, seals, mystical diagrams | generic interface symbols |
+| Relic icons | physical cult artifacts | books, skulls, daggers, candles, idols | abstract glyphs |
+
+### 28.8 Canonical Runtime UI Assets
+
+| Category | Files |
+|---|---|
+| Panels | `panel_main.png`, `panel_card.png`, `panel_popup.png`, `panel_tooltip.png`, `panel_card_9slice.png`, `panel_tooltip_9slice.png` |
+| Buttons | `button_primary.png`, `button_secondary.png`, `button_danger.png`, `button_small.png`, `button_icon.png`, `btn_continue_idle.png`, `btn_continue_hover.png`, `btn_continue_pressed.png`, `btn_upgrade.png`, `btn_upgrade_hover.png`, `btn_upgrade_disabled.png` |
+| Labels / overlays | `tooltip_panel.png`, `label_bg.png`, `ui_dark_overlay.png` |
+| Connectors | `connector_line`, `connector_highlight`, `tree_connector_line.png`, `tree_connector_active.png` |
+| FX | `glow_ring.png`, `sparkle.png`, `selection_ring.png`, `ritual_glow_small.png`, `node_unlock_glow.png`, `faith_burst.png`, `divine_pulse.png` |
+
+### 28.9 Canonical Validation Summary
+
+| Check Type | Pass Condition |
+|---|---|
+| Readability | silhouette clear at gameplay size |
+| Style | cult-cartoon, not realistic, not generic UI |
+| Scale | matches world scale table |
+| Transparency | full alpha, no white fringe |
+| Composition | center remains quieter than edges |
+| Runtime naming | matches canonical filenames |
+| Runtime usability | readable in actual scene, not only in isolation |
