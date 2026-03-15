@@ -716,17 +716,19 @@ Current and planned environment namespace includes:
 - `ritual_circle_ground.png`
 - `ritual_pillar_01.png`
 
-Planned modular props include:
+Approved Wave 1 Village modular props:
 - `well_01.png`
 - `cart_01.png`
-- `signpost_01.png`
 - `barrel_01.png`
+- `crate_small.png`
+
+Planned modular props include:
+- `signpost_01.png`
 - `fence_broken_01.png`
 - `grass_patch_a.png`
 - `grass_patch_b.png`
 - `stone_small_a.png`
 - `stone_small_b.png`
-- `crate_small.png`
 - `candle_cluster_01.png`
 - `candle_cluster_02.png`
 - `candle_cluster_03.png`
@@ -741,6 +743,26 @@ Planned modular props include:
 Placement rule:
 - props belong near edges, corners, entrances, or stage framing zones
 - props must not block main play area
+
+Wave 1 Village accepted set:
+- `tree_a.png`
+- `tree_b.png`
+- `tree_c.png`
+- `village_house_small.png`
+- `village_house_medium.png`
+- `wood_fence.png`
+- `wood_fence_short.png`
+- `well_01.png`
+- `cart_01.png`
+- `barrel_01.png`
+- `crate_small.png`
+- `stage_village_ground.png`
+- `stage_village_overlay.png`
+- `bg_village.png`
+
+Wave 1 Village integration note:
+- `bg_village.png` remains the current runtime background target
+- `stage_village_ground.png` and `stage_village_overlay.png` are approved source-support assets for future layered composition workflows
 
 ---
 
