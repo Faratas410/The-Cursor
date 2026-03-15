@@ -548,6 +548,12 @@ avoid opportunistic refactors
 
 keep one patch focused on one objective
 
+Documentation follow-through rule:
+
+if a patch changes runtime behavior, scene structure, system ownership, signal contracts, asset paths, or canonical workflow expectations, update the affected documentation in the same task
+
+if documentation intentionally does not change, state that explicitly in the completion report
+
 19. TESTING EXPECTATIONS
 
 When modifying gameplay logic verify where relevant:
@@ -615,6 +621,7 @@ Before concluding a task, agents must report:
 Files modified
 What changed
 Behavioral impact
+Documentation updated or intentionally unchanged
 Parse-safety checks performed
 Any assumptions made
 
